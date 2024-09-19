@@ -1,0 +1,151 @@
+.pc-comm-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 70%;
+  padding: 1rem;
+  height: 100%;
+
+
+  .pc-comm-header {
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+
+    .pc-comm-header-date {
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+
+
+  .pc-comm-result-box {
+    width: 100%;
+
+    .pc-comm-result {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #dddddd;
+      padding-bottom: 2vh;
+      margin-bottom: 2.5vh;
+      cursor: pointer;
+
+      .pc-comm-result-text {
+        .pc-comm-result-title {
+          font-size: 2rem;
+          font-weight: bold;
+        }
+
+        .pc-comm-result-content {
+          font-size: 1.1rem;
+        }
+      }
+
+      .pc-comm-result-img {
+        width: 10rem;
+      }
+    }
+  }
+}
+
+.pc-comm-write-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2vh;
+
+  .pc-comm-write-btn-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2vh;
+
+    .preview {
+      margin-left: 2vh;
+      background-color: #1976d2;
+      color: #dddddd;
+      cursor: pointer;
+    }
+  }
+
+  .file {
+    display: none;
+  }
+
+  .pc-comm-previewIMG-box {
+    background-color: #fff;
+    border-radius: 5px;
+    border: 3px dashed #eee;
+    padding: 1vh;
+
+    .pc-comm-previewIMG {
+      max-width: 20vh;
+      max-height: 20vh;
+    }
+  }
+}
+
+.pc-comm-content-body {
+  width: 100%;
+
+  .pc-comm-content-btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .pc-comm-content-content {
+    margin-bottom: 8vh;
+
+    .pc-comm-content-img {
+      max-width: 20vh;
+      max-height: 20vh;
+    }
+  }
+
+  .pc-comm-content-comments {
+    background: #f6f5f5;
+    border-radius: 8px;
+    padding: 0.5em;
+
+    .pc-comm-content-comments-write {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1vh;
+      margin-bottom: 2vh;
+    }
+
+    .pc-comm-content-comments-part {
+
+      .pc-comm-content-comments-charm{
+        border: 1px solid #6b7280;
+        border-radius: 15px;
+        margin-bottom: 3vh;
+        background: white;
+
+        .pc-comm-content-comments-first {
+          padding: 0.3em 0.5em 1em 0.5em;
+
+          p {
+            font-size: 1.1rem;
+            font-weight: bold;
+          }
+        }
+
+        .pc-comm-content-comments-second {
+          padding: 0.3em 0.5em 1em 1.4em;
+
+          p {
+            font-size: 1rem;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
