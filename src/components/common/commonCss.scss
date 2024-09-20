@@ -1,0 +1,29 @@
+.pc-header {
+  display: flex;
+  justify-content: space-between;
+
+  height: 60px;
+  padding: 6px;
+
+  border-bottom: 1px solid #dddddd;
+
+  .pc-img-div {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .pc-logo-img {
+      height: 70%;
+    }
+  }
+
+  .pc-choose-child {
+    display: flex;
+  }
+}
+
+.child-img {
+  border: 1px solid black;
+  width: 5vw;
+}
