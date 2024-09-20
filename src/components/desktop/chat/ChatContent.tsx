@@ -1,9 +1,24 @@
-import React from "react";
-import {TextField} from "@mui/material";
+import React, { Dispatch, SetStateAction } from "react";
+import { TextField, IconButton } from "@mui/material";
+import axios from "axios";
 import ChatPartDefault from "./ChatPartDefault";
-import ChatCloud from "./ChatCloud";
 
-const ChatContent: React.FC = () => {
+interface Message {
+    type: 'user' | 'bot' | 'error';
+    text: string;
+}
+
+interface ChatContentProps {
+    messages: Message[];
+    setMessages: Dispatch<SetStateAction<Message[]>>;
+    query: string;
+    setQuery: Dispatch<SetStateAction<string>>;
+    isChatEnded: boolean;
+    endstartChat: () => void;
+    session_id: string;
+}
+
+const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id }) => {
     const makeSx = {
         width: "70%",
         backgroundColor: "#F4F4F4",
@@ -30,28 +45,70 @@ const ChatContent: React.FC = () => {
         },
     };
 
-    return (
-        <div className={"pc-show-chat"}>
-            <div className={"pc-chat-part"}>
-                <ChatPartDefault/>
-                {/*<ChatCloud/>*/}
-            </div>
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (isChatEnded || !session_id || !query.trim()) return;
 
-            <div className={"pc-chat-input"}>
-                <TextField
-                    id="outlined-basic"
-                    placeholder="육아 고민을 적어주세요"
-                    variant="outlined"
-                    sx={makeSx}
-                    InputProps={{
-                        endAdornment: (
-                            <img className={"pc-chat-icon"} src={"/img/search.png"} alt={""}/>
-                        ),
-                    }}
-                />
+        const userMessage: Message = { type: 'user', text: query };
+        setMessages(prevMessages => [...prevMessages, userMessage]);
+
+        try {
+            const response = await axios.post('http://localhost:8080/chat/message', {
+                session_id,
+                chat_detail: { query }
+            });
+
+            const botAnswer = response.data.answer || '답변이 없습니다.';
+            const botMessage: Message = { type: 'bot', text: botAnswer };
+
+            setMessages(prevMessages => [...prevMessages, botMessage]);
+            setQuery('');
+        } catch (error) {
+            const errorMessage: Message = { type: 'error', text: '오류가 발생했습니다.' };
+            setMessages(prevMessages => [...prevMessages, errorMessage]);
+            console.error('오류 발생:', error);
+        }
+    };
+
+    return (
+        <div className="pc-show-chat">
+            <div className="pc-chat-part">
+                <ChatPartDefault />
+            </div>
+            
+            <div className="pc-chat-content">
+                <div style={{ height: '100%', width: '100%', overflowY: 'auto', paddingBottom: '10vh' }}>
+                    <div style={{ padding: '10px' }}>
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`message ${msg.type}`} style={{ margin: '5px 0' }}>
+                                <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <form onSubmit={handleSubmit} className="pc-chat-input">
+                    <TextField
+                        id="outlined-basic"
+                        label="육아 고민을 적어주세요"
+                        variant="outlined"
+                        sx={makeSx}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        disabled={isChatEnded}
+                        className="pc-chat-body-searchInput"
+                    />
+                    <div style={{ display: 'flex', marginTop: '10px' }}>
+                        <IconButton type="submit" disabled={isChatEnded}>
+                            <img src="/img/send.png" alt="Send" className="pc-chat-icon" />
+                        </IconButton>
+                        <IconButton type="button" onClick={endstartChat} disabled={isChatEnded}>
+                            새로운 채팅 시작
+                        </IconButton>
+                    </div>
+                </form>
             </div>
         </div>
     );
-}
+};
 
 export default ChatContent;
