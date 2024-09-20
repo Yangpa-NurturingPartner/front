@@ -16,7 +16,7 @@ interface Message {
 const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
     const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
-    const { session_id } = useParams();  // 현재 session_id가 아니라 요약에서 받은 session_id를 사용해야 함
+    const { session_id } = useParams();  //과거기록보기 -> 현재 session_id가 아니라 요약에서 받은 session_id를 사용해야 함
     const [query, setQuery] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isChatEnded, setIsChatEnded] = useState(false);
