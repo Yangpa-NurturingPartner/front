@@ -1,32 +1,52 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+interface CommunityBoard {
+  board_no: number;
+  title: string;
+  board_contents: string;
+  reg_date: Date;
+}
 
 const CommContent: React.FC = () => {
+  const [commProps, setCommProps] = useState<CommunityBoard[]>([]);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const handleClick = (board_no: number) => {
+    navigate(`/community/${board_no}`);
+  };
 
-    const handleClick = (id: string) => {
-        navigate(`/community/${id}`);
+  useEffect(() => {
+    const fetchBoardList = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/community/boards');
+        setCommProps(response.data.list);
+      } catch (error) {
+        console.error('게시글 리스트 불러오기 오류:', error);
+      }
     };
 
-    return (
-        <div className={"pc-comm-result-box"}>
-            {
-                Array.from({length: 5}).map((_, index: number) => {
-                    return (
-                        <div className={"pc-comm-result"} onClick={() => handleClick(index.toString())}>
-                            <div className={"pc-comm-result-text"}>
-                                <p className={"pc-comm-result-title"}>자녀 장려금 신청 못했다면?</p>
-                                <span className={"pc-comm-result-content"}>2024 자녀장려금 지급은 언제일까? 2024 자녀장려금 지급일부터 기한후 신청방법까지, 한 눈에 정리했어요.</span>
-                            </div>
-                            <img className={"pc-comm-result-img"} src={"/img/mainPaint.png"} alt={""}/>
-                        </div>
-                    )
-                })
-            }
+    fetchBoardList();
+  }, []);
 
+  return (
+    <div className={"pc-comm-result-box"}>
+      {commProps.map((board) => (
+        <div 
+          key={board.board_no} 
+          className={"pc-comm-result"} 
+          onClick={() => handleClick(board.board_no)}
+        >
+          <div className={"pc-comm-result-text"}>
+            <p className={"pc-comm-result-title"}>{board.title}</p>
+            <span className={"pc-comm-result-content"}>{board.board_contents}</span>
+          </div>
+          <img className={"pc-comm-result-img"} src={"/img/mainPaint.png"} alt={"게시글 이미지"} />
         </div>
-    );
-}
+      ))}
+    </div>
+  );
+};
 
 export default CommContent;
