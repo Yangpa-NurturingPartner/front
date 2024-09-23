@@ -36,9 +36,12 @@ const LoginPage: React.FC = () => {
             .then(response => response.json()) // 응답을 JSON으로 변환
             .then(data => {
                 const jwtToken = data.token;  // 백엔드에서 반환된 JWT 토큰
+                const email = data.email;  // 이메일을 응답에서 추출
                 //console.log(jwtToken);
+
                 // JWT 토큰을 로컬 스토리지에 저장
                 localStorage.setItem('jwtToken', jwtToken);
+                localStorage.setItem('email', email);  // 이메일 저장
 
                 // 프로필 페이지로 이동
                 navigate("/profile");
@@ -51,12 +54,12 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <GoogleOAuthProvider clientId="597389730622-1qsc90pogdcg8crjid8qsd0d20t2f1vi.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="clientID">
             <div className="login-page">
                 <div className="login-container">
                     <div className="image-container">
                         <img src="/img/mainPaint.png" alt="Mother and child with onion character"
-                            className="login-image" />
+                             className="login-image" />
                         <p className="image-caption">"이번 생에 부모는 처음이니까"<br />저희가 함께 도와드리겠습니다.</p>
                     </div>
                     <div className="form-container">
