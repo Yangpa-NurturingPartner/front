@@ -27,7 +27,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                 <img
                     src={"/img/write.png"}
                     alt={""}
-                    onClick={endstartChat} // 클릭 시 새로운 채팅 시작
+                    onClick={async () => {
+                        await endstartChat(); //새로운 채팅 시작
+                     }}
                     style={{
                         cursor: "pointer",
                         position: "absolute",

@@ -42,20 +42,27 @@ const Chatting: React.FC = () => {
         try {
             if (currentSession_id) {
                 await axios.post('http://localhost:8080/chat/end-chat', null, { params: { session_id: currentSession_id } });
-                setIsChatEnded(true);
                 setMessages(prevMessages => [...prevMessages, { type: 'bot', text: '채팅이 종료되었습니다.' }]);
+                setIsChatEnded(true); //세션 종료 상태 먼저 업데이트
             }
-
+    
             const response = await axios.post('http://localhost:8080/chat/start-new-chat');
             const newSession_id = response.data.session_id;
-            setCurrentSession_id(newSession_id);
-            setMessages([]);
-            setQuery('');
-            setIsChatEnded(false);
+    
+            if (newSession_id) {
+                console.log("새 세션아이디 : " + newSession_id);
+                setCurrentSession_id(newSession_id); //새로운 세션 ID 설정
+                setMessages([]); //메시지 초기화
+                setQuery(''); //입력 초기화
+                setIsChatEnded(false); //채팅 활성화
+            } else {
+                console.error('세션 ID를 받아오지 못했습니다.');
+            }
         } catch (error) {
             console.error('채팅 종료 및 시작 오류:', error);
         }
     };
+     
 
     useEffect(() => {
         const checkSession = async () => {
@@ -85,7 +92,7 @@ const Chatting: React.FC = () => {
                 isCollapsed={isSidebarCollapsed} 
                 toggleSidebar={toggleSidebar} 
                 viewChatDetail={viewChatDetail}
-                endstartChat={endstartChat} // 추가된 부분
+                endstartChat={endstartChat}
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (

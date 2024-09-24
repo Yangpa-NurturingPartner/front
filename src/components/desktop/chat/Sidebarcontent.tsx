@@ -47,20 +47,18 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     useEffect(() => {
         const fetchChatSummaries = async () => {
             try {
-                // 임시로 사용자 번호 1 사용
+                //임시로 사용자 번호 1 사용
                 const user_no = 1;
 
                 const sessionIdsResponse = await axios.post('http://localhost:8080/chat/get-userinfo', { user_no });
                 const sessionIds = sessionIdsResponse.data;
-
-                console.log("세션아이디:", sessionIds);
 
                 if (!sessionIds || sessionIds.length === 0) {
                     console.warn("세션 아이디가 없습니다.");
                     return;
                 }
 
-                // 채팅 요약 불러오기
+                //채팅 요약 불러오기
                 const response = await axios.post('http://localhost:8080/chat/chat-record', sessionIds);
                 setChatSummaries(response.data);
                 setFilteredSummaries(response.data);
