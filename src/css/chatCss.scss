@@ -12,7 +12,6 @@
   }
 }
 
-
 .pc-chat-sidebar-btn {
   position: absolute;
   bottom: 3vh;
@@ -38,27 +37,26 @@
   position: absolute;
   top: 4.2rem;
   bottom: 9vh;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
+  padding: 0.5rem 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .pc-chat-body-searchInput {
   flex-shrink: 0;
   padding: 0.2rem 0.5rem;
-  max-width: 80%; 
-  margin-left: 2rem;
+  width: 100%; 
 }
 
-//사이드바 기록 조회
+// 사이드바 기록 조회
 .pc-chat-body-searchHistory {
   overflow-y: auto;
   flex-grow: 1;
   padding: 0.5rem 0.5rem;
 
   .pc-chat-body-searchHistory-box {
-    padding: 0.5rem 0.5rem;
+    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
 
     .pc-chat-body-day {
@@ -69,16 +67,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
       border: 1px solid lightyellow;
       border-radius: 15px;
       background: white;
-
       min-height: 6vh;
-      width: 100%;
-      
+      width: 95%;
       white-space: pre-wrap; 
-      word-wrap: break-word; 
+      word-wrap: break-word;
+      padding: 0.5rem;
+      text-align: center; 
     }
   }
 }
@@ -92,7 +89,6 @@
   left: 20vw;
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
-  //height: calc(100vh - 9.3vh);
   overflow: hidden;
 
   &.collapsed {
@@ -160,12 +156,11 @@
     right: 0;
     padding: 10px 20px;
     background-color: #ffffff;
-
     display: flex;
     justify-content: center;
 
     .pc-chat-icon {
-      width: 2rem;
+      width: 5rem;
     }
   }
 }
@@ -182,7 +177,7 @@
   align-items: center;
   padding: 10px 20px;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chat-header .logo {

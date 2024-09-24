@@ -70,10 +70,14 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
     };
 
+    const handleQuestionClick = (question: string) => {
+        setQuery(question);
+    };
+
     return (
         <div className="pc-show-chat">
             <div className="pc-chat-part">
-                <ChatPartDefault />
+                <ChatPartDefault onQuestionClick={handleQuestionClick} />
             </div>
             
             <div className="pc-chat-content">
@@ -100,9 +104,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                     <div style={{ display: 'flex', marginTop: '10px' }}>
                         <IconButton type="submit" disabled={isChatEnded}>
                             <img src="/img/send.png" alt="Send" className="pc-chat-icon" />
-                        </IconButton>
-                        <IconButton type="button" onClick={endstartChat} disabled={isChatEnded}>
-                            새로운 채팅 시작
                         </IconButton>
                     </div>
                 </form>
