@@ -70,10 +70,14 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
     };
 
+    const handleQuestionClick = (question: string) => {
+        setQuery(question);
+    };
+
     return (
         <div className="pc-show-chat">
             <div className="pc-chat-part">
-                <ChatPartDefault />
+                <ChatPartDefault onQuestionClick={handleQuestionClick} />
             </div>
             
             <div className="pc-chat-content">
