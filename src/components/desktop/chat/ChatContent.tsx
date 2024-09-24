@@ -101,9 +101,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                         <IconButton type="submit" disabled={isChatEnded}>
                             <img src="/img/send.png" alt="Send" className="pc-chat-icon" />
                         </IconButton>
-                        <IconButton type="button" onClick={endstartChat} disabled={isChatEnded}>
-                            새로운 채팅 시작
-                        </IconButton>
                     </div>
                 </form>
             </div>

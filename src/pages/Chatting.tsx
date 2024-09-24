@@ -7,7 +7,6 @@ import ChatDetail from "../components/desktop/chat/ChatDetail";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-// Message 타입 정의
 interface Message {
   type: 'user' | 'bot' | 'error';
   text: string;
@@ -16,7 +15,7 @@ interface Message {
 const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
     const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
-    const { session_id } = useParams();  //과거기록보기 -> 현재 session_id가 아니라 요약에서 받은 session_id를 사용해야 함
+    const { session_id } = useParams();
     const [query, setQuery] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isChatEnded, setIsChatEnded] = useState(false);
@@ -42,13 +41,11 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         try {
             if (currentSession_id) {
-                //세션 종료
                 await axios.post('http://localhost:8080/chat/end-chat', null, { params: { session_id: currentSession_id } });
                 setIsChatEnded(true);
                 setMessages(prevMessages => [...prevMessages, { type: 'bot', text: '채팅이 종료되었습니다.' }]);
             }
-    
-            //새로운 세션 시작
+
             const response = await axios.post('http://localhost:8080/chat/start-new-chat');
             const newSession_id = response.data.session_id;
             setCurrentSession_id(newSession_id);
@@ -69,7 +66,6 @@ const Chatting: React.FC = () => {
                         chat_detail: {}
                     });
                     if (response.status === 500) {
-                        // 세션이 없을 경우 새로운 세션 생성
                         const newResponse = await axios.post('http://localhost:8080/chat/start-new-chat');
                         const newSession_id = newResponse.data.session_id;
                         setCurrentSession_id(newSession_id);
@@ -88,7 +84,8 @@ const Chatting: React.FC = () => {
             <Sidebar 
                 isCollapsed={isSidebarCollapsed} 
                 toggleSidebar={toggleSidebar} 
-                viewChatDetail={viewChatDetail} // 요약 클릭 이벤트 핸들러 전달
+                viewChatDetail={viewChatDetail}
+                endstartChat={endstartChat} // 추가된 부분
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
