@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 
 interface ChatSummary {
@@ -46,10 +47,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     useEffect(() => {
         const fetchChatSummaries = async () => {
             try {
-                //임시
-                const user_id = "kim123";
+                // 임시로 사용자 번호 1 사용
+                const user_no = 1;
 
-                const sessionIdsResponse = await axios.post('http://localhost:8080/chat/get-userinfo', { user_id });
+                const sessionIdsResponse = await axios.post('http://localhost:8080/chat/get-userinfo', { user_no });
                 const sessionIds = sessionIdsResponse.data;
 
                 console.log("세션아이디:", sessionIds);
@@ -59,10 +60,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                     return;
                 }
 
-                //채팅 요약 불러오기
+                // 채팅 요약 불러오기
                 const response = await axios.post('http://localhost:8080/chat/chat-record', sessionIds);
-                setChatSummaries(response.data); 
-                setFilteredSummaries(response.data); 
+                setChatSummaries(response.data);
+                setFilteredSummaries(response.data);
             } catch (error) {
                 console.error('채팅 요약 불러오기 오류:', error);
             }
@@ -88,15 +89,16 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     return (
         <div className="pc-chat-body">
             <TextField
-                id="outlined-basic"
+                placeholder="히스토리 검색"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                label="히스토리 검색"
                 variant="outlined"
-                sx={{ ...makeSx, width: '80%', padding: '0.2rem' }}
+                sx={makeSx}
                 InputProps={{
                     endAdornment: (
-                        <img className={"pc-chat-icon"} src={"/img/search.png"} alt={""} style={{ width: "1.5rem" }} />
+                        <InputAdornment position="end">
+                            <SearchIcon style={{ color: "#999" }} />
+                        </InputAdornment>
                     ),
                 }}
             />
