@@ -91,7 +91,12 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 variant="outlined"
-                sx={makeSx}
+                sx={{
+                    ...makeSx,
+                    '& input::placeholder': {
+                        textAlign: 'center',
+                    },
+                }}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">

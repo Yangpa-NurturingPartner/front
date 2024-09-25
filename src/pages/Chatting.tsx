@@ -8,8 +8,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 interface Message {
-  type: 'user' | 'bot' | 'error';
-  text: string;
+    type: 'user' | 'bot' | 'error';
+    text: string;
 }
 
 const Chatting: React.FC = () => {
@@ -55,6 +55,7 @@ const Chatting: React.FC = () => {
                 setMessages([]); //메시지 초기화
                 setQuery(''); //입력 초기화
                 setIsChatEnded(false); //채팅 활성화
+                setShowChatDetail(false); // 채팅 세부사항 숨김
             } else {
                 console.error('세션 ID를 받아오지 못했습니다.');
             }
@@ -62,7 +63,10 @@ const Chatting: React.FC = () => {
             console.error('채팅 종료 및 시작 오류:', error);
         }
     };
-     
+
+    const handleNewChat = () => {
+        endstartChat(); // 새로운 채팅 시작
+    };
 
     useEffect(() => {
         const checkSession = async () => {
@@ -96,7 +100,7 @@ const Chatting: React.FC = () => {
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
-                    <ChatDetail chatDetail={chatDetail} />
+                    <ChatDetail chatDetail={chatDetail} onNewChat={handleNewChat} />
                 ) : (
                     <ChatContent
                         messages={messages}

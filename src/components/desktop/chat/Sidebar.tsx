@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; 
 import Goback from "../../common/Goback";
 import SidebarContent from "./Sidebarcontent";
 
@@ -10,6 +11,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat }) => {
+    const navigate = useNavigate();
     
     return (
         <>
@@ -24,20 +26,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     onClick={toggleSidebar}
                     style={{ cursor: "pointer" }}
                 />
+                <div className={"pc-chat-sidebar-btn-newchat"}>
                 <img
                     src={"/img/write.png"}
                     alt={""}
                     onClick={async () => {
                         await endstartChat(); //새로운 채팅 시작
+                        navigate("/chat"); // 메인 채팅 페이지로 이동
                      }}
                     style={{
                         cursor: "pointer",
                         position: "absolute",
-                        left: isCollapsed ? '4vw' : '17vw',
+                        left: isCollapsed ? '4vw' : '13vw',
                         bottom: "0.2vh",
                         transition: "left 0.3s ease"
                     }}
                 />
+                </div>
             </div>
         </>
     );

@@ -94,15 +94,21 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             </div>
             
             <div className="pc-chat-content">
-                <div style={{ height: '100%', width: '100%', overflowY: 'auto', paddingBottom: '10vh' }}>
-                    <div style={{ padding: '10px' }}>
-                        {messages.map((msg, index) => (
-                            <div key={index} className={`message ${msg.type}`} style={{ margin: '5px 0' }}>
+                <div className="message-container">
+                    {messages.map((msg, index) => (
+                        <div key={index}>
+                            <div 
+                                className={`message ${msg.type}`}
+                                style={{
+                                    fontSize: '15px'
+                                }}
+                                >
                                 <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
+
                 <form onSubmit={handleSubmit} className="pc-chat-input">
                     <TextField
                         id="outlined-basic"
