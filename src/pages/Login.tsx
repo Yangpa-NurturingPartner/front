@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
         // console.log(credentialResponse);
 
         // 백엔드로 POST 요청 보내기
-        fetch('http://localhost:8081/api/google-login', {
+        fetch('http://localhost:8080/api/google-login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,12 +54,12 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <GoogleOAuthProvider clientId="clientID">
+        <GoogleOAuthProvider clientId="597389730622-1qsc90pogdcg8crjid8qsd0d20t2f1vi.apps.googleusercontent.com">
             <div className="login-page">
                 <div className="login-container">
                     <div className="image-container">
                         <img src="/img/mainPaint.png" alt="Mother and child with onion character"
-                             className="login-image" />
+                            className="login-image" />
                         <p className="image-caption">"이번 생에 부모는 처음이니까"<br />저희가 함께 도와드리겠습니다.</p>
                     </div>
                     <div className="form-container">

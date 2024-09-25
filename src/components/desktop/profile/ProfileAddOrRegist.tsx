@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import {TextField} from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TextField } from "@mui/material";
 
-interface profileProps {
+interface ProfileAddOrRegistProps {
     setRegis: React.Dispatch<React.SetStateAction<boolean>>;
+    onProfileAdded: () => void;
 }
 
-const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
+const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onProfileAdded }) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,17 +30,17 @@ const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
                 <span>아이 등록</span>
             </div>
 
-            <div className={"pc-profile-ar-close"}
-                 onClick={() => setRegis(false)}
-            >
-                <img src={"/img/close.png"} alt={""}/>
+            <div className={"pc-profile-ar-close"} onClick={() => setRegis(false)}>
+                <img src={"/img/close.png"} alt={""} />
             </div>
 
             <div className={"pc-profile-ar-body"}>
-                <div className={"pc-profile-ar-register-img-box"}
-                     onClick={() => document.getElementById('image-upload')?.click()}>
+                <div
+                    className={"pc-profile-ar-register-img-box"}
+                    onClick={() => document.getElementById("image-upload")?.click()}
+                >
                     <div className={"pc-profile-ar-register-img"}>
-                        <img src={selectedImage || "/img/addChild.png"} alt={""}/>
+                        <img src={selectedImage || "/img/addChild.png"} alt={""} />
                     </div>
 
                     <span>아이 등록</span>
@@ -47,7 +48,7 @@ const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
                         type="file"
                         id="image-upload"
                         accept="image/*"
-                        style={{display: "none"}}
+                        style={{ display: "none" }}
                         onChange={handleImageChange}
                     />
                 </div>
@@ -58,7 +59,7 @@ const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
                             <span>이름/ 애칭</span>
                             <span className={"pc-profile-ar-star"}>*</span>
                         </div>
-                        <TextField id="outlined-basic"/>
+                        <TextField id="outlined-basic" />
                     </div>
 
                     <div className={"pc-profile-ar-input-box"}>
@@ -68,7 +69,7 @@ const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
                         </div>
 
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker/>
+                            <DatePicker />
                         </LocalizationProvider>
                     </div>
 
@@ -79,18 +80,29 @@ const ProfileAddOrRegist: React.FC<profileProps> = ({setRegis}) => {
                         </div>
 
                         <div className={"pc-profile-ar-choose-sex"}>
-                            <Button className="MuiButton-contained" variant="contained">남자</Button>
-                            <Button className="MuiButton-outlined" variant="outlined">여자</Button>
+                            <Button className="MuiButton-contained" variant="contained">
+                                남자
+                            </Button>
+                            <Button className="MuiButton-outlined" variant="outlined">
+                                여자
+                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div>
-                <Button id="register-button" variant="contained" size={"large"}>등록 완료</Button>
+                <Button
+                    id="register-button"
+                    variant="contained"
+                    size={"large"}
+                    onClick={onProfileAdded}  // 등록 완료 버튼 클릭 시 onProfileAdded 함수 호출
+                >
+                    등록 완료
+                </Button>
             </div>
         </>
     );
-}
+};
 
 export default ProfileAddOrRegist;
