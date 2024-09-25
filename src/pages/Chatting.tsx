@@ -92,6 +92,19 @@ const Chatting: React.FC = () => {
             addInitialMessages();
             setIsInitialQueryAnswered(true); // 대답을 보여줬냐? -> 네
         }
+
+        //페이지 나가면 채팅 종료
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = '';
+            endstartChat();
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
     }, [sessionId, initialQuery, initialAnswer, isInitialQueryAnswered]);
 
     return (
