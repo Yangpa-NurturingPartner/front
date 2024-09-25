@@ -35,30 +35,32 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, onNewChat }) => {
   };
 
   return (
-    <div className="pc-chat-content">
-      <header className="chat-header">
-        <h1>채팅 기록</h1>
-      </header>
-      <div className="message-container">
-        {messages.length > 0 ? (
-          messages
-            .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-            .map((msg, index) => (
-              <div key={index}>
-                <div 
-                  className={`message ${msg.type}`}
-                  style={{
-                    fontSize: '15px'
-                  }}
-                >
-                  <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
-                  <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
+    <div className="pc-show-chat">
+      <div className="pc-chat-content">
+        <header className="chat-header">
+          <h1>채팅 기록</h1>
+        </header>
+        <div className="message-container">
+          {messages.length > 0 ? (
+            messages
+              .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+              .map((msg, index) => (
+                <div key={index}>
+                  <div 
+                    className={`message ${msg.type}`}
+                    style={{
+                      fontSize: '15px'
+                    }}
+                  >
+                    <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
+                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
+                  </div>
                 </div>
-              </div>
-            ))
-        ) : (
-          <div className="no-records">채팅 기록이 없습니다.</div>
-        )}
+              ))
+          ) : (
+            <div className="no-records">채팅 기록이 없습니다.</div>
+          )}
+        </div>
       </div>
     </div>
   );

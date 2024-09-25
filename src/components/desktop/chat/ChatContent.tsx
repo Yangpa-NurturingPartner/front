@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction } from "react";
-import { TextField, IconButton } from "@mui/material";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { TextField, IconButton, CircularProgress } from "@mui/material";
 import axios from "axios";
 import ChatPartDefault from "./ChatPartDefault";
 
@@ -19,6 +19,8 @@ interface ChatContentProps {
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id }) => {
+    const [isLoading, setIsLoading] = useState(false); //로딩 상태
+    const [showAsk, setShowAsk] = useState(true); //간편질문 보여주는 부분
     const makeSx = {
         width: "70%",
         backgroundColor: "#F4F4F4",
@@ -47,41 +49,41 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-    
-        // 로그 추가
-        console.log("send 버튼 클릭됨");
-        console.log("isChatEnded:", isChatEnded);
-        console.log("session_id:", session_id);
-        console.log("query:", query.trim());
-    
+
+        if (messages.length > 0) {
+            setShowAsk(false); // 예: 메시지가 있을 경우 pc-ask 숨김
+        }
+
         if (isChatEnded || !session_id || !query.trim()) {
             if (isChatEnded) {
                 alert('채팅이 종료되었습니다. 새 채팅을 시작해주세요.');
             }
             return;
         }
-    
+
         const userMessage: Message = { type: 'user', text: query };
         setMessages(prevMessages => [...prevMessages, userMessage]);
-    
+
+        setIsLoading(true); // 로딩 시작
         try {
             const response = await axios.post('http://localhost:8080/chat/message', {
                 session_id,
                 chat_detail: { query }
             });
-    
+
             const botAnswer = response.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: 'bot', text: botAnswer };
-    
+
             setMessages(prevMessages => [...prevMessages, botMessage]);
             setQuery('');
         } catch (error) {
             const errorMessage: Message = { type: 'error', text: '오류가 발생했습니다.' };
             setMessages(prevMessages => [...prevMessages, errorMessage]);
             console.error('오류 발생:', error);
+        } finally {
+            setIsLoading(false); // 로딩 끝
         }
     };
-    
 
     const handleQuestionClick = (question: string) => {
         setQuery(question);
@@ -90,7 +92,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     return (
         <div className="pc-show-chat">
             <div className="pc-chat-part">
-                <ChatPartDefault onQuestionClick={handleQuestionClick} />
+                <ChatPartDefault onQuestionClick={handleQuestionClick} showAsk={showAsk} />
             </div>
             
             <div className="pc-chat-content">
@@ -109,6 +111,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                     ))}
                 </div>
 
+                {isLoading && ( // 로딩 중이면 로딩 스피너 표시
+                    <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                        <CircularProgress />
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="pc-chat-input">
                     <TextField
                         id="outlined-basic"
@@ -117,11 +125,11 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                         sx={makeSx}
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        disabled={isChatEnded}
+                        disabled={isChatEnded || isLoading} // 로딩 중일 때 입력 비활성화
                         className="pc-chat-body-searchInput"
                     />
                     <div style={{ display: 'flex', marginTop: '10px' }}>
-                        <IconButton type="submit" disabled={isChatEnded}>
+                        <IconButton type="submit" disabled={isChatEnded || isLoading}> {/* 로딩 중일 때 버튼 비활성화 */}
                             <img src="/img/send.png" alt="Send" className="pc-chat-icon" />
                         </IconButton>
                     </div>
