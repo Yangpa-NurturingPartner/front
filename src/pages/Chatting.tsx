@@ -44,6 +44,7 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         try {
             if (currentSession_id) {
+                console.log('채팅 종료 요청:', currentSession_id);
                 await axios.post('http://localhost:8080/chat/end-chat', null, { params: { session_id: currentSession_id } });
                 setMessages(prevMessages => [...prevMessages, { type: 'bot', text: '채팅이 종료되었습니다.' }]);
                 setIsChatEnded(true);
@@ -51,7 +52,7 @@ const Chatting: React.FC = () => {
     
             const response = await axios.post('http://localhost:8080/chat/start-new-chat');
             const newSession_id = response.data.session_id;
-    
+        
             if (newSession_id) {
                 setCurrentSession_id(newSession_id);
                 setMessages([]); 
@@ -59,6 +60,7 @@ const Chatting: React.FC = () => {
                 setIsChatEnded(false); 
                 setShowChatDetail(false); 
                 setIsInitialQueryAnswered(false); 
+                console.log('새로운 채팅 시작:', newSession_id); 
             } else {
                 console.error('세션 ID를 받아오지 못했습니다.');
             }
@@ -66,7 +68,7 @@ const Chatting: React.FC = () => {
             console.error('채팅 종료 및 시작 오류:', error);
         }
     };
-
+    
     const handleNewChat = () => {
         endstartChat(); 
     };
@@ -94,16 +96,15 @@ const Chatting: React.FC = () => {
         }
 
         //페이지 나가면 채팅 종료
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            event.preventDefault();
-            event.returnValue = '';
-            endstartChat();
+        const handleUnload = async (event: BeforeUnloadEvent) => {
+            console.log("페이지 종료 이벤트 발생");
+            await endstartChat();
         };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
+    
+        window.addEventListener("unload", handleUnload);
+    
         return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
+            window.removeEventListener("unload", handleUnload);
         };
     }, [sessionId, initialQuery, initialAnswer, isInitialQueryAnswered]);
 

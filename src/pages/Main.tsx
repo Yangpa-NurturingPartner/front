@@ -14,12 +14,14 @@ const Main: React.FC = () => {
 
     useEffect(() => {
         const startNewChat = async () => {
-            const response = await axios.post('http://localhost:8080/chat/start-new-chat');
-            setSessionId(response.data.session_id);
+            if (!sessionId) { // sessionId가 없는 경우에만 새로운 채팅 시작
+                const response = await axios.post('http://localhost:8080/chat/start-new-chat');
+                setSessionId(response.data.session_id);
+            }
         };
-
-        startNewChat(); // 컴포넌트가 마운트될 때 새로운 채팅 시작
-    }, []);
+    
+        startNewChat();
+    }, [sessionId]);
 
     //질문이랑 답변을 채팅페이지로 보냄
     const handleMainQuery = async (query: string) => { 
