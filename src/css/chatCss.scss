@@ -1,5 +1,6 @@
 body {
   box-sizing: border-box; /* 패딩과 테두리를 width에 포함*/
+  overflow-x: hidden;
 }
 
 .pc-chat-sidebar {
@@ -61,10 +62,22 @@ body {
   overflow-y: auto;
   flex-grow: 1;
   padding: 0.5rem 0.5rem;
+  position: relative;  /* 추가: 상대적 위치 설정 */
+
+  /* 웹킷 기반 브라우저용 스크롤바 스타일 */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #4280c2c7;
+    border-radius: 4px;
+  }
 
   .pc-chat-body-searchHistory-box {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    padding-right: 10px;  /* 내용이 스크롤바와 겹치지 않도록 패딩 추가 */
 
     .pc-chat-body-day {
       font-size: 1.2rem;
@@ -79,21 +92,19 @@ body {
       background: white;
       min-height: 6vh;
       width: 95%;
-      white-space: pre-wrap; 
+      white-space: pre-wrap;
       word-wrap: break-word;
       padding: 0.5rem;
-      text-align: center; 
+      text-align: center;
     }
   }
 }
-
 
 .content-container {
   position: absolute;
   top: 8.3%;
   bottom: 0;
   right: 0;
-  left: 15vw; /* 사이드바의 너비와 맞춤 */
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
   overflow: hidden;
@@ -101,7 +112,7 @@ body {
 
   &.collapsed { /* 사이드바가 접힐 때 */
     left: 5; 
-    width: calc(100vw - 10.4vw);/* 사이드바가 접힐 때 채팅 기록이 전체 화면을 차지하도록 설정 */
+    width: calc(100vw - 10vw);/* 사이드바가 접힐 때 채팅 기록이 전체 화면을 차지하도록 설정 */
   }
 
   &.expanded { /* 사이드바가 확장될 때 */
@@ -109,7 +120,6 @@ body {
     width: calc(100vw - 15vw); 
   }
 }
-
 
 .pc-show-chat {
   font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
@@ -205,6 +215,7 @@ body {
 .message-container {
   flex-grow: 1;
   overflow-y: auto;
+  width: 80vw;
   padding: 50px;
   padding-bottom: 8vh; /*pc-chat-input 높이만큼의 여백추가 */
 }
