@@ -47,20 +47,32 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (isChatEnded || !session_id || !query.trim()) return;
-
+    
+        // 로그 추가
+        console.log("send 버튼 클릭됨");
+        console.log("isChatEnded:", isChatEnded);
+        console.log("session_id:", session_id);
+        console.log("query:", query.trim());
+    
+        if (isChatEnded || !session_id || !query.trim()) {
+            if (isChatEnded) {
+                alert('채팅이 종료되었습니다. 새 채팅을 시작해주세요.');
+            }
+            return;
+        }
+    
         const userMessage: Message = { type: 'user', text: query };
         setMessages(prevMessages => [...prevMessages, userMessage]);
-
+    
         try {
             const response = await axios.post('http://localhost:8080/chat/message', {
                 session_id,
                 chat_detail: { query }
             });
-
+    
             const botAnswer = response.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: 'bot', text: botAnswer };
-
+    
             setMessages(prevMessages => [...prevMessages, botMessage]);
             setQuery('');
         } catch (error) {
@@ -69,6 +81,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             console.error('오류 발생:', error);
         }
     };
+    
 
     const handleQuestionClick = (question: string) => {
         setQuery(question);
@@ -81,15 +94,21 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             </div>
             
             <div className="pc-chat-content">
-                <div style={{ height: '100%', width: '100%', overflowY: 'auto', paddingBottom: '10vh' }}>
-                    <div style={{ padding: '10px' }}>
-                        {messages.map((msg, index) => (
-                            <div key={index} className={`message ${msg.type}`} style={{ margin: '5px 0' }}>
+                <div className="message-container">
+                    {messages.map((msg, index) => (
+                        <div key={index}>
+                            <div 
+                                className={`message ${msg.type}`}
+                                style={{
+                                    fontSize: '15px'
+                                }}
+                                >
                                 <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
+
                 <form onSubmit={handleSubmit} className="pc-chat-input">
                     <TextField
                         id="outlined-basic"
