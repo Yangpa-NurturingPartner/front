@@ -21,16 +21,16 @@ const Main: React.FC = () => {
         startNewChat(); // 컴포넌트가 마운트될 때 새로운 채팅 시작
     }, []);
 
-    //질문 제출
-    const handleMainQuery = async (question: string) => { 
-        console.log("질문 제출:", question);
-        setQuery(question);
+    //질문이랑 답변을 채팅페이지로 보냄
+    const handleMainQuery = async (query: string) => { 
+        console.log("질문 제출:", query);
+        setQuery(query);
         try {
             const response = await axios.post('http://localhost:8080/chat/message', {
                 session_id: sessionId,
-                chat_detail: { query: question }
+                chat_detail: { query: query }
             });
-            navigate('/chat');
+            navigate('/chat', { state: { sessionId, query, answer: response.data.answer } });
             console.log("응답:", response.data); // 응답 로그 추가
         } catch (error) {
             console.error("질문 제출 오류:", error);
