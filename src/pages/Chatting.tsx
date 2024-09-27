@@ -15,8 +15,8 @@ const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false); // 사이드바 상태
     const location = useLocation(); 
     const [sessionId, setSessionId] = useState<string | null>(location.state?.sessionId || null); // 메인에서 이어지는 세션 ID
-    const initialQuery = location.state?.query; // 초기 쿼리
-    const initialAnswer = location.state?.answer; // 초기 답변
+    const [initialQuery, setInitialQuery] = useState(location.state?.query || null);
+    const [initialAnswer, setInitialAnswer] = useState(location.state?.answer || null); 
     const [query, setQuery] = useState(''); // 사용자 쿼리
     const [messages, setMessages] = useState<Message[]>([]); // 메시지 목록
     const [isChatEnded, setIsChatEnded] = useState(false); // 채팅 종료 상태
@@ -127,11 +127,14 @@ const Chatting: React.FC = () => {
             addInitialMessages();
             setIsInitialQueryAnswered(true);
             console.log("메인페이지에서 질답 받아옴");
+            setInitialQuery(null);
+            setInitialAnswer(null);
         }
     
         // 페이지 언로드 이벤트 핸들러
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             console.log("handleBeforeUnload 실행됨");
+            endSession();
         };
     
         window.addEventListener("beforeunload", handleBeforeUnload);
@@ -139,13 +142,7 @@ const Chatting: React.FC = () => {
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [ initialQuery, initialAnswer, isInitialQueryAnswered]);
-
-    useEffect(() => {
-        if (session_id) {
-            console.log("할당된세션아이디 : " + session_id);
-        }
-    }, [session_id]);
+    }, []);
     
     
     return (
