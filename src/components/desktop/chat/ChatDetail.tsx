@@ -29,11 +29,6 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, onNewChat }) => {
     setMessages([...newMessages, ...botMessages]); //사용자 메시지와 봇 메시지를 합쳐서 상태 업데이트
   }, [chatDetail]); //chatDetail이 변경될 때마다 effect 실행
 
-  const handleNewChat = () => {
-    setMessages([]); //메시지 초기화
-    onNewChat(); //새로운 채팅
-  };
-
   return (
     <div className="pc-show-chat">
       <div className="pc-chat-content">

@@ -2,35 +2,33 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import Sidebar from "../components/desktop/chat/Sidebar";
 import "../css/chatCss.scss";
-import { useMediaQuery } from "react-responsive";
 import ChatContent from "../components/desktop/chat/ChatContent";
 import ChatDetail from "../components/desktop/chat/ChatDetail";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 interface Message {
-    type: 'user' | 'bot' | 'error';
-    text: string;
+    type: 'user' | 'bot' | 'error'; // 메시지 유형 정의
+    text: string; // 메시지 텍스트
 }
 
 const Chatting: React.FC = () => {
-    const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
+    const [isSidebarCollapsed, setSidebarCollapsed] = useState(false); // 사이드바 상태
     const location = useLocation(); 
-    const sessionId = location.state?.sessionId; 
-    const initialQuery = location.state?.query; 
-    const initialAnswer = location.state?.answer; 
-    const [query, setQuery] = useState('');
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [isChatEnded, setIsChatEnded] = useState(false);
-    const [currentSession_id, setCurrentSession_id] = useState<string | null>(sessionId || null);
-    const [chatDetail, setChatDetail] = useState<any[]>([]); 
-    const [showChatDetail, setShowChatDetail] = useState(false);
-    const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false);
-    const [isSessionEnded, setIsSessionEnded] = useState(false);
+    const [sessionId, setSessionId] = useState<string | null>(location.state?.sessionId || null); // 메인에서 이어지는 세션 ID
+    const initialQuery = location.state?.query; // 초기 쿼리
+    const initialAnswer = location.state?.answer; // 초기 답변
+    const [query, setQuery] = useState(''); // 사용자 쿼리
+    const [messages, setMessages] = useState<Message[]>([]); // 메시지 목록
+    const [isChatEnded, setIsChatEnded] = useState(false); // 채팅 종료 상태
+    const [session_id, setSession_id] = useState<string | null>(null); // 현재 세션 ID
+    const [chatDetail, setChatDetail] = useState<any[]>([]); // 채팅 상세 내용
+    const [showChatDetail, setShowChatDetail] = useState(false); // 채팅 상세 보기 상태
+    const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false); // 초기 질문 응답 상태
 
-    const viewChatDetail = async (sessionId: string) => {
+    // 채팅 상세 내용 보기 함수
+    const viewChatDetail = async (session_id: string) => {
         try {
-            const response = await axios.get(`http://localhost:8080/chat/chat-record-view/${sessionId}`);
+            const response = await axios.get(`http://localhost:8000/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data);
             setShowChatDetail(true);
         } catch (error) {
@@ -38,92 +36,129 @@ const Chatting: React.FC = () => {
         }
     };
 
+    // 사이드바 토글 함수
     const toggleSidebar = () => {
         setSidebarCollapsed(prev => !prev);
     };
 
-    const endstartChat = async () => {
-        if (isSessionEnded) {
-            console.log("종료된 세션");
-            return; 
-        }
-        setIsSessionEnded(true); // 종료 상태로 변경
+    // 세션 종료 함수
+    const endSession = async () => {
         try {
-            if (currentSession_id) {
-                await axios.post('http://localhost:8080/chat/end-chat', null, { params: { session_id: currentSession_id } });
-                console.log("채팅 종료");
-                setIsChatEnded(true);
-            }
-            // 새로운 채팅 세션 시작
-            const response = await axios.post('http://localhost:8080/chat/start-new-chat');
-            const newSession_id = response.data.session_id;
-    
-            if (newSession_id) {
-                setCurrentSession_id(newSession_id);
-                setMessages([]);
-                setQuery('');
-                setIsChatEnded(false);
-                setShowChatDetail(false);
-                setIsInitialQueryAnswered(false);
-                console.log("채팅 새로 시작");
-            } else {
-                console.error('세션 ID를 받아오지 못했습니다.');
-            }
+            await axios.post('http://localhost:8000/chat/end-chat', null, { params: { session_id:  localStorage.getItem("localsession_id") } });
+            console.log("채팅이 종료되었습니다.");
+            setMessages(prevMessages => [...prevMessages, { type: 'bot', text: '채팅이 종료되었습니다.' }]);
+            setIsChatEnded(true);
+            localStorage.removeItem("localsession_id"); //로컬스토리지에서 세션 ID 삭제
+            console.log("null이나와야함 = " +  localStorage.getItem("localsession_id"));
+
         } catch (error) {
-            console.error('채팅 종료 및 시작 오류:', error);
+            const axiosError = error as AxiosError;
+            console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
         }
-    };
-    
-    const handleNewChat = () => {
-        endstartChat(); 
     };
 
+    // 새로운 채팅 시작 함수
+    const endstartChat = async () => {
+        await endSession(); // 이전 세션 종료
+        console.log("채팅 종료 및 새 세션 시작 요청 전송");
+    
+        try {
+            const response = await axios.post('http://localhost:8000/chat/start-new-chat', null, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+    
+            console.log('Response:', response);
+    
+            const newSession_id = response.data.session_id; // 새로운 세션 ID 가져오기
+            console.log("newSession_id = " + newSession_id);
+    
+            if (newSession_id) {
+                setSession_id(newSession_id); // 새로운 세션 ID 상태 업데이트
+                localStorage.setItem("localsession_id", newSession_id); // 세션 ID를 로컬 스토리지에 저장
+                console.log("localStorage.getItem = " + localStorage.getItem("localsession_id"));
+
+                setMessages([]); // 메시지 초기화
+                setQuery(''); // 쿼리 초기화
+                setIsChatEnded(false); // 채팅 종료 상태 초기화
+                setShowChatDetail(false); // 채팅 상세 보기를 초기화
+                setIsInitialQueryAnswered(false); // 초기 질문 응답 상태 초기화
+                console.log("endstartChat + 채팅 새로 시작");
+                console.log("할당된세션아이디 : " + session_id);
+            } else {
+                console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
+            }
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.error('endstartChat + 채팅 종료 및 시작 오류:',  axiosError.response ? axiosError.response.data : axiosError.message);
+        }
+    };
+
+    // 초기 메시지 추가 함수
     const addInitialMessages = async () => {
         const userMessage: Message = { type: 'user', text: initialQuery };
         const botMessage: Message = { type: 'bot', text: initialAnswer };
 
         await new Promise<void>((resolve) => {
             setMessages(prevMessages => {
-                resolve(); // 상태 업데이트 완료 후 resolve
+                resolve();
                 return [...prevMessages, userMessage, botMessage];
             });
-        });      
+        });
     };
 
     useEffect(() => {
-        if (sessionId) {
-            setCurrentSession_id(sessionId);
+        if (sessionId) { //메인에서 이어지는 경우
+            console.log("메인에서온 sessionId= " + sessionId);
+            setSession_id(sessionId); // 로컬 스토리지의 세션 ID로 업데이트
+            console.log("메인에서 넘겨준 session_id = " + session_id);
+            setSessionId(null);
+            console.log("sessionId nul나와야함 = " + sessionId);
+        } else{
+            console.error('session_id가 존재하지 않습니다. 새 채팅 세션 시작.');
+            endstartChat(); // 새 채팅 세션 시작
         }
 
-        if (initialQuery && initialAnswer && !isInitialQueryAnswered) { // main에서 온 대답을 아직 화면에 안보여줬을때 실행
+        console.log('새로운 session_id:', session_id);
+    
+        // 초기 쿼리와 초기 답변이 있을 경우 메시지 추가
+        if (initialQuery && initialAnswer && !isInitialQueryAnswered) {
             addInitialMessages();
-            setIsInitialQueryAnswered(true); // 대답을 보여줬냐? -> 네
+            setIsInitialQueryAnswered(true);
+            console.log("메인페이지에서 질답 받아옴");
         }
-
-        //페이지 나가면 채팅 종료
-        const handleUnload = async (event: BeforeUnloadEvent) => {
-            console.log("페이지 종료 이벤트 발생");
-            await endstartChat();
+    
+        // 페이지 언로드 이벤트 핸들러
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            console.log("handleBeforeUnload 실행됨");
         };
     
-        window.addEventListener("unload", handleUnload);
+        window.addEventListener("beforeunload", handleBeforeUnload);
     
         return () => {
-            window.removeEventListener("unload", handleUnload);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
         };
-    }, [sessionId, initialQuery, initialAnswer, isInitialQueryAnswered]);
+    }, [ initialQuery, initialAnswer, isInitialQueryAnswered]);
 
+    useEffect(() => {
+        if (session_id) {
+            console.log("할당된세션아이디 : " + session_id);
+        }
+    }, [session_id]);
+    
+    
     return (
         <>
             <Sidebar 
                 isCollapsed={isSidebarCollapsed} 
                 toggleSidebar={toggleSidebar} 
                 viewChatDetail={viewChatDetail}
-                endstartChat={endstartChat}
+                endstartChat={endstartChat} // 새 채팅 시작 핸들러 전달
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
-                    <ChatDetail chatDetail={chatDetail} onNewChat={handleNewChat} />
+                    <ChatDetail chatDetail={chatDetail} onNewChat={endstartChat} />
                 ) : (
                     <ChatContent
                         messages={messages}
@@ -132,7 +167,7 @@ const Chatting: React.FC = () => {
                         setQuery={setQuery}
                         isChatEnded={isChatEnded}
                         endstartChat={endstartChat}
-                        session_id={currentSession_id || ''}
+                        session_id={session_id || ''} // 세션 ID 전달
                     />
                 )}
             </div>

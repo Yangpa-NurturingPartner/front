@@ -50,7 +50,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 //임시로 사용자 번호 1 사용
                 const user_no = 1;
 
-                const sessionIdsResponse = await axios.post('http://localhost:8080/chat/get-userinfo', { user_no });
+                const sessionIdsResponse = await axios.post('http://localhost:8000/chat/get-userinfo', { user_no });
                 const sessionIds = sessionIdsResponse.data;
 
                 if (!sessionIds || sessionIds.length === 0) {
@@ -59,7 +59,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 }
 
                 //채팅 요약 불러오기
-                const response = await axios.post('http://localhost:8080/chat/chat-record', sessionIds);
+                const response = await axios.post('http://localhost:8000/chat/chat-record', sessionIds);
                 setChatSummaries(response.data);
                 setFilteredSummaries(response.data);
             } catch (error) {

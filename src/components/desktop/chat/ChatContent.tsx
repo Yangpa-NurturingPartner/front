@@ -66,9 +66,9 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
         setIsLoading(true); // 로딩 시작
         try {
-            const response = await axios.post('http://localhost:8080/chat/message', {
+            const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id,
-                chat_detail: { query }
+                chat_detail: query
             });
 
             const botAnswer = response.data.answer || '답변이 없습니다.';
