@@ -1,50 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useMediaQuery } from "react-responsive";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { setSelectedProfile } from '../../../redux/slices/profileSlice';
 import "../commonCss.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import HeaderMenu from "./HeaderMenu";
 
-interface ProfileData {
-    childId: number;
-    name: string;
-    sex: number;
-    birthdate: string;
-    imageProfile: string;
-}
-
 const Header: React.FC = () => {
     const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
-    const [selectedProfile, setSelectedProfile] = useState<ProfileData | null>(null);
-    const [profileList, setProfileList] = useState<ProfileData[]>([]);
-    const [token, setToken] = useState<string | null>(null);
+    const dispatch = useDispatch();
+    const profileList = useSelector((state: RootState) => state.profile.profiles);
+    const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
     useEffect(() => {
-        const storedProfileData = localStorage.getItem('profileList');
         const storedSelectedProfile = localStorage.getItem('selectedProfile');
-        const storedToken = localStorage.getItem('jwtToken');
-
-        if (storedToken) {
-            setToken(storedToken);
+        if (storedSelectedProfile) {
+            dispatch(setSelectedProfile(JSON.parse(storedSelectedProfile)));
         }
-
-        if (storedProfileData) {
-            const parsedProfileList = JSON.parse(storedProfileData);
-            setProfileList(parsedProfileList);
-
-            if (storedSelectedProfile) {
-                setSelectedProfile(JSON.parse(storedSelectedProfile));
-            } else if (parsedProfileList.length > 0) {
-                setSelectedProfile(parsedProfileList[0]);
-            }
-        }
-    }, [selectedProfile]);
+    }, [dispatch]);
 
     const handleChange = (event: SelectChangeEvent) => {
         const selectedChildId = Number(event.target.value);
         const newSelectedProfile = profileList.find(profile => profile.childId === selectedChildId) || null;
-
         if (newSelectedProfile) {
-            setSelectedProfile(newSelectedProfile);
+            dispatch(setSelectedProfile(newSelectedProfile));
             localStorage.setItem('selectedProfile', JSON.stringify(newSelectedProfile));
         }
     };
@@ -65,7 +45,7 @@ const Header: React.FC = () => {
                             inputProps={{ 'aria-label': 'Without label' }}
                             style={{ height: "100%" }}
                         >
-                            {profileList.map(profile => (
+                            {profileList.map((profile) => (
                                 <MenuItem key={profile.childId} value={profile.childId}>
                                     {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
                                 </MenuItem>

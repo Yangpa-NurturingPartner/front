@@ -35,9 +35,11 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
     };
 
     const handleLogout = () => {
+        // 로그아웃 시 로컬 스토리지에서 토큰과 프로필 정보 제거
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('selectedProfile');
         localStorage.removeItem('profileList');
+        // 로그인 페이지로 리다이렉트
         navigate('/login');
     };
 
