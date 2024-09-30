@@ -15,7 +15,6 @@ const Main: React.FC = () => {
         try {
             const response = await axios.post('http://localhost:8000/chat/start-new-chat');
             setSessionId(response.data.session_id);
-            console.log("sessionId:", sessionId);
             localStorage.setItem("localsession_id", response.data.session_id); //세션 ID를 로컬 스토리지에 저장
             console.log("메인 로컬스토리지 저장 = " + localStorage.getItem("localsession_id"));
         } catch (error) {

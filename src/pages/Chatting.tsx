@@ -47,8 +47,9 @@ const Chatting: React.FC = () => {
         try {
             await axios.post('http://localhost:8000/chat/end-chat', null, { params: { session_id: localStorage.getItem("localsession_id") } });
             console.log("채팅이 종료되었습니다.");
-            
-            // 메시지 초기화
+
+            setInitialAnswer([]);
+            setInitialQuery([]);
             setMessages([]); // 화면에 보여지는 메시지 초기화
             
             setIsChatEnded(true);
@@ -113,11 +114,13 @@ const Chatting: React.FC = () => {
         if (sessionId) { //메인에서 이어지는 경우
             console.log("메인에서온 sessionId= " + sessionId);
             setSession_id(sessionId); // 로컬 스토리지의 세션 ID로 업데이트
+            console.log("session_id = " + session_id); //null 나옴
             setSessionId(null);
+            console.log("null나와야함 = " + sessionId); //초기화 안된 세션아이디 나옴
         } else {
             console.error('session_id가 존재하지 않습니다. 새 채팅 세션 시작.');
-            endSession(); // 세션 종료
-            endstartChat(); // 새 세션 시작
+            endSession(); 
+            endstartChat();
         }
     
         const initializeChat = async () => {
@@ -127,17 +130,17 @@ const Chatting: React.FC = () => {
                 console.log("메인페이지에서 받아옴");
                 setInitialQuery(null); 
                 setInitialAnswer(null);
-                //setMessages([]);
-                console.log("초기화됐나요? -> " + messages);
             }
         };
     
         initializeChat();
     
-        // 페이지 언로드 이벤트 핸들러
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        //페이지를 나갈때
+        const handleBeforeUnload = async(event: BeforeUnloadEvent) => {
             console.log("handleBeforeUnload 실행됨");
             if(sessionId){
+                await setSessionId(null);
+                console.log("초기화가되어야함... : " + sessionId);
                 endSession(); //메인에서 이어짐
             }
         };
@@ -146,6 +149,7 @@ const Chatting: React.FC = () => {
     
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
+            console.log("페이지 새로고침");
             if(!sessionId){
                 endSession(); //채팅페이지에서 채팅
             }
