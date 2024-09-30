@@ -1,29 +1,47 @@
-import React from "react";
-import {MenuItem} from "@mui/material";
+import React, { useEffect } from "react";
+import { MenuItem } from "@mui/material";
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
-const HeaderMenu:React.FC = () => {
+interface HeaderMenuProps {
+    selectedProfile: any;
+}
 
+const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 디버깅: 선택된 프로필 데이터 확인
+        console.log('Selected Profile in HeaderMenu:', selectedProfile);
+    }, [selectedProfile]);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    return(
+    const handleLogout = () => {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('selectedProfile');
+        localStorage.removeItem('profileList');
+        navigate('/login');
+    };
+
+    return (
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
             <Tooltip title="Account settings">
                 <IconButton
@@ -34,7 +52,17 @@ const HeaderMenu:React.FC = () => {
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                    <Avatar sx={{ width: 32, height: 32 }}>
+                        {selectedProfile?.imageProfile ? (
+                            <img
+                                src={`data:image/png;base64,${selectedProfile.imageProfile}`}
+                                alt=""
+                                style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+                            />
+                        ) : (
+                            selectedProfile?.name?.charAt(0) || 'M'
+                        )}
+                    </Avatar>
                 </IconButton>
             </Tooltip>
 
@@ -94,7 +122,7 @@ const HeaderMenu:React.FC = () => {
                     </ListItemIcon>
                     Settings
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
                     </ListItemIcon>
@@ -102,7 +130,7 @@ const HeaderMenu:React.FC = () => {
                 </MenuItem>
             </Menu>
         </Box>
-    )
-}
+    );
+};
 
 export default HeaderMenu;
