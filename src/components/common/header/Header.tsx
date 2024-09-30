@@ -3,8 +3,14 @@ import {useMediaQuery} from "react-responsive";
 import "../commonCss.scss"
 import {FormControl, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import HeaderMenu from "./HeaderMenu";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
+
+    const navigate = useNavigate();
+
+    const onClickHandler = () => navigate("/");
+
     const isPortrait = useMediaQuery({query: '(orientation: portrait)'});
 
     const [age, setAge] = React.useState('');
@@ -15,9 +21,12 @@ const Header: React.FC = () => {
 
     return (
         <div>
-            <div className={isPortrait ? "ph-header" : "pc-header"}>
+            <div className={isPortrait ? "ph-header" : "pc-header"} >
+            
                 <div className={isPortrait ? "" : "pc-img-div"}>
-                    <img className={isPortrait ? "ph-logo-img" : "pc-logo-img"} src="/img/logo.png" alt={""}/>
+                    <img className={isPortrait ? "ph-logo-img" : "pc-logo-img"} src="/img/logo.png" 
+                    alt={""} onClick={onClickHandler}
+                    style = {{cursor: "pointer"}}/>
                 </div>
 
                 <div className={isPortrait ? "ph-choose-child" : "pc-choose-child"}>

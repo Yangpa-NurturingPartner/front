@@ -46,7 +46,7 @@ const SearchPart: React.FC = () => {
                             <span className={"pc-search-input-title"}>내 손안의 양육 파트너 : 양파</span>
                             <TextField
                                 id="outlined-basic"
-                                placeholder="육아 고민 AI에게 물어보기"
+                                placeholder="육아 고민을 양파에게 물어보세요!"
                                 variant="outlined"
                                 sx={makeSx}
                                 InputProps={{
