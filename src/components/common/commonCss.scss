@@ -1,8 +1,9 @@
 .pc-header {
   display: flex;
   justify-content: space-between;
+  align-items: center; /* 자식 요소들을 수직으로 가운데 정렬 */
 
-  height: 60px;
+  height: 100px;
   padding: 6px;
 
   border-bottom: 1px solid #dddddd;
@@ -20,6 +21,8 @@
 
   .pc-choose-child {
     display: flex;
+    height: 60px;
+    
   }
 }
 
