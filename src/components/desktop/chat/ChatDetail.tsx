@@ -47,7 +47,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, onNewChat }) => {
                       fontSize: '15px'
                     }}
                   >
-                    <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
+                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
                     <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
                   </div>
                 </div>

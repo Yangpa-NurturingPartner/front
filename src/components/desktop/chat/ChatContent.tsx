@@ -18,7 +18,7 @@ interface ChatContentProps {
     session_id: string;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, session_id }) => {
     const [isLoading, setIsLoading] = useState(false); //로딩 상태
     const [showAsk, setShowAsk] = useState(true); //간편질문 보여주는 부분
     const makeSx = {
@@ -105,7 +105,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                                     fontSize: '15px'
                                 }}
                                 >
-                                <strong>{msg.type === 'user' ? '사용자' : '챗봇'}:</strong> {msg.text}
+                                <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
                             </div>
                         </div>
                     ))}

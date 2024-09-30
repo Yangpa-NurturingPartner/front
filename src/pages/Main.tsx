@@ -10,12 +10,14 @@ const Main: React.FC = () => {
     const [query, setQuery] = useState<string>(''); 
     const navigate = useNavigate();
 
-    // 새로운 채팅 세션을 시작하는 함수
+    //새로운 채팅
     const startNewChat = async () => {
         try {
             const response = await axios.post('http://localhost:8000/chat/start-new-chat');
             setSessionId(response.data.session_id);
             console.log("sessionId:", sessionId);
+            localStorage.setItem("localsession_id", response.data.session_id); //세션 ID를 로컬 스토리지에 저장
+            console.log("메인 로컬스토리지 저장 = " + localStorage.getItem("localsession_id"));
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
@@ -26,7 +28,7 @@ const Main: React.FC = () => {
         startNewChat();
     }
 
-    // 질문이랑 답변을 채팅 페이지로 보냄
+    //질문이랑 답변을 채팅 페이지로 보냄
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
         setQuery(query);
@@ -36,7 +38,6 @@ const Main: React.FC = () => {
                 chat_detail: query
             });
             navigate('/chat', { state: { sessionId, query, answer: response.data.answer } });
-            console.log("응답:", response.data); // 응답 로그 추가
         } catch (error) {
             console.error("질문 제출 오류:", error);
         }
