@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../modules/Totalsearchmodule"; // RootState 타입을 가져옵니다.
+import { RootState } from "../../../modules/"; // RootState 타입을 가져옵니다.
 
 interface SearchResult {
     title?: string;
