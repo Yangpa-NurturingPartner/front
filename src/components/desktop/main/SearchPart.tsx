@@ -58,7 +58,12 @@ const SearchPart: React.FC<SearchPartProps> = ({ MainQuery }) => {
                             variant="outlined"
                             sx={makeSx}
                             value={query} 
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)} // query 값을 설정
+                            onKeyUp={(e: any) => {
+                                if (e.key === "Enter") {
+                                    handleMainQuery(); // Enter 키가 눌리면 handleMainQuery 호출
+                                }
+                            }}
                             InputProps={{
                                 endAdornment: (
                                     <IconButton onClick={handleMainQuery}>
