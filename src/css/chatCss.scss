@@ -128,7 +128,7 @@ body {
   justify-content: space-between;
   align-items: center;
   height: 95%;
-  padding: 20px;
+  padding: 5px 20px 20px 20px;
   position: relative;
   overflow-y: auto;
 
@@ -197,7 +197,6 @@ body {
   align-items: center;
   padding: 10px 20px;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .chat-header .logo {
