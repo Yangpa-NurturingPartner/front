@@ -49,10 +49,11 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
         console.log("jwtToken = " + jwtToken);
     
         const fetchChatSummaries = async () => {
-            try { const response = await axios.post('http://localhost:8000/chat/user-chat-record', {}, {
+            try { const response = await axios.post('http://localhost:8000/chat/user-chat-record', {
+                "token": jwtToken
+            }, {
                     headers: {
-                        'Content-Type': 'application/json', 
-                        'Authorization': jwtToken,
+                        'Content-Type': 'application/json'
                     }
                 });
                 setChatSummaries(response.data);
@@ -65,8 +66,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     
         fetchChatSummaries();
     }, []);
-    
-    
 
     useEffect(() => {
         const filterItems = () => {
