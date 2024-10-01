@@ -1,7 +1,7 @@
 {
   "name": "front",
   "version": "0.1.0",
-  "proxy": "http://localhost:8000",
+  "proxy": "http://localhost:8080",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -19,7 +19,6 @@
     "@types/node": "^16.18.108",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
-    "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "lucide-react": "^0.439.0",
     "react": "^18.3.1",
