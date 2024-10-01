@@ -4,14 +4,31 @@ import "../css/totalSearchCss.scss"
 import {TextField} from "@mui/material";
 import TotalQuestionBox from "../components/desktop/totalSearch/TotalQuestionBox";
 import TotalResult from "../components/desktop/totalSearch/TotalResult";
+import { getTotalSearchResult } from "../apis/TotalSearchApiCalls";
+import { useDispatch , useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const TotalSearch: React.FC = () => {
 
     const [find, setFind] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (find) {
+            dispatch(getTotalSearchResult(searchQuery));
+        }
+    }, [dispatch, searchQuery, find]);
+    
+    const handleSearch = () => {
+        setFind(true); // 검색 결과를 보여주기 위해 find를 true로 설정
+    };
+    
     const handleKeyPress = (event: any) => {
         if (event === 'Enter') {
             setFind(!find);
+            handleSearch()
         }
     };
 
@@ -38,8 +55,7 @@ const TotalSearch: React.FC = () => {
                 color: "black",
             },
         },
-    };
-
+    }; 
 
     return (
         <>
@@ -60,10 +76,16 @@ const TotalSearch: React.FC = () => {
                         sx={makeSx}
                         InputProps={{
                             endAdornment: (
-                                <img src={"/img/search.png"} alt={""} style={{width: "2rem"}}/>
+                                <img 
+                                    src={"/img/search.png"} 
+                                    alt={""} 
+                                    style={{width: "2rem", cursor: "pointer"}} 
+                                    onClick={handleSearch}
+                                />
                             ),
                         }}
                         onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e.key)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     />
                 </div>
 
