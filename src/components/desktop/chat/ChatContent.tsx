@@ -1,4 +1,5 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'; 
 import { TextField, IconButton, CircularProgress } from "@mui/material";
 import axios from "axios";
 import ChatPartDefault from "./ChatPartDefault";
@@ -21,6 +22,7 @@ interface ChatContentProps {
 const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, session_id }) => {
     const [isLoading, setIsLoading] = useState(false); //로딩 상태
     const [showAsk, setShowAsk] = useState(true); //간편질문 보여주는 부분
+    const navigate = useNavigate();
     const makeSx = {
         width: "70%",
         backgroundColor: "#F4F4F4",
@@ -46,6 +48,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             },
         },
     };
+
+    useEffect(() => {
+        // 새로고침 시 state를 null로 설정
+        if (window.performance && window.performance.navigation.type === 0) {
+            navigate('/chat', { state: null });
+        }
+    }, [navigate]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
