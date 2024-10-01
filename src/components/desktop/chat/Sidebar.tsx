@@ -7,10 +7,11 @@ interface SidebarProps {
     isCollapsed: boolean;
     toggleSidebar: () => void;
     viewChatDetail: (session_id: string) => void;
+    endSession: () => void;
     endstartChat: () => void; 
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat, endSession }) => {
     const navigate = useNavigate();
     
     return (
@@ -31,8 +32,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     src={"/img/write.png"}
                     alt={""}
                     onClick={async () => {
+                        window.location.reload();
+                        await endSession(); //기존 채팅 종료
                         await endstartChat(); //새로운 채팅 시작
-                        navigate("/chat"); // 메인 채팅 페이지로 이동
                      }}
                     style={{
                         cursor: "pointer",
