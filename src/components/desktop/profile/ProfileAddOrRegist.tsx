@@ -45,7 +45,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         const email = localStorage.getItem('email');
 
         if (!jwtToken || !email) {
-            console.error("JWT token or email is missing");
+            // console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
@@ -78,15 +78,15 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             });
 
             if (!response.ok) {
-                console.error('HTTP Error:', response.status, response.statusText);
+                // console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to add or update profile');
             }
 
             const result = await response.json();
-            console.log("Profile added/updated successfully:", result);
+            // console.log("Profile added/updated successfully:", result);
             onProfileAdded();
         } catch (error) {
-            console.error('Error adding or updating profile:', error);
+            // console.error('Error adding or updating profile:', error);
         }
     };
 
@@ -97,7 +97,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         const email = localStorage.getItem('email');
 
         if (!jwtToken || !email) {
-            console.error("JWT token or email is missing");
+            // console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
@@ -115,14 +115,14 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             });
 
             if (!response.ok) {
-                console.error('HTTP Error:', response.status, response.statusText);
+                // console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to delete profile');
             }
 
-            console.log("Profile deleted successfully");
+            // console.log("Profile deleted successfully");
             onProfileAdded();
         } catch (error) {
-            console.error('Error deleting profile:', error);
+            // console.error('Error deleting profile:', error);
         }
     };
 

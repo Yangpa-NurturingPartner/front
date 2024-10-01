@@ -14,15 +14,14 @@ const Header: React.FC = () => {
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
     useEffect(() => {
-        const storedSelectedProfile = localStorage.getItem('selectedProfile');
-        if (storedSelectedProfile) {
-            dispatch(setSelectedProfile(JSON.parse(storedSelectedProfile)));
-        }
-    }, [dispatch]);
+        // console.log('Selected profile in Header:', selectedProfile);
+        // console.log('Profile list in Header:', profileList);
+    }, [selectedProfile, profileList]);
 
     const handleChange = (event: SelectChangeEvent) => {
         const selectedChildId = Number(event.target.value);
         const newSelectedProfile = profileList.find(profile => profile.childId === selectedChildId) || null;
+        // console.log('New selected profile:', newSelectedProfile);
         if (newSelectedProfile) {
             dispatch(setSelectedProfile(newSelectedProfile));
             localStorage.setItem('selectedProfile', JSON.stringify(newSelectedProfile));
@@ -46,7 +45,7 @@ const Header: React.FC = () => {
                             style={{ height: "100%" }}
                         >
                             {profileList.map((profile) => (
-                                <MenuItem key={profile.childId} value={profile.childId}>
+                                <MenuItem key={profile.childId} value={profile.childId.toString()}>
                                     {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
                                 </MenuItem>
                             ))}

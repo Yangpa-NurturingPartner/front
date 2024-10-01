@@ -23,7 +23,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
 
     useEffect(() => {
         // 디버깅: 선택된 프로필 데이터 확인
-        console.log('Selected Profile in HeaderMenu:', selectedProfile);
+        // console.log('Selected Profile in HeaderMenu:', selectedProfile);
     }, [selectedProfile]);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -62,7 +62,11 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
                                 style={{ width: '100%', height: '100%', borderRadius: '50%' }}
                             />
                         ) : (
-                            selectedProfile?.name?.charAt(0) || 'M'
+                            <img
+                                src="/img/child1.png"
+                                alt=""
+                                style={{width: '100%', height: '100%', borderRadius: '50%'}}
+                            />
                         )}
                     </Avatar>
                 </IconButton>
