@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
         // console.log("idToken : " + idToken);
 
         // 백엔드로 POST 요청 보내기
-        fetch('http://localhost:8080/api/google-login', {
+        fetch('http://localhost:8000/api/google-login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
