@@ -41,17 +41,18 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 display: "none",
                 color: "black",
             },
-        }
+        },
     };
 
     useEffect(() => {
         const jwtToken = "Bearer " + localStorage.getItem("userToken");
         console.log("jwtToken = " + jwtToken);
-    
+
         const fetchChatSummaries = async () => {
-            try { const response = await axios.post('http://localhost:8000/chat/user-chat-record', {
-                "token": jwtToken
-            }, {
+            try {
+                const response = await axios.post('http://localhost:8000/chat/user-chat-record', {
+                    "token": jwtToken
+                }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -63,7 +64,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 console.error('채팅 요약 불러오기 오류:', error);
             }
         };
-    
+
         fetchChatSummaries();
     }, []);
 
@@ -80,6 +81,21 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
 
         filterItems();
     }, [searchQuery, chatSummaries]);
+
+    // 날짜별로 그룹화하고 최근 날짜만 표시하는 함수
+    const groupByDate = (summaries: ChatSummary[]) => {
+        const grouped: { [key: string]: ChatSummary[] } = {};
+        summaries.forEach(summary => {
+            const date = new Date(summary.end_time).toLocaleDateString();
+            if (!grouped[date]) {
+                grouped[date] = [];
+            }
+            grouped[date].push(summary);
+        });
+        return grouped;
+    };
+
+    const groupedSummaries = groupByDate(filteredSummaries);
 
     return (
         <div className="pc-chat-body">
@@ -103,22 +119,27 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 }}
             />
             <div className="pc-chat-body-searchHistory">
-                {filteredSummaries.length > 0 ? (
-                    filteredSummaries.map((summary, index) => (
-                    <div key={index} className="pc-chat-body-searchHistory-box" onClick={() => viewChatDetail(summary.session_id)}>
-                        <div className="pc-chat-body-day">
-                        <span>{new Date(summary.end_time).toLocaleDateString()}</span>
+                {Object.entries(groupedSummaries).length > 0 ? (
+                    Object.entries(groupedSummaries).map(([date, summaries]) => (
+                        <div key={date}>
+                            <div className="pc-chat-body-day">
+                                <span>{date}</span>
+                            </div>
+                            {summaries.map((summary, index) => (
+                                <div key={index} className="pc-chat-body-searchHistory-box" onClick={() => viewChatDetail(summary.session_id)}>
+                                    <div className="pc-chat-body-roomHistory">
+                                        {summary.summ_answer}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="pc-chat-body-roomHistory">
-                        {summary.summ_answer}
-                        </div>
-                    </div>
                     ))
                 ) : (
                     <div className="no-records">채팅 기록이 없습니다.</div>
                 )}
             </div>
         </div>
-    )
+    );
 };
+
 export default SidebarContent;
