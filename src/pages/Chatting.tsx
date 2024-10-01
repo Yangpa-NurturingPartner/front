@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import Sidebar from "../components/desktop/chat/Sidebar";
 import "../css/chatCss.scss";
 import ChatContent from "../components/desktop/chat/ChatContent";
@@ -24,6 +24,8 @@ const Chatting: React.FC = () => {
     const [chatDetail, setChatDetail] = useState<any[]>([]); 
     const [showChatDetail, setShowChatDetail] = useState(false);
     const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false); 
+
+    const navigate = useNavigate();
 
     //채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
@@ -65,29 +67,38 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
     
+        const requestData = {
+            oldSession_id: localStorage.getItem("oldSession_id"), // 기존 세션 ID
+            jwtToken: "Bearer " + localStorage.getItem("userToken"),
+            child_id: 1 // child_id
+        };
+    
         try {
-            const response = await axios.post('http://localhost:8000/chat/start-new-chat', null, {
+            const response = await axios.post('http://localhost:8000/chat/start-new-chat', requestData, {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json', // 요청 본문 형식
+                    'Authorization': requestData.jwtToken, // JWT 토큰을 Authorization 헤더에 포함
                 }
             });
     
             console.log('Response:', response);
     
-            const newSession_id = response.data.session_id; // 새로운 세션 ID 가져오기
+            const newSession_id = response.data.session_id; 
             console.log("newSession_id = " + newSession_id);
     
             if (newSession_id) {
-                setSession_id(newSession_id); // 새로운 세션 ID 상태 업데이트
-                localStorage.setItem("localsession_id", newSession_id); // 세션 ID를 로컬 스토리지에 저장
+                setSession_id(newSession_id); 
+                localStorage.setItem("localsession_id", newSession_id); 
                 console.log("localStorage.getItem = " + localStorage.getItem("localsession_id"));
-
-                setMessages([]); // 메시지 초기화
-                setQuery(''); // 쿼리 초기화
-                setIsChatEnded(false); // 채팅 종료 상태 초기화
-                setIsInitialQueryAnswered(false); // 초기 질문 응답 상태 초기화
+    
+                setMessages([]); //기존 채팅 내용 지우기
+                console.log("지워졌나요? = " + messages);
+                setQuery(''); 
+                setIsChatEnded(false); 
+                setIsInitialQueryAnswered(false); 
                 console.log("endstartChat + 채팅 새로 시작");
-                console.log("할당된세션아이디 : " + session_id);
+    
+                navigate("/chat"); //메인 채팅 페이지로 이동
             } else {
                 console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
             }
@@ -96,6 +107,7 @@ const Chatting: React.FC = () => {
             console.error('endstartChat + 채팅 종료 및 시작 오류:',  axiosError.response ? axiosError.response.data : axiosError.message);
         }
     };
+    
 
     // 초기 메시지 추가 함수
     const addInitialMessages = async () => {

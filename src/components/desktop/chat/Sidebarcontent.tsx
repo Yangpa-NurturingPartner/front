@@ -45,30 +45,28 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     };
 
     useEffect(() => {
+        const jwtToken = "Bearer " + localStorage.getItem("userToken");
+        console.log("jwtToken = " + jwtToken);
+    
         const fetchChatSummaries = async () => {
-            try {
-                //임시로 사용자 번호 1 사용
-                const user_no = 1;
-
-                const sessionIdsResponse = await axios.post('http://localhost:8000/chat/get-userinfo', { user_no });
-                const sessionIds = sessionIdsResponse.data;
-
-                if (!sessionIds || sessionIds.length === 0) {
-                    console.warn("세션 아이디가 없습니다.");
-                    return;
-                }
-
-                //채팅 요약 불러오기
-                const response = await axios.post('http://localhost:8000/chat/chat-record', sessionIds);
+            try { const response = await axios.post('http://localhost:8000/chat/user-chat-record', {}, {
+                    headers: {
+                        'Content-Type': 'application/json', 
+                        'Authorization': jwtToken,
+                    }
+                });
                 setChatSummaries(response.data);
+                console.log(response.data);
                 setFilteredSummaries(response.data);
             } catch (error) {
                 console.error('채팅 요약 불러오기 오류:', error);
             }
         };
-
+    
         fetchChatSummaries();
     }, []);
+    
+    
 
     useEffect(() => {
         const filterItems = () => {

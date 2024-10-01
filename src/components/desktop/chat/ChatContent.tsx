@@ -65,10 +65,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         setMessages(prevMessages => [...prevMessages, userMessage]);
 
         setIsLoading(true); // 로딩 시작
+
+
         try {
             const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id,
-                chat_detail: query
+                chat_detail: query,
+                token: "Bearer " + localStorage.getItem("userToken")
             });
 
             const botAnswer = response.data.answer || '답변이 없습니다.';
@@ -76,8 +79,8 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
             setMessages(prevMessages => [...prevMessages, botMessage]);
             setQuery('');
-        } catch (error) {
-            const errorMessage: Message = { type: 'error', text: '오류가 발생했습니다.' };
+        } catch (error: any) {
+            const errorMessage: Message = { type: 'error', text: error.response?.data?.message || '오류가 발생했습니다.' };
             setMessages(prevMessages => [...prevMessages, errorMessage]);
             console.error('오류 발생:', error);
         } finally {

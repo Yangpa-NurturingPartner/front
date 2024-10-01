@@ -32,9 +32,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     src={"/img/write.png"}
                     alt={""}
                     onClick={async () => {
+                        window.location.reload();
                         await endSession(); //기존 채팅 종료
                         await endstartChat(); //새로운 채팅 시작
-                        navigate("/chat"); // 메인 채팅 페이지로 이동
                      }}
                     style={{
                         cursor: "pointer",
