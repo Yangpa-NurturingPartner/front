@@ -2,19 +2,26 @@ import React from "react";
 
 interface ChatPartDefaultProps {
     onQuestionClick: (question: string) => void;
-    showAsk: boolean; // 추가: pc-ask의 표시 여부
+    showAsk: boolean; 
+    onSubmit: () => void;
 }
 
-const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, showAsk }) => {
+const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, showAsk, onSubmit }) => {
     const questions = [
-        "아이가 편식을 너무 심하게 해",
+        "아",
         "책을 어떻게 읽어 줘야 할까",
         "오은영 10계명 알려줘"
     ];
 
     if (!showAsk) {
-        return null; //showAsk가 false면 null을 반환하여 pc-ask를 숨김
+        return null;
     }
+
+    const handleQuestionClick = (question: string) => {
+        console.log("클릭됨");
+        onQuestionClick(question); 
+        onSubmit(); 
+    };
 
     return (
         <div className={"pc-ask"}>
@@ -24,7 +31,7 @@ const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, show
                     <div 
                         key={index} 
                         className={"pc-ask-question"} 
-                        onClick={() => onQuestionClick(question)}
+                        onClick={() => handleQuestionClick(question)} 
                     >
                         <span>{question}</span>
                     </div>

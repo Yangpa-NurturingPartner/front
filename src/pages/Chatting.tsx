@@ -92,7 +92,6 @@ const Chatting: React.FC = () => {
                 console.log("localStorage.getItem = " + localStorage.getItem("localsession_id"));
     
                 setMessages([]); //기존 채팅 내용 지우기
-                console.log("지워졌나요? = " + messages);
                 setQuery(''); 
                 setIsChatEnded(false); 
                 setIsInitialQueryAnswered(false); 
