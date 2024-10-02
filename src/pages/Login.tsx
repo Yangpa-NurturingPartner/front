@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
         const idToken = credentialResponse.credential;
 
         // 백엔드로 POST 요청 보내기
-        fetch('http://localhost:8000/api/google-login', {
+        fetch(`${process.env.REACT_APP_API_URL}/api/google-login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,14 +19,15 @@ const LoginPage: React.FC = () => {
             body: JSON.stringify({ token: idToken }),
         })
             .then(response => {
+                // console.log('Full response object:', response);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                const jwtToken = data.token;
-                const email = data.email;
+                const jwtToken = data.data.token;
+                const email = data.data.email;
 
                 // JWT 토큰과 이메일을 로컬 스토리지에 저장
                 localStorage.setItem('jwtToken', jwtToken);
@@ -43,7 +44,7 @@ const LoginPage: React.FC = () => {
     };
 
     return (
-        <GoogleOAuthProvider clientId="597389730622-1qsc90pogdcg8crjid8qsd0d20t2f1vi.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}>
             <div className="login-page">
                 <div className="login-container">
                     <div className="image-container">
