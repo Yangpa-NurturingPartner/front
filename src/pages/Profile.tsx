@@ -10,33 +10,28 @@ import ProfileAddOrRegist from "../components/desktop/profile/ProfileAddOrRegist
 
 const Profile: React.FC = () => {
     const [regis, setRegis] = useState(false);
-    const [selectedProfile, setSelectedProfileState] = useState<ProfileState['selectedProfile'] | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    // Redux 상태에서 profileList와 selectedProfile 가져오기
     const profileList = useSelector((state: RootState) => state.profile.profiles);
+    const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
     useEffect(() => {
-        fetchProfileData();
-    }, []);
-
-    const fetchProfileData = async () => {
         const jwtToken = localStorage.getItem('jwtToken');
-
         if (!jwtToken) {
-            // console.log("JWT token is missing");
             navigate("/login");
             return;
         }
+        fetchProfileData(jwtToken);
+    }, []);
 
-        setLoading(true);
-
+    const fetchProfileData = async (jwtToken: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/profiles/search`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/profiles/search`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
                 },
             });
 
@@ -45,40 +40,38 @@ const Profile: React.FC = () => {
             }
 
             const data = await response.json();
-            dispatch(setProfiles(data));
+
+            if (Array.isArray(data.data)) {
+                dispatch(setProfiles(data.data));
+            } else {
+                console.error('Fetched data does not contain an array:', data);
+                dispatch(setProfiles([]));
+            }
         } catch (error) {
-            // console.error('Error fetching profile data:', error);
-        } finally {
-            setLoading(false);
+            console.error('Error fetching profile data:', error);
+            dispatch(setProfiles([]));
         }
     };
 
     const handleProfileAdded = () => {
         setRegis(false);
-        setSelectedProfile(null);
-        fetchProfileData();
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken) fetchProfileData(jwtToken);
     };
 
     const handleAddNewProfile = () => {
-        setSelectedProfile(null);
+        dispatch(setSelectedProfile(null)); // Redux 상태로 설정
         setRegis(true);
     };
 
     const handleSelectProfile = (profile: ProfileState['selectedProfile']) => {
-        if (!profile) {
-            // console.error("Selected profile is undefined or null.");
-            return; // profile이 유효하지 않으면 함수 종료
-        }
+        if (!profile) return;
+
+        // Redux에 selectedProfile 설정
+        dispatch(setSelectedProfile(profile));
         localStorage.setItem('selectedProfile', JSON.stringify(profile));
-        // console.log("Dispatching setSelectedProfile with profile:", profile);
-        dispatch({ type: 'profile/setSelectedProfile', payload: profile }); // profile이 유효할 때만 dispatch 실행
         navigate("/");
     };
-
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
 
     return (
         <div className={"pc-profile-body"}>
@@ -86,8 +79,8 @@ const Profile: React.FC = () => {
                 {!regis ? (
                     <ProfileChoose
                         setRegis={setRegis}
-                        profileData={profileList}
-                        setSelectedProfile={setSelectedProfile}
+                        profileData={Array.isArray(profileList) ? profileList : []}
+                        setSelectedProfile={(profile) => dispatch(setSelectedProfile(profile))} // Redux로 상태 설정
                         onAddNewProfile={handleAddNewProfile}
                         onSelectProfile={handleSelectProfile}
                     />
@@ -95,7 +88,7 @@ const Profile: React.FC = () => {
                     <ProfileAddOrRegist
                         setRegis={setRegis}
                         onProfileAdded={handleProfileAdded}
-                        selectedProfile={selectedProfile}
+                        selectedProfile={selectedProfile} // Redux에서 가져온 selectedProfile 전달
                     />
                 )}
             </div>
