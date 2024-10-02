@@ -1,15 +1,18 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../modules/"; // RootState 타입을 가져옵니다.
 
 interface SearchResult {
     title?: string;
     message?: string;
 }
 
-const TotalResult: React.FC = () => {
+interface TotalResultProps {
+    searchQuery: string;
+}
 
-    const totalSearchResult = useSelector((state: RootState) => state.totalSearchResult) || {
+const TotalResult: React.FC<TotalResultProps> = ({ searchQuery }) => {
+
+    const totalSearchResult = useSelector((state : any) => state.totalSearchResult) || {
         video_results: [] as SearchResult[],
         document_results: [] as SearchResult[],
         community_results: [] as SearchResult[],
@@ -18,7 +21,7 @@ const TotalResult: React.FC = () => {
 
     return (
         <div>
-            <h2>검색 결과</h2>
+            <h2>검색 결과: {searchQuery}</h2>
             <div>
                 <h3>비디오 결과</h3>
                 {totalSearchResult.video_results.length > 0 ? (

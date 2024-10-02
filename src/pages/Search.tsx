@@ -4,8 +4,8 @@ import "../css/totalSearchCss.scss"
 import {TextField} from "@mui/material";
 import TotalQuestionBox from "../components/desktop/totalSearch/TotalQuestionBox";
 import TotalResult from "../components/desktop/totalSearch/TotalResult";
-import { getTotalSearchResult } from "../apis/TotalSearchApiCalls";
-import { useDispatch , useSelector } from "react-redux";
+import { totalSearchResult } from "../apis/TotalSearchApiCalls";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 
 const TotalSearch: React.FC = () => {
@@ -17,7 +17,7 @@ const TotalSearch: React.FC = () => {
 
     useEffect(() => {
         if (find) {
-            dispatch(getTotalSearchResult(searchQuery));
+            dispatch(totalSearchResult(searchQuery) as any);
         }
     }, [dispatch, searchQuery, find]);
     
@@ -90,7 +90,7 @@ const TotalSearch: React.FC = () => {
                 </div>
 
                 {
-                    find ? <TotalResult/>
+                    find ? <TotalResult searchQuery={searchQuery} />
                         : <TotalQuestionBox/>
                 }
             </div>
