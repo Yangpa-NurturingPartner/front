@@ -95,16 +95,11 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     //간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (question: string) => {
         setShowAsk(false);
-
-        if (isChatEnded || !session_id || !query.trim()) {
-            if (isChatEnded) {
-                alert('채팅이 종료되었습니다. 새 채팅을 시작해주세요.');
-            }
-            return;
-        }
-
+        
         const userMessage: Message = { type: 'user', text: question };
         setMessages(prevMessages => [...prevMessages, userMessage]);
+
+        console.log("간편질문 클릭! " + messages);
 
         setIsLoading(true);
 

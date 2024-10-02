@@ -18,7 +18,10 @@ const Main: React.FC = () => {
 
     // 새로운 채팅
     const startNewChat = async () => {
+        console.log("채팅 시작");
         try {
+            //const SERVER_PORT = process.env.REACT_APP_SERVER_PORT;
+            //const response = await axios.post(`${SERVER_PORT}/chat/start-new-chat`, requestData, {
             const response = await axios.post('http://localhost:8000/chat/start-new-chat', requestData, {
                 headers: {
                     'Content-Type': 'application/json', 
@@ -26,18 +29,15 @@ const Main: React.FC = () => {
                 }
             });
             setSessionId(response.data.session_id);
-            // localStorage.setItem("localsession_id", response.data.session_id); // 세션 ID를 로컬 스토리지에 저장
-            // console.log("메인 로컬스토리지 저장 = " + localStorage.getItem("localsession_id"));
+            console.log("sessionId1 = " + response.data.session_id);
+            console.log("sessionId2 = " + sessionId); //딜레이
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
     };
 
-    // 컴포넌트가 처음 렌더링될 때 세션 ID가 없으면 새로운 채팅 시작
     useEffect(() => {
-        if (!sessionId) {
             startNewChat();
-        }
     }, []); 
 
     // 질문과 답변을 채팅 페이지로 보냄

@@ -46,8 +46,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
 
     useEffect(() => {
         const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
-        console.log("jwtToken = " + jwtToken);
-    
         const fetchChatSummaries = async () => {
             try {
                 const response = await axios.post('http://localhost:8000/chat/user-chat-record', {}, {
@@ -70,8 +68,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
         fetchChatSummaries(); // 초기 데이터 로딩
     
         //5초마다 주기적으로 호출
-        const intervalId = setInterval(fetchChatSummaries, 5000); 
-        return () => clearInterval(intervalId);
+        //onst intervalId = setInterval(fetchChatSummaries, 5000); 
+        //return () => clearInterval(intervalId);
     }, []);
     
 
