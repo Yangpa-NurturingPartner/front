@@ -5,7 +5,12 @@ import "../css/mainCsss.scss";
 import SearchNavigate from "../components/desktop/main/SearchNavigate";
 import axios from "axios";
 
-const Main: React.FC = () => {
+interface MainProps {
+    showAsk: boolean; 
+    setShowAsk: (value: boolean) => void; 
+  }
+
+  const Main: React.FC<MainProps> = ({ showAsk, setShowAsk }) => {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [query, setQuery] = useState<string>(''); 
     const navigate = useNavigate();
@@ -38,12 +43,14 @@ const Main: React.FC = () => {
 
     useEffect(() => {
             startNewChat();
-    }, []); 
+            setShowAsk(false);
+    }, [setShowAsk]); 
 
     // 질문과 답변을 채팅 페이지로 보냄
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
         setQuery(query);
+        console.log("showAsk!!!!!! :", showAsk);
         try {
             const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id: sessionId,

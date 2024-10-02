@@ -15,18 +15,18 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, onNewChat }) => {
   useEffect(() => {
     // chatDetail prop이 변경될 때마다 messages 초기화
     const newMessages = chatDetail.map(detail => ({
-      type: 'user' as 'user', // 타입을 명시적으로 설정
+      type: 'user' as 'user', 
       text: detail.query,
       timestamp: detail.qa_time,
     }));
 
     const botMessages = chatDetail.map(detail => ({
-      type: 'bot' as 'bot', // 타입을 명시적으로 설정
+      type: 'bot' as 'bot', 
       text: detail.answer,
       timestamp: detail.qa_time,
     }));
 
-    setMessages([...newMessages, ...botMessages]); //사용자 메시지와 봇 메시지를 합쳐서 상태 업데이트
+    setMessages([...newMessages, ...botMessages]); 
   }, [chatDetail]); //chatDetail이 변경될 때마다 effect 실행
 
   return (

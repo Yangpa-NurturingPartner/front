@@ -11,7 +11,12 @@ interface Message {
     text: string; 
 }
 
-const Chatting: React.FC = () => {
+interface ChattingProps {
+    showAsk: boolean; 
+    setShowAsk: (value: boolean) => void; 
+  }
+
+  const Chatting: React.FC<ChattingProps> = ({ showAsk, setShowAsk }) => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false); 
     const location = useLocation(); 
     const [sessionId, setSessionId] = useState<string | null>(location.state?.sessionId || null); //메인에서 이어지는 세션 ID
@@ -23,13 +28,14 @@ const Chatting: React.FC = () => {
     const [session_id, setSession_id] = useState<string | null>(null); 
     const [chatDetail, setChatDetail] = useState<any[]>([]); 
     const [showChatDetail, setShowChatDetail] = useState(false);
-    const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false); 
+    const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false);
 
     const navigate = useNavigate();
 
     //채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
         try {
+            console.log("ddddddddddddd = " + showChatDetail );
             const response = await axios.get(`http://localhost:8000/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data);
             setShowChatDetail(true);
@@ -46,14 +52,19 @@ const Chatting: React.FC = () => {
     // 세션 종료 함수
     const endSession = async () => {
         console.log("Endsession 실행됨");
-        try {
-            await axios.post('http://localhost:8000/chat/end-chat', null, { params: { session_id: localStorage.getItem("localsession_id") } });
+        try { await axios.post('http://localhost:8000/chat/end-chat', null, { params: { sessionId: localStorage.getItem("localsession_id") } 
+            });
             console.log("채팅이 종료되었습니다.");
-
+    
             setInitialAnswer([]);
             setInitialQuery([]);
             setMessages([]); // 화면에 보여지는 메시지 초기화
-            
+            console.log(messages);
+            setShowAsk(true);
+            setShowChatDetail(false);
+            console.log("dsfdgswersgawegwef = " + showChatDetail);
+            console.log("endSession showAsk = " + showAsk);
+    
             setIsChatEnded(true);
             localStorage.removeItem("localsession_id"); // 로컬스토리지에서 세션 ID 삭제
     
@@ -62,14 +73,17 @@ const Chatting: React.FC = () => {
             console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
         }
     };
+    
 
     // 새로운 채팅 시작 함수
     const endstartChat = async () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
+        setShowAsk(true);
+        console.log("endstartChat showAsk = " + showAsk);
     
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-            child_id: 1 // child_id
+            child_id: 1 
         };
     
         try {
@@ -84,16 +98,17 @@ const Chatting: React.FC = () => {
     
             const newSession_id = response.data.session_id; 
             console.log("newSession_id = " + newSession_id);
+
+            setMessages([]);
+            setQuery(''); 
+            setIsChatEnded(false); 
+            setIsInitialQueryAnswered(false); 
     
             if (newSession_id) {
                 setSession_id(newSession_id); 
                 localStorage.setItem("localsession_id", newSession_id); 
                 console.log("localStorage.getItem = " + localStorage.getItem("localsession_id"));
     
-                setMessages([]); //기존 채팅 내용 지우기
-                setQuery(''); 
-                setIsChatEnded(false); 
-                setIsInitialQueryAnswered(false); 
                 console.log("endstartChat + 채팅 새로 시작");
     
                 navigate("/chat"); //메인 채팅 페이지로 이동
@@ -109,6 +124,8 @@ const Chatting: React.FC = () => {
 
     // 초기 메시지 추가 함수
     const addInitialMessages = async () => {
+        setShowAsk(false);
+        console.log("초기메세지 showAsk = " + showAsk);
         const userMessage: Message = { type: 'user', text: initialQuery };
         const botMessage: Message = { type: 'bot', text: initialAnswer };
 
@@ -174,6 +191,8 @@ const Chatting: React.FC = () => {
                 viewChatDetail={viewChatDetail}
                 endstartChat={endstartChat} // 새 채팅 시작 핸들러 전달
                 endSession={endSession}
+                showChatDetail={showChatDetail}
+                setShowChatDetail={setShowChatDetail}
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (

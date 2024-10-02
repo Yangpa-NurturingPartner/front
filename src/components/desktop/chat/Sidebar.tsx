@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Goback from "../../common/Goback";
 import SidebarContent from "./Sidebarcontent";
@@ -9,10 +9,13 @@ interface SidebarProps {
     viewChatDetail: (session_id: string) => void;
     endSession: () => void;
     endstartChat: () => void; 
+    showChatDetail: boolean;
+    setShowChatDetail: (value: boolean) => void; 
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat, endSession }) => {
     const navigate = useNavigate();
+    const [showChatDetail, setShowChatDetail] = useState(false);
     
     return (
         <>
@@ -33,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     alt={""}
                     onClick={async () => {
                         navigate('/chat', { state: null });
-                        window.location.reload(); //새로고침
+                        setShowChatDetail(false);
                         await endSession(); //기존 채팅 종료
                         await endstartChat(); //새로운 채팅 시작
                      }}

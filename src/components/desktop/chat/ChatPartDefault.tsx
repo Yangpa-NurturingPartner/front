@@ -24,7 +24,7 @@ const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, show
     };
 
     return (
-        <div className={"pc-ask"}>
+        <div className={`pc-ask ${showAsk ? '' : 'hidden'}`}>
             <span className={"pc-ask-title"}>육아 고민을 AI에게 물어보세요</span>
             <div className={"pc-ask-question-box"}>
                 {questions.map((question, index) => (
