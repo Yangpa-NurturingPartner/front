@@ -57,9 +57,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     }, [navigate]);
 
     const handleSubmit = async () => {
-        if (messages.length > 0) {
-            setShowAsk(false);
-        }
+        setShowAsk(false);
 
         if (isChatEnded || !session_id || !query.trim()) {
             if (isChatEnded) {
@@ -177,7 +175,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                             onClick={handleSubmit} 
                             disabled={isChatEnded || isLoading}
                         >
-                            <img src="/img/send.png" alt="Send" className="pc-chat-icon" />
+                            send
                         </IconButton>
                     </div>
                 </form>

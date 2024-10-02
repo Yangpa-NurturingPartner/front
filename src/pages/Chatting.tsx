@@ -68,7 +68,6 @@ const Chatting: React.FC = () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
     
         const requestData = {
-            oldSession_id: localStorage.getItem("oldSession_id"), // 기존 세션 ID
             jwtToken: "Bearer " + localStorage.getItem("userToken"),
             child_id: 1 // child_id
         };

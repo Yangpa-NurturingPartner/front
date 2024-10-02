@@ -47,13 +47,12 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     useEffect(() => {
         const jwtToken = "Bearer " + localStorage.getItem("userToken");
         console.log("jwtToken = " + jwtToken);
-
+    
         const fetchChatSummaries = async () => {
             try {
-                const response = await axios.post('http://localhost:8000/chat/user-chat-record', {
-                    "token": jwtToken
-                }, {
+                const response = await axios.post('http://localhost:8000/chat/user-chat-record', {}, {
                     headers: {
+                        'Authorization': jwtToken,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -64,9 +63,14 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                 console.error('채팅 요약 불러오기 오류:', error);
             }
         };
-
-        fetchChatSummaries();
+    
+        fetchChatSummaries(); // 초기 데이터 로딩
+    
+        //5초마다 주기적으로 호출
+        const intervalId = setInterval(fetchChatSummaries, 5000); 
+        return () => clearInterval(intervalId);
     }, []);
+    
 
     useEffect(() => {
         const filterItems = () => {
@@ -82,7 +86,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
         filterItems();
     }, [searchQuery, chatSummaries]);
 
-    // 날짜별로 그룹화하고 최근 날짜만 표시하는 함수
+    // 날짜별로 그룹화
     const groupByDate = (summaries: ChatSummary[]) => {
         const grouped: { [key: string]: ChatSummary[] } = {};
         summaries.forEach(summary => {
