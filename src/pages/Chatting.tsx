@@ -17,7 +17,7 @@ const Chatting: React.FC = () => {
     const [sessionId, setSessionId] = useState<string | null>(location.state?.sessionId || null); //메인에서 이어지는 세션 ID
     const [initialQuery, setInitialQuery] = useState(location.state?.query || null);
     const [initialAnswer, setInitialAnswer] = useState(location.state?.answer || null); 
-    const [query, setQuery] = useState(''); // 사용자 쿼리
+    const [query, setQuery] = useState(''); 
     const [messages, setMessages] = useState<Message[]>([]); 
     const [isChatEnded, setIsChatEnded] = useState(false); 
     const [session_id, setSession_id] = useState<string | null>(null); 
@@ -68,7 +68,7 @@ const Chatting: React.FC = () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
     
         const requestData = {
-            jwtToken: "Bearer " + localStorage.getItem("userToken"),
+            jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
             child_id: 1 // child_id
         };
     

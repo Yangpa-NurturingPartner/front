@@ -45,7 +45,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     };
 
     useEffect(() => {
-        const jwtToken = "Bearer " + localStorage.getItem("userToken");
+        const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
         console.log("jwtToken = " + jwtToken);
     
         const fetchChatSummaries = async () => {
@@ -56,9 +56,12 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
                         'Content-Type': 'application/json'
                     }
                 });
-                setChatSummaries(response.data);
-                console.log(response.data);
-                setFilteredSummaries(response.data);
+
+                const summaries = Array.isArray(response.data) ? response.data : [];
+            
+                setChatSummaries(summaries);
+                console.log(summaries);
+                setFilteredSummaries(summaries);
             } catch (error) {
                 console.error('채팅 요약 불러오기 오류:', error);
             }

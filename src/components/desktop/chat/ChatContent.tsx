@@ -75,7 +75,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id,
                 chat_detail: query,
-                token: "Bearer " + localStorage.getItem("userToken")
+                token: "Bearer " + localStorage.getItem("jwtToken")
             });
 
             const botAnswer = response.data.answer || '답변이 없습니다.';
@@ -95,6 +95,14 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     //간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (question: string) => {
         setShowAsk(false);
+
+        if (isChatEnded || !session_id || !query.trim()) {
+            if (isChatEnded) {
+                alert('채팅이 종료되었습니다. 새 채팅을 시작해주세요.');
+            }
+            return;
+        }
+
         const userMessage: Message = { type: 'user', text: question };
         setMessages(prevMessages => [...prevMessages, userMessage]);
 
@@ -104,7 +112,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id,
                 chat_detail: question,
-                token: "Bearer " + localStorage.getItem("userToken")
+                token: "Bearer " + localStorage.getItem("jwtToken")
             });
 
             const botAnswer = response.data.answer || '답변이 없습니다.';
