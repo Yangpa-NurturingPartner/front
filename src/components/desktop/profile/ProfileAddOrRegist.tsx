@@ -45,7 +45,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         const email = localStorage.getItem('email');
 
         if (!jwtToken || !email) {
-            // console.error("JWT token or email is missing");
+            console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
@@ -59,8 +59,8 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
 
             const method = selectedProfile ? 'PUT' : 'POST';
             const url = selectedProfile
-                ? `http://localhost:8080/api/profiles/${selectedProfile.childId}`
-                : 'http://localhost:8080/api/profiles/add';
+                ? `${process.env.REACT_APP_API_URL}/api/profiles/${selectedProfile.childId}`
+                : `${process.env.REACT_APP_API_URL}/api/profiles/add`;
 
             const response = await fetch(url, {
                 method: method,
@@ -78,15 +78,15 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             });
 
             if (!response.ok) {
-                // console.error('HTTP Error:', response.status, response.statusText);
+                console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to add or update profile');
             }
 
             const result = await response.json();
-            // console.log("Profile added/updated successfully:", result);
+            console.log("Profile added/updated successfully:", result);
             onProfileAdded();
         } catch (error) {
-            // console.error('Error adding or updating profile:', error);
+            console.error('Error adding or updating profile:', error);
         }
     };
 
@@ -94,35 +94,30 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         if (!selectedProfile) return;
 
         const jwtToken = localStorage.getItem('jwtToken');
-        const email = localStorage.getItem('email');
 
-        if (!jwtToken || !email) {
-            // console.error("JWT token or email is missing");
+        if (!jwtToken) {
+            console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/profiles/${selectedProfile.childId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/profiles/${selectedProfile.childId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    memberUser: { userEmail: email }
-                })
+                }
             });
 
             if (!response.ok) {
-                // console.error('HTTP Error:', response.status, response.statusText);
+                console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to delete profile');
             }
 
             // console.log("Profile deleted successfully");
             onProfileAdded();
         } catch (error) {
-            // console.error('Error deleting profile:', error);
+            console.error('Error deleting profile:', error);
         }
     };
 
