@@ -83,7 +83,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             }
 
             const result = await response.json();
-            console.log("Profile added/updated successfully:", result);
+            // console.log("Profile added/updated successfully:", result);
             onProfileAdded();
         } catch (error) {
             console.error('Error adding or updating profile:', error);
