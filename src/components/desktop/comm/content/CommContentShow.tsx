@@ -3,8 +3,15 @@ import {styled} from "@mui/system";
 import TextField from "@mui/material/TextField";
 import {blue, grey} from "../../../../pages/CommContent";
 
-const CommContentShow:React.FC = () => {
-    const imgRef = useRef<HTMLImageElement | null>(null); // 이미지에 대한 참조 생성
+interface BoardProps {
+    board: {
+        title: string;
+        board_contents: string;
+    };
+}
+
+const CommContentShow: React.FC<BoardProps> = ({board}) => {
+    const imgRef = useRef<HTMLImageElement | null>(null);
 
     const handleFullScreen = () => {
         if (imgRef.current) {
@@ -39,7 +46,7 @@ const CommContentShow:React.FC = () => {
                 <Textarea
                     minRows={1}
                     maxRows={1}
-                    value="제목"
+                    value={board.title}
                     sx={{
                         width: "100%",
                         marginBottom: "1vh",
@@ -57,7 +64,7 @@ const CommContentShow:React.FC = () => {
                 <Textarea
                     multiline
                     minRows={25}
-                    value="글 내용"
+                    value={board.board_contents}
                     sx={{
                         width: "100%",
                         marginBottom: "1vh",

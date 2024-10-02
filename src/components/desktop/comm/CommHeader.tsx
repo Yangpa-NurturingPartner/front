@@ -8,34 +8,33 @@ import CommDate from "./CommDate";
 export interface commheaderprops {
     write: boolean;
     setWrite: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedList: number;
+    setSelectedList: React.Dispatch<React.SetStateAction<number>>;
+    setSelectedPage: React.Dispatch<React.SetStateAction<number>>;
+    selectedPeriod: "all" | "month" | "week";
+    setSelectedPeriod: React.Dispatch<React.SetStateAction<"all" | "month" | "week">>;
+    searchUserQuery: (query: string) => Promise<void>;
 }
 
-const CommHeader: React.FC<commheaderprops> = ({write, setWrite}) => {
-    const [selectedTab, setSelectedTab] = React.useState(0);
+const CommHeader: React.FC<commheaderprops> = ({
+                                                   write, setWrite,
+                                                   selectedList, setSelectedList,
+                                                   setSelectedPage,
+                                                   selectedPeriod, setSelectedPeriod,
+                                                   searchUserQuery
+                                               }) => {
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        setSelectedTab(newValue);
+        setSelectedPage(1);
+        setSelectedList(newValue);
     };
 
     const choiseSx = {fontSize: "1rem", fontWeight: "bold"};
-    const buttonSx = {
-        width: "10rem",
-        fontSize: "1rem",
-        backgroundColor: "#E3F0FE",
-        color: "#000",
-        borderRadius: "5px",
-        padding: "5px 15px",
-        marginRight: "8px",
-        "&:hover": {
-            backgroundColor: "#208DF9",
-            color: "#fff"
-        },
-    };
 
     return (
         <div className={"pc-comm-header"}>
             <Tabs
-                value={selectedTab}
+                value={selectedList}
                 onChange={handleTabChange}
                 variant="fullWidth"
                 textColor="primary"
@@ -46,17 +45,22 @@ const CommHeader: React.FC<commheaderprops> = ({write, setWrite}) => {
                 }}
                 sx={{borderBottom: "1px solid black"}}
             >
-                <Tab label="전체" sx={choiseSx}/>
-                <Tab label="인기" sx={choiseSx}/>
-                <Tab label="공지사항" sx={choiseSx}/>
-                <Tab label="이벤트" sx={choiseSx}/>
-                <Tab label="0~2세(영아기)" sx={choiseSx}/>
-                <Tab label="3~6세(유아기)" sx={choiseSx}/>
-                <Tab label="7~12세(아동기)" sx={choiseSx}/>
-                <Tab label="13~18세(청소년기)" sx={choiseSx}/>
+                <Tab label="전체" sx={choiseSx} value={0}/>
+                <Tab label="공지사항" sx={choiseSx} value={50}/>
+                {/*<Tab label="인기" sx={choiseSx}/>*/}
+                {/*<Tab label="이벤트" sx={choiseSx} />*/}
+                <Tab label="0~2세(영아기)" sx={choiseSx} value={100}/>
+                <Tab label="3~6세(유아기)" sx={choiseSx} value={200}/>
+                <Tab label="7~12세(아동기)" sx={choiseSx} value={300}/>
+                <Tab label="13~18세(청소년기)" sx={choiseSx} value={400}/>
             </Tabs>
 
-            {write ? <></> : <CommDate setWrite={setWrite}/>}
+            {write ? <></> : <CommDate
+                setWrite={setWrite}
+                selectedPeriod={selectedPeriod}
+                setSelectedPeriod={setSelectedPeriod}
+                searchUserQuery={searchUserQuery}
+            />}
 
         </div>
     );

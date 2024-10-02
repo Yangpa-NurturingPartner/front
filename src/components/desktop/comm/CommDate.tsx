@@ -4,23 +4,23 @@ import Button from "@mui/material/Button";
 
 export interface commDateprops {
     setWrite: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedPeriod: "all" | "month" | "week";
+    setSelectedPeriod: React.Dispatch<React.SetStateAction<"all" | "month" | "week">>;
+    searchUserQuery: (query: string) => Promise<void>;
 }
 
-const CommDate: React.FC<commDateprops> = ({setWrite}) => {
-
-    const [period, setPeriod] = React.useState('전체기간');
-    const [filter, setFilter] = React.useState('제목만');
+const CommDate: React.FC<commDateprops> = ({
+                                               setWrite,
+                                               selectedPeriod, setSelectedPeriod,
+                                               searchUserQuery
+                                           }) => {
 
     const handlePeriodChange = (event: any) => {
-        setPeriod(event.target.value);
-    };
-
-    const handleFilterChange = (event: any) => {
-        setFilter(event.target.value);
+        setSelectedPeriod(event.target.value);
     };
 
     const makeSx = {
-        width: "40vw",
+        width: "45vw",
     };
 
     return (
@@ -31,25 +31,13 @@ const CommDate: React.FC<commDateprops> = ({setWrite}) => {
                     size="small"
                 >
                     <Select
-                        value={period}
+                        value={selectedPeriod}
                         onChange={handlePeriodChange}
                         sx={{width: "7rem"}}
                     >
-                        <MenuItem value="전체기간">전체기간</MenuItem>
-                        <MenuItem value="최근1주">최근1주</MenuItem>
-                        <MenuItem value="최근1개월">최근1개월</MenuItem>
-                    </Select>
-                </FormControl>
-
-
-                <FormControl
-                    variant="outlined"
-                    size="small"
-                    sx={{width: "6rem"}}
-                >
-                    <Select value={filter} onChange={handleFilterChange}>
-                        <MenuItem value="제목만">제목만</MenuItem>
-                        <MenuItem value="내용만">내용만</MenuItem>
+                        <MenuItem value="all">전체기간</MenuItem>
+                        <MenuItem value="week">최근1주</MenuItem>
+                        <MenuItem value="month">최근1개월</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -63,6 +51,9 @@ const CommDate: React.FC<commDateprops> = ({setWrite}) => {
                             endAdornment: (
                                 <img src={"/img/search.png"} alt={""} style={{width: "1.5rem"}}/>
                             ),
+                        }}
+                        onKeyUp={(e: any) => {
+                            if (e.key === "Enter") searchUserQuery(e.target.value);
                         }}
                     />
                 </FormControl>
