@@ -1,15 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom'; // Router를 가져옵니다
+import { BrowserRouter } from 'react-router-dom';
+import  store from './redux/store';
 import App from './App';
-import store from './redux/store'; // 스토어를 가져옵니다
+import "./index.css"
 
-ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter> {/* Router로 감싸기 */}
-      <App />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </Provider>
+    </React.StrictMode>
 );
