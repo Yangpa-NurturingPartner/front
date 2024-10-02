@@ -1,44 +1,66 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-const TotalResult: React.FC = () => {
+interface SearchResult {
+    title?: string;
+    message?: string;
+}
+
+interface TotalResultProps {
+    searchQuery: string;
+}
+
+const TotalResult: React.FC<TotalResultProps> = ({ searchQuery }) => {
+
+    const totalSearchResult = useSelector((state : any) => state.totalSearchResult) || {
+        video_results: [] as SearchResult[],
+        document_results: [] as SearchResult[],
+        community_results: [] as SearchResult[],
+        chat_results: [] as SearchResult[]
+    };
+
     return (
-        <div className={"pc-total-result-box"}>
-            <div className={"pc-total-result-2"}>
-                <div className={"pc-total-result-1"}>
-                    <span>관련 문서</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 문서 검색 내용</div>
-                        <div>2. 문서 검색 내용</div>
-                        <div>3. 문서 검색 내용</div>
-                    </div>
-                </div>
-
-                <div className={"pc-total-result-1"}>
-                    <span>관련 영상</span>
-                    <div className={"pc-total-search-list"}>
-                        <img src={"/img/mainPaint.png"} alt={""}/>
-                    </div>
-                </div>
+        <div>
+            <h2>검색 결과: {searchQuery}</h2>
+            <div>
+                <h3>비디오 결과</h3>
+                {totalSearchResult.video_results.length > 0 ? (
+                    totalSearchResult.video_results.map((result: SearchResult, index: number) => (
+                        <div key={index}>{result.title}</div>
+                    ))
+                ) : (
+                    <p>비디오 결과가 없습니다.</p>
+                )}
             </div>
-
-            <div className={"pc-total-result-2"}>
-                <div className={"pc-total-result-1"}>
-                    <span>커뮤니티</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 커뮤니티 검색 내용</div>
-                        <div>2. 커뮤니티 검색 내용</div>
-                        <div>3. 커뮤니티 검색 내용</div>
-                    </div>
-                </div>
-
-                <div className={"pc-total-result-1"}>
-                    <span>예전 채팅</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 예전 채팅</div>
-                        <div>2. 예전 채팅</div>
-                        <div>3. 예전 채팅</div>
-                    </div>
-                </div>
+            <div>
+                <h3>문서 결과</h3>
+                {totalSearchResult.document_results.length > 0 ? (
+                    totalSearchResult.document_results.map((result: SearchResult, index: number) => (
+                        <div key={index}>{result.title}</div>
+                    ))
+                ) : (
+                    <p>문서 결과가 없습니다.</p>
+                )}
+            </div>
+            <div>
+                <h3>커뮤니티 결과</h3>
+                {totalSearchResult.community_results.length > 0 ? (
+                    totalSearchResult.community_results.map((result: SearchResult, index: number) => (
+                        <div key={index}>{result.title}</div>
+                    ))
+                ) : (
+                    <p>커뮤니티 결과가 없습니다.</p>
+                )}
+            </div>
+            <div>
+                <h3>채팅 결과</h3>
+                {totalSearchResult.chat_results.length > 0 ? (
+                    totalSearchResult.chat_results.map((result: SearchResult, index: number) => (
+                        <div key={index}>{result.message}</div>
+                    ))
+                ) : (
+                    <p>채팅 결과가 없습니다.</p>
+                )}
             </div>
         </div>
     );

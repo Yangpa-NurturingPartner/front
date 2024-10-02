@@ -7,7 +7,7 @@ import Header from "./components/common/header/Header";
 import Chatting from "./pages/Chatting";
 import Community from "./pages/Community";
 import CommContent from "./pages/CommContent";
-import TotalSearch from "./pages/TotalSearch";
+import TotalSearch from "./pages/Search";
 import Profile from "./pages/Profile";
 
 

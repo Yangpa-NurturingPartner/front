@@ -56,24 +56,6 @@ const CommHeader: React.FC<commheaderprops> = ({write, setWrite}) => {
                 <Tab label="13~18세(청소년기)" sx={choiseSx}/>
             </Tabs>
 
-
-            <div style={{marginTop: "1.5rem"}}>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained" sx={{...buttonSx, backgroundColor: "#1976D2", color: "#FFF"}}>
-                        전체 게시판
-                    </Button>
-                    <Button variant="contained" sx={buttonSx}>
-                        고민 나누기
-                    </Button>
-                    <Button variant="contained" sx={buttonSx}>
-                        육아 꿀팁
-                    </Button>
-                    <Button variant="contained" sx={buttonSx}>
-                        일상공유
-                    </Button>
-                </Stack>
-            </div>
-
             {write ? <></> : <CommDate setWrite={setWrite}/>}
 
         </div>
