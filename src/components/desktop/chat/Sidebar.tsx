@@ -11,11 +11,14 @@ interface SidebarProps {
     endstartChat: () => void; 
     showChatDetail: boolean;
     setShowChatDetail: (value: boolean) => void; 
+    showAsk: boolean;
+    setShowAsk: (value: boolean) => void; 
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat, endSession }) => {
     const navigate = useNavigate();
     const [showChatDetail, setShowChatDetail] = useState(false);
+    const [showAsk, setShowAsk] = useState(true);
     
     return (
         <>
@@ -31,24 +34,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     style={{ cursor: "pointer" }}
                 />
                 <div className={"pc-chat-sidebar-btn-newchat"}>
-                <img
-                    src={"/img/write.png"}
-                    alt={""}
-                    onClick={async () => {
-                        navigate('/chat', { state: null });
-                        setShowChatDetail(false);
-                        await endSession(); //기존 채팅 종료
-                        await endstartChat(); //새로운 채팅 시작
-                     }}
-                    style={{
-                        cursor: "pointer",
-                        position: "absolute",
-                        left: isCollapsed ? '4vw' : '13vw',
-                        bottom: "0.2vh",
-                        transition: "left 0.3s ease"
-                    }}
-                />
-                </div>
+            <img
+                src={"/img/write.png"}
+                alt={""}
+                onClick={async () => {
+                    navigate('/chat', { state: { showAsk: true } });
+                    setShowChatDetail(false);
+                    await endSession(); // 기존 채팅 종료
+                    await endstartChat(); // 새로운 채팅 시작
+                }}
+                style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    left: isCollapsed ? '4vw' : '13vw',
+                    bottom: "0.2vh",
+                    transition: "left 0.3s ease"
+                }}
+            />
+        </div>
+
             </div>
         </>
     );

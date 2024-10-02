@@ -2,20 +2,16 @@ import React from "react";
 
 interface ChatPartDefaultProps {
     onQuestionClick: (question: string) => void;
-    showAsk: boolean; 
     onSubmit: () => void;
 }
 
-const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, showAsk, onSubmit }) => {
+const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, onSubmit }) => {
+
     const questions = [
         "아",
         "책을 어떻게 읽어 줘야 할까",
         "오은영 10계명 알려줘"
     ];
-
-    if (!showAsk) {
-        return null;
-    }
 
     const handleQuestionClick = (question: string) => {
         console.log("클릭됨");
@@ -24,7 +20,7 @@ const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, show
     };
 
     return (
-        <div className={`pc-ask ${showAsk ? '' : 'hidden'}`}>
+        <div className="pc-ask"> 
             <span className={"pc-ask-title"}>육아 고민을 AI에게 물어보세요</span>
             <div className={"pc-ask-question-box"}>
                 {questions.map((question, index) => (

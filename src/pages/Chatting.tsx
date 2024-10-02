@@ -11,12 +11,7 @@ interface Message {
     text: string; 
 }
 
-interface ChattingProps {
-    showAsk: boolean; 
-    setShowAsk: (value: boolean) => void; 
-  }
-
-  const Chatting: React.FC<ChattingProps> = ({ showAsk, setShowAsk }) => {
+  const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false); 
     const location = useLocation(); 
     const [sessionId, setSessionId] = useState<string | null>(location.state?.sessionId || null); //메인에서 이어지는 세션 ID
@@ -28,6 +23,7 @@ interface ChattingProps {
     const [session_id, setSession_id] = useState<string | null>(null); 
     const [chatDetail, setChatDetail] = useState<any[]>([]); 
     const [showChatDetail, setShowChatDetail] = useState(false);
+    const [showAsk, setShowAsk] = useState(true);
     const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false);
 
     const navigate = useNavigate();
@@ -35,7 +31,6 @@ interface ChattingProps {
     //채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
         try {
-            console.log("ddddddddddddd = " + showChatDetail );
             const response = await axios.get(`http://localhost:8000/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data);
             setShowChatDetail(true);
@@ -60,10 +55,8 @@ interface ChattingProps {
             setInitialQuery([]);
             setMessages([]); // 화면에 보여지는 메시지 초기화
             console.log(messages);
-            setShowAsk(true);
             setShowChatDetail(false);
-            console.log("dsfdgswersgawegwef = " + showChatDetail);
-            console.log("endSession showAsk = " + showAsk);
+            setShowAsk(true);
     
             setIsChatEnded(true);
             localStorage.removeItem("localsession_id"); // 로컬스토리지에서 세션 ID 삭제
@@ -78,8 +71,6 @@ interface ChattingProps {
     // 새로운 채팅 시작 함수
     const endstartChat = async () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
-        setShowAsk(true);
-        console.log("endstartChat showAsk = " + showAsk);
     
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
@@ -103,15 +94,16 @@ interface ChattingProps {
             setQuery(''); 
             setIsChatEnded(false); 
             setIsInitialQueryAnswered(false); 
+            setShowAsk(true);
+            console.log("showAsk = " + showAsk);
     
             if (newSession_id) {
                 setSession_id(newSession_id); 
                 localStorage.setItem("localsession_id", newSession_id); 
-                console.log("localStorage.getItem = " + localStorage.getItem("localsession_id"));
     
                 console.log("endstartChat + 채팅 새로 시작");
     
-                navigate("/chat"); //메인 채팅 페이지로 이동
+                navigate('/chat', { state: { showAsk: true } });
             } else {
                 console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
             }
@@ -124,8 +116,6 @@ interface ChattingProps {
 
     // 초기 메시지 추가 함수
     const addInitialMessages = async () => {
-        setShowAsk(false);
-        console.log("초기메세지 showAsk = " + showAsk);
         const userMessage: Message = { type: 'user', text: initialQuery };
         const botMessage: Message = { type: 'bot', text: initialAnswer };
 
@@ -141,9 +131,7 @@ interface ChattingProps {
         if (sessionId) { //메인에서 이어지는 경우
             console.log("메인에서온 sessionId= " + sessionId);
             setSession_id(sessionId); // 로컬 스토리지의 세션 ID로 업데이트
-            console.log("session_id = " + session_id); //null 나옴
             setSessionId(null);
-            console.log("null나와야함 = " + sessionId); //초기화 안된 세션아이디 나옴
         } else {
             console.error('session_id가 존재하지 않습니다. 새 채팅 세션 시작.');
             endSession(); 
@@ -167,8 +155,7 @@ interface ChattingProps {
             console.log("handleBeforeUnload 실행됨");
             if(sessionId){
                 await setSessionId(null);
-                console.log("초기화가되어야함... : " + sessionId);
-                endSession(); //메인에서 이어짐
+                endSession(); 
             }
         };
     
@@ -189,14 +176,16 @@ interface ChattingProps {
                 isCollapsed={isSidebarCollapsed} 
                 toggleSidebar={toggleSidebar} 
                 viewChatDetail={viewChatDetail}
-                endstartChat={endstartChat} // 새 채팅 시작 핸들러 전달
+                endstartChat={endstartChat}
                 endSession={endSession}
                 showChatDetail={showChatDetail}
                 setShowChatDetail={setShowChatDetail}
+                showAsk={showAsk}
+                setShowAsk={setShowAsk}
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
-                    <ChatDetail chatDetail={chatDetail} onNewChat={endstartChat} />
+                    <ChatDetail chatDetail={chatDetail} />
                 ) : (
                     <ChatContent
                         messages={messages}
@@ -205,7 +194,7 @@ interface ChattingProps {
                         setQuery={setQuery}
                         isChatEnded={isChatEnded}
                         endstartChat={endstartChat}
-                        session_id={session_id || ''} // 세션 ID 전달
+                        session_id={session_id || ''}
                     />
                 )}
             </div>

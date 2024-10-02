@@ -95,7 +95,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     //간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (question: string) => {
         setShowAsk(false);
-        
         const userMessage: Message = { type: 'user', text: question };
         setMessages(prevMessages => [...prevMessages, userMessage]);
 
@@ -130,8 +129,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             <div className="pc-chat-part">
                 <ChatPartDefault 
                     onQuestionClick={handleQuestionClick}
-                    onSubmit={handleSubmit} 
-                    showAsk={showAsk} 
+                    onSubmit={handleSubmit}
                 />
             </div>
 

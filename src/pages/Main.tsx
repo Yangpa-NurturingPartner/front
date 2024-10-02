@@ -5,15 +5,12 @@ import "../css/mainCsss.scss";
 import SearchNavigate from "../components/desktop/main/SearchNavigate";
 import axios from "axios";
 
-interface MainProps {
-    showAsk: boolean; 
-    setShowAsk: (value: boolean) => void; 
-  }
 
-  const Main: React.FC<MainProps> = ({ showAsk, setShowAsk }) => {
+  const Main: React.FC = () => {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [query, setQuery] = useState<string>(''); 
     const navigate = useNavigate();
+    const [showAsk, setShowAsk] = useState(false);
 
     const requestData = {
         oldSession_id: localStorage.getItem("oldSession_id"), // 기존 세션 ID
@@ -34,8 +31,9 @@ interface MainProps {
                 }
             });
             setSessionId(response.data.session_id);
+            setShowAsk(false);
             console.log("sessionId1 = " + response.data.session_id);
-            console.log("sessionId2 = " + sessionId); //딜레이
+            console.log("showAsk Main = " + showAsk);
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
@@ -43,14 +41,12 @@ interface MainProps {
 
     useEffect(() => {
             startNewChat();
-            setShowAsk(false);
-    }, [setShowAsk]); 
+    }, []); 
 
     // 질문과 답변을 채팅 페이지로 보냄
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
         setQuery(query);
-        console.log("showAsk!!!!!! :", showAsk);
         try {
             const response = await axios.post('http://localhost:8000/chat/message', {
                 session_id: sessionId,

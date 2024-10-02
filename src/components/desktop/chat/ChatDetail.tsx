@@ -6,10 +6,9 @@ interface ChatDetailProps {
     answer: string;
     qa_time: string;
   }[];
-  onNewChat: () => void; // 새로운 채팅 시작을 위한 함수 prop 추가
 }
 
-const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, onNewChat }) => {
+const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail }) => {
   const [messages, setMessages] = useState<{ type: 'user' | 'bot'; text: string; timestamp: string }[]>([]);
 
   useEffect(() => {

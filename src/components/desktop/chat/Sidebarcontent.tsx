@@ -68,7 +68,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
         fetchChatSummaries(); // 초기 데이터 로딩
     
         //5초마다 주기적으로 호출
-        //onst intervalId = setInterval(fetchChatSummaries, 5000); 
+        //const intervalId = setInterval(fetchChatSummaries, 5000); 
         //return () => clearInterval(intervalId);
     }, []);
     
