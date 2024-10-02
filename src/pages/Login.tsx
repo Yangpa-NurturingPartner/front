@@ -10,7 +10,8 @@ const LoginPage: React.FC = () => {
         const idToken = credentialResponse.credential;
 
         // 백엔드로 POST 요청 보내기
-        fetch(`${process.env.REACT_APP_API_URL}/api/google-login`, {
+        const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
+        fetch(`${apiUrl}/api/google-login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
