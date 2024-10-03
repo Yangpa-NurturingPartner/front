@@ -8,9 +8,10 @@ interface BoardProps {
         title: string;
         board_contents: string;
     };
+    files: any;
 }
 
-const CommContentShow: React.FC<BoardProps> = ({board}) => {
+const CommContentShow: React.FC<BoardProps> = ({board, files}) => {
     const imgRef = useRef<HTMLImageElement | null>(null);
 
     const handleFullScreen = () => {
@@ -78,14 +79,18 @@ const CommContentShow: React.FC<BoardProps> = ({board}) => {
                     tabIndex={-1}
                 />
 
-                <img
-                    className={"pc-comm-content-img"}
-                    src={"/img/mainPaint.png"}
-                    alt={""}
-                    onClick={handleFullScreen}
-                    ref={imgRef}
-                    style={{cursor: "pointer"}}
-                />
+                {
+                    files.length > 0
+                        ? <img
+                            className={"pc-comm-content-img"}
+                            src={files[0].name}
+                            alt={""}
+                            onClick={handleFullScreen}
+                            ref={imgRef}
+                            style={{cursor: "pointer"}}
+                        />
+                        : <></>
+                }
             </div>
         </>
     )

@@ -41,11 +41,11 @@ const CommContent: React.FC = () => {
     if (error) return <p>{error}</p>;
 
     // 게시물 데이터, 댓글 데이터 분리
-    const {board, comments}: any = communityData;
+    const {board, comments, files}: any = communityData;
 
     return (
         <div className={"pc-comm-content-body"}>
-            <CommContentShow board={board}/>
+            <CommContentShow board={board} files={files}/>
             <CommContentComments
                 comments={comments}
                 boardId={boardId}

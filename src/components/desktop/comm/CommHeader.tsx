@@ -4,6 +4,7 @@ import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import CommDate from "./CommDate";
+import {useLocation, useNavigate} from "react-router-dom";
 
 export interface commheaderprops {
     write: boolean;
@@ -14,6 +15,7 @@ export interface commheaderprops {
     selectedPeriod: "all" | "month" | "week";
     setSelectedPeriod: React.Dispatch<React.SetStateAction<"all" | "month" | "week">>;
     searchUserQuery: (query: string) => Promise<void>;
+    resetWrite: (back?: (number | undefined)) => void
 }
 
 const CommHeader: React.FC<commheaderprops> = ({
@@ -21,12 +23,16 @@ const CommHeader: React.FC<commheaderprops> = ({
                                                    selectedList, setSelectedList,
                                                    setSelectedPage,
                                                    selectedPeriod, setSelectedPeriod,
-                                                   searchUserQuery
+                                                   searchUserQuery, resetWrite
                                                }) => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setSelectedPage(1);
         setSelectedList(newValue);
+        resetWrite(0);
     };
 
     const choiseSx = {fontSize: "1rem", fontWeight: "bold"};
@@ -36,6 +42,7 @@ const CommHeader: React.FC<commheaderprops> = ({
             <Tabs
                 value={selectedList}
                 onChange={handleTabChange}
+                onClick={()=> {if(location.pathname !== "/community") navigate("/community");}}
                 variant="fullWidth"
                 textColor="primary"
                 TabIndicatorProps={{
