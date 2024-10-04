@@ -1,55 +1,42 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, FormControl, MenuItem, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 
 export interface commDateprops {
     setWrite: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedPeriod: "all" | "month" | "week";
+    setSelectedPeriod: React.Dispatch<React.SetStateAction<"all" | "month" | "week">>;
+    searchUserQuery: (query: string) => Promise<void>;
 }
 
-const CommDate: React.FC<commDateprops> = ({setWrite}) => {
-
-    const [period, setPeriod] = React.useState('전체기간');
-    const [filter, setFilter] = React.useState('제목만');
+const CommDate: React.FC<commDateprops> = ({
+                                               setWrite,
+                                               selectedPeriod,
+                                               setSelectedPeriod,
+                                               searchUserQuery,
+                                           }) => {
+    const [inputValue, setInputValue] = useState(""); // 입력된 값을 저장하는 상태
 
     const handlePeriodChange = (event: any) => {
-        setPeriod(event.target.value);
-    };
-
-    const handleFilterChange = (event: any) => {
-        setFilter(event.target.value);
+        setSelectedPeriod(event.target.value);
     };
 
     const makeSx = {
-        width: "40vw",
+        width: "45vw",
     };
 
     return (
         <div className={"pc-comm-header-date"}>
             <Box display="flex" alignItems="center" gap={1}>
-                <FormControl
-                    variant="outlined"
-                    size="small"
-                >
+                <FormControl variant="outlined" size="small">
                     <Select
-                        value={period}
+                        value={selectedPeriod}
                         onChange={handlePeriodChange}
                         sx={{width: "7rem"}}
                     >
-                        <MenuItem value="전체기간">전체기간</MenuItem>
-                        <MenuItem value="최근1주">최근1주</MenuItem>
-                        <MenuItem value="최근1개월">최근1개월</MenuItem>
-                    </Select>
-                </FormControl>
-
-
-                <FormControl
-                    variant="outlined"
-                    size="small"
-                    sx={{width: "6rem"}}
-                >
-                    <Select value={filter} onChange={handleFilterChange}>
-                        <MenuItem value="제목만">제목만</MenuItem>
-                        <MenuItem value="내용만">내용만</MenuItem>
+                        <MenuItem value="all">전체기간</MenuItem>
+                        <MenuItem value="week">최근1주</MenuItem>
+                        <MenuItem value="month">최근1개월</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -59,24 +46,30 @@ const CommDate: React.FC<commDateprops> = ({setWrite}) => {
                         variant="outlined"
                         size="small"
                         sx={makeSx}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
                         InputProps={{
                             endAdornment: (
-                                <img src={"/img/search.png"} alt={""} style={{width: "1.5rem"}}/>
+                                <img
+                                    src={"/img/search.png"}
+                                    alt={""}
+                                    style={{width: "1.5rem", cursor:"pointer"}}
+                                    onClick={() => searchUserQuery(inputValue)}
+                                />
                             ),
+                        }}
+                        onKeyUp={(e: any) => {
+                            if (e.key === "Enter") searchUserQuery(inputValue);
                         }}
                     />
                 </FormControl>
             </Box>
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setWrite(true)}
-            >
+            <Button variant="contained" color="primary" onClick={() => setWrite(true)}>
                 글쓰기
             </Button>
         </div>
     );
-}
+};
 
 export default CommDate;
