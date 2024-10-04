@@ -90,5 +90,40 @@ $ cd Back
 $ git clone https://github.com/Yangpa-NurturingPartner/AI.git
 $ cd AI
 ```
+
+
+<hr>
   
+
+## Stacks ⚙
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
