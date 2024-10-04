@@ -26,10 +26,11 @@ const Profile: React.FC = () => {
         fetchProfileData(jwtToken);
     }, []);
 
-    const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
+    const serverIp: string | undefined = process.env.REACT_APP_HOST;
+    const port: string | undefined = process.env.REACT_APP_BACK_PORT;
     const fetchProfileData = async (jwtToken: string) => {
         try {
-            const response = await fetch(`${apiUrl}/api/profiles/search`, {
+            const response = await fetch(`http://${serverIp}:${port}/api/profiles/search`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
