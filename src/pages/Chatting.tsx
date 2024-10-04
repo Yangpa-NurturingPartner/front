@@ -84,6 +84,8 @@ interface ChatSummary {
     // 새로운 채팅 시작 함수
     const endstartChat = async () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
+        setShowChatDetail(false);
+        console.log("showChatDetail? " + showChatDetail);
     
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
@@ -208,6 +210,15 @@ interface ChatSummary {
             console.error('채팅 요약 불러오기 오류:', error);
         }
     };
+
+    useEffect(() => {
+        if (!showChatDetail) {
+            // showChatDetail이 false가 되었을 때만 기본 화면으로 이동
+            setMessages([]);
+            setShowAsk(true);
+            navigate('/chat', { state: null });
+        }
+    }, [showChatDetail]);
     
     return (
         <>

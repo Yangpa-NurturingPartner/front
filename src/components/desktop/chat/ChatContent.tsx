@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'; 
 import { TextField, IconButton, CircularProgress } from "@mui/material";
+import { Search } from '@mui/icons-material';
 import axios from "axios";
 import ChatPartDefault from "./ChatPartDefault";
 
@@ -166,29 +167,29 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                 )}
 
                 <form className="pc-chat-input">
-                <TextField
-                    id="outlined-basic"
-                    placeholder="육아 고민을 적어주세요"
-                    variant="outlined"
-                    sx={makeSx}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            handleSubmit(); 
-                        }
-                    }}
-                    disabled={isChatEnded || isLoading} 
-                    className="pc-chat-body-searchInput"
-                />
+                    <TextField
+                        id="outlined-basic"
+                        placeholder="육아 고민을 적어주세요"
+                        variant="outlined"
+                        sx={makeSx}
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleSubmit(); 
+                            }
+                        }}
+                        disabled={isChatEnded || isLoading} 
+                        className="pc-chat-body-searchInput"
+                    />
                     <div style={{ display: 'flex', marginTop: '10px' }}>
                         <IconButton 
                             type="button" 
                             onClick={handleSubmit} 
                             disabled={isChatEnded || isLoading}
                         >
-                            send
+                            <Search /> 
                         </IconButton>
                     </div>
                 </form>
