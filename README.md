@@ -90,5 +90,93 @@ $ cd Back
 $ git clone https://github.com/Yangpa-NurturingPartner/AI.git
 $ cd AI
 ```
+
+
+<hr>
   
+
+## Stacks ⚙
+### Frontend & Backend
+![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=spring&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+
+### Database & Search
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)
+![AWS OpenSearch](https://img.shields.io/badge/AWS%20OpenSearch-232F3E?style=flat&logo=amazon-aws&logoColor=white)
+![DataGrip](https://img.shields.io/badge/DataGrip-000000?style=flat&logo=datagrip&logoColor=white)
+
+### AI
+![LangChain](https://img.shields.io/badge/LangChain-065535?style=flat)
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
+![Whisper](https://img.shields.io/badge/Whisper-1C1E21?style=flat)
+
+### Development Tools
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat&logo=intellij-idea&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat&logo=visual-studio-code&logoColor=white)
+
+### Communication
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white)
+
+
+<hr>
+
+
+## 화면 구성📺
+<table>
+    <tr>
+        <td align="center"><strong>메인 페이지</strong></td>
+        <td align="center"><strong>채팅 페이지</strong></td>
+    </tr>
+    <tr>
+        <td align="center"></td>
+        <td align="center"></td>
+    </tr>
+    <tr>
+        <td align="center"><strong>통합검색 페이지</strong></td>
+        <td align="center"><strong>커뮤니티 페이지</strong></td>
+    </tr>
+    <tr>
+        <td align="center"></td>
+        <td align="center"></td>
+    </tr>
+</table>
+
+<br>
+
+## API 주소
+
+
+<hr>
+
+
+## 주요 기능
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
