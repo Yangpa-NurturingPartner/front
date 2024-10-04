@@ -34,8 +34,6 @@ import axios from "axios";
             });
             setSessionId(response.data.data.session_id);
             setShowAsk(false);
-            console.log("sessionId1 = " + response.data.data.session_id);
-            console.log("showAsk Main = " + showAsk);
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
@@ -49,6 +47,7 @@ import axios from "axios";
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
         setQuery(query);
+        setShowAsk(false);
 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT; 

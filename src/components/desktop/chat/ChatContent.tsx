@@ -68,6 +68,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             return;
         }
 
+        setShowAsk(false);
         const userMessage: Message = { type: 'user', text: query };
         setMessages(prevMessages => [...prevMessages, userMessage]);
 
@@ -139,15 +140,15 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
     return (
         <div className="pc-show-chat">
-            <div className="pc-chat-part">
-            {showAsk && (
-                <ChatPartDefault 
-                onQuestionClick={handleQuestionClick}
-                onSubmit={handleSubmit}
-                />
-            )}
+             <div className={`pc-chat-part ${messages.length > 0 ? 'blank' : ''}`}>
+                {showAsk && (
+                    <ChatPartDefault 
+                    onQuestionClick={handleQuestionClick}
+                    onSubmit={handleSubmit}
+                    />
+                )}
             </div>
-
+    
             <div className="pc-chat-content">
                 <div className="message-container">
                     {messages.map((msg, index) => (
@@ -161,13 +162,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                         </div>
                     ))}
                 </div>
-
+    
                 {isLoading && (
                     <div style={{ textAlign: 'center', margin: '20px 0' }}>
                         <CircularProgress />
                     </div>
                 )}
-
+    
                 <form className="pc-chat-input">
                     <TextField
                         id="outlined-basic"
@@ -198,6 +199,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             </div>
         </div>
     );
-};
-
+}
+    
 export default ChatContent;

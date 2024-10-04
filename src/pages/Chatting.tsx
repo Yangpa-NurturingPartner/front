@@ -160,7 +160,7 @@ interface ChatSummary {
             if (initialQuery && initialAnswer && !isInitialQueryAnswered) {
                 await addInitialMessages(); 
                 setIsInitialQueryAnswered(true);
-                console.log("메인페이지에서 받아옴");
+                console.log("tqtq " + addInitialMessages());
                 setInitialQuery(null); 
                 setInitialAnswer(null);
             }
