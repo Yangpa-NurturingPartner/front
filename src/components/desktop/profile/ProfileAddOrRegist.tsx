@@ -57,11 +57,12 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
                 imageBase64 = base64String ? base64String : null;
             }
 
-            const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
+            const serverIp: string | undefined = process.env.REACT_APP_HOST;
+            const port: string | undefined = process.env.REACT_APP_BACK_PORT;
             const method = selectedProfile ? 'PUT' : 'POST';
             const url = selectedProfile
-                ? `${apiUrl}/api/profiles/${selectedProfile.childId}`
-                : `${apiUrl}/api/profiles/add`;
+                ? `http://${serverIp}:${port}/api/profiles/${selectedProfile.childId}`
+                : `http://${serverIp}:${port}/api/profiles/add`;
 
             const response = await fetch(url, {
                 method: method,
@@ -103,8 +104,9 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         }
 
         try {
-            const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
-            const response = await fetch(`${apiUrl}/api/profiles/${selectedProfile.childId}`, {
+            const serverIp: string | undefined = process.env.REACT_APP_HOST;
+            const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+            const response = await fetch(`http://${serverIp}:${port}/api/profiles/${selectedProfile.childId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
