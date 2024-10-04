@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { setProfiles, setSelectedProfile, ProfileState } from '../redux/slices/profileSlice';
@@ -11,6 +11,7 @@ import ProfileAddOrRegist from "../components/desktop/profile/ProfileAddOrRegist
 const Profile: React.FC = () => {
     const [regis, setRegis] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const dispatch = useDispatch();
 
     // Redux 상태에서 profileList와 selectedProfile 가져오기
@@ -24,7 +25,18 @@ const Profile: React.FC = () => {
             return;
         }
         fetchProfileData(jwtToken);
-    }, []);
+
+        const queryParams = new URLSearchParams(location.search);
+        const action = queryParams.get('action');
+
+        if (action === 'edit' && selectedProfile) {
+            setRegis(true);
+        } else if (action === 'add') {
+            dispatch(setSelectedProfile(null));
+            setRegis(true);
+        }
+
+    }, [location.search, selectedProfile]);
 
     const serverIp: string | undefined = process.env.REACT_APP_HOST;
     const port: string | undefined = process.env.REACT_APP_BACK_PORT;
