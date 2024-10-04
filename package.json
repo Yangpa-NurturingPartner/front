@@ -1,10 +1,6 @@
 {
   "name": "front",
   "version": "0.1.0",
-<<<<<<< HEAD
-  "proxy": "http://localhost:8000",
-=======
->>>>>>> 02f8e95ebf9a38322c52588d608e7e90cd3deef8
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",

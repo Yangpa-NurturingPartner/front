@@ -8,7 +8,7 @@ interface ChatPartDefaultProps {
 const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, onSubmit }) => {
 
     const questions = [
-        "아",
+        "아이가 밥을 안 먹어요",
         "책을 어떻게 읽어 줘야 할까",
         "오은영 10계명 알려줘"
     ];
