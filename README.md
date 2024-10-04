@@ -1,46 +1,60 @@
-# Getting Started with Create React App
+# 🧅내 손안의 양파 : 양육 파트너
+<br>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/edec5cfe-3c7a-45ea-8a84-13d0857216c4" alt="logo"/>
+</div>
 
-## Available Scripts
 
-In the project directory, you can run:
+## Project Info
 
-### `npm start`
+> **AI-Mazing (하이미디어)** <br>
+> 개발기간 : **2024.08.21 ~ 2024.10.11**
+<br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 배포 주소
 
-### `npm test`
+> 개발 버전 :  <br>
+> 프론트 서버 :  <br>
+> 백엔드 서버 :  <br> 
+<br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### AI-Mazing 소개
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<table>
+  <tr>
+    <td align="center"><strong>안유진</strong></td>
+    <td align="center"><strong>홍건호</strong></td>
+    <td align="center"><strong>손석현</strong></td>
+    <td align="center"><strong>최정민</strong></td>
+    <td align="center"><strong>이승호</strong></td>
+    <td align="center"><strong>장혜지</strong></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/dkswndms4782">@dkswndms4782</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/HongGunHo05">@HongGunHo05</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/lobster0202">@lobster02025</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/jeongmin521">@jeongmin521</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/gengen89">@gengen89</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/jangheyji">@jangheyji</a>
+    </td>
+  </tr>
+</table>
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 프로젝트 소개
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
