@@ -11,6 +11,12 @@ interface Message {
     text: string; 
 }
 
+interface ChatSummary {
+    session_id: string;
+    end_time: string;
+    summ_answer: string;
+}
+
   const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false); 
     const location = useLocation(); 
@@ -26,13 +32,18 @@ interface Message {
     const [showAsk, setShowAsk] = useState(true);
     const [isInitialQueryAnswered, setIsInitialQueryAnswered] = useState(false);
 
+    const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
+    
+
     const navigate = useNavigate();
 
     //채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
         try {
-            const response = await axios.get(`http://localhost:8000/chat/chat-record-view/${session_id}`);
-            setChatDetail(response.data);
+            const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${session_id}`);
+            setChatDetail(response.data.data);
             setShowChatDetail(true);
         } catch (error) {
             console.error('채팅 상세 불러오기 오류:', error);
@@ -47,7 +58,9 @@ interface Message {
     // 세션 종료 함수
     const endSession = async () => {
         console.log("Endsession 실행됨");
-        try { await axios.post('http://localhost:8000/chat/end-chat', null, { params: { sessionId: localStorage.getItem("localsession_id") } 
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+        try { await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { sessionId: localStorage.getItem("localsession_id") } 
             });
             console.log("채팅이 종료되었습니다.");
     
@@ -76,9 +89,12 @@ interface Message {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
             child_id: 1 
         };
+
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
     
         try {
-            const response = await axios.post('http://localhost:8000/chat/start-new-chat', requestData, {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/start-new-chat`, requestData, {
                 headers: {
                     'Content-Type': 'application/json', // 요청 본문 형식
                     'Authorization': requestData.jwtToken, // JWT 토큰을 Authorization 헤더에 포함
@@ -87,7 +103,7 @@ interface Message {
     
             console.log('Response:', response);
     
-            const newSession_id = response.data.session_id; 
+            const newSession_id = response.data.data.session_id; 
             console.log("newSession_id = " + newSession_id);
 
             setMessages([]);
@@ -169,6 +185,29 @@ interface Message {
             }
         };
     }, []);
+
+    const fetchChatSummaries = async () => {
+        const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
+        try {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/user-chat-record`, {
+                'token' : jwtToken
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const summaries = Array.isArray(response.data.data) ? response.data.data : [];
+            console.log(summaries);
+
+            setChatSummaries(summaries);
+        } catch (error) {
+            console.error('채팅 요약 불러오기 오류:', error);
+        }
+    };
     
     return (
         <>
@@ -182,6 +221,9 @@ interface Message {
                 setShowChatDetail={setShowChatDetail}
                 showAsk={showAsk}
                 setShowAsk={setShowAsk}
+                fetchChatSummaries={fetchChatSummaries}
+                chatSummaries={chatSummaries}
+                setChatSummaries={setChatSummaries}
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
@@ -195,6 +237,7 @@ interface Message {
                         isChatEnded={isChatEnded}
                         endstartChat={endstartChat}
                         session_id={session_id || ''}
+                        fetchChatSummaries={fetchChatSummaries}
                     />
                 )}
             </div>

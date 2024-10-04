@@ -17,9 +17,10 @@ interface ChatContentProps {
     isChatEnded: boolean;
     endstartChat: () => void;
     session_id: string;
+    fetchChatSummaries: () => Promise<void>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, session_id }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, session_id,fetchChatSummaries }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [showAsk, setShowAsk] = useState(true);
     const navigate = useNavigate();
@@ -71,19 +72,26 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
         setIsLoading(true);
 
+        
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
         try {
-            const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
-            const response = await axios.post(`${apiUrl}/chat/message`, {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
                 chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken")
             });
 
-            const botAnswer = response.data.answer || '답변이 없습니다.';
+            const botAnswer = response.data.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: 'bot', text: botAnswer };
+
+            console.log(serverIp);
+            console.log(port)
 
             setMessages(prevMessages => [...prevMessages, botMessage]);
             setQuery('');
+            fetchChatSummaries();
         } catch (error: any) {
             const errorMessage: Message = { type: 'error', text: error.response?.data?.message || '오류가 발생했습니다.' };
             setMessages(prevMessages => [...prevMessages, errorMessage]);
@@ -103,14 +111,17 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
         setIsLoading(true);
 
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
         try {
-            const response = await axios.post('http://localhost:8000/chat/message', {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
                 chat_detail: question,
                 token: "Bearer " + localStorage.getItem("jwtToken")
             });
 
-            const botAnswer = response.data.answer || '답변이 없습니다.';
+            const botAnswer = response.data.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: 'bot', text: botAnswer };
 
             setMessages(prevMessages => [...prevMessages, botMessage]);

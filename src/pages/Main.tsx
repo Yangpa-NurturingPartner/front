@@ -21,18 +21,20 @@ import axios from "axios";
     // 새로운 채팅
     const startNewChat = async () => {
         console.log("채팅 시작");
+
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
         try {
-            //const SERVER_PORT = process.env.REACT_APP_SERVER_PORT;
-            //const response = await axios.post(`${SERVER_PORT}/chat/start-new-chat`, requestData, {
-            const response = await axios.post('http://localhost:8000/chat/start-new-chat', requestData, {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/start-new-chat`, requestData, {
                 headers: {
                     'Content-Type': 'application/json', 
                     'Authorization': requestData.jwtToken,
                 }
             });
-            setSessionId(response.data.session_id);
+            setSessionId(response.data.data.session_id);
             setShowAsk(false);
-            console.log("sessionId1 = " + response.data.session_id);
+            console.log("sessionId1 = " + response.data.data.session_id);
             console.log("showAsk Main = " + showAsk);
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
@@ -47,13 +49,17 @@ import axios from "axios";
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
         setQuery(query);
+
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
         try {
-            const response = await axios.post('http://localhost:8000/chat/message', {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id: sessionId,
                 chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken")
             });
-            navigate('/chat', { state: { sessionId, query, answer: response.data.answer } });
+            navigate('/chat', { state: { sessionId, query, answer: response.data.data.answer } });
         } catch (error) {
             console.error("질문 제출 오류:", error);
         }

@@ -11,10 +11,14 @@ interface ChatSummary {
 
 interface SidebarContentProps {
     viewChatDetail: (session_id: string) => void;
+    fetchChatSummaries: () => Promise<void>;
+    chatSummaries: ChatSummary[];
+    setChatSummaries:any;
 }
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
-    const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
+const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchChatSummaries,
+     chatSummaries, setChatSummaries }) => {
+    
     const [filteredSummaries, setFilteredSummaries] = useState<ChatSummary[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -45,27 +49,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
     };
 
     useEffect(() => {
-        const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
-        const fetchChatSummaries = async () => {
-            try {
-                const response = await axios.post('http://localhost:8000/chat/user-chat-record', {}, {
-                    headers: {
-                        'Authorization': jwtToken,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                const summaries = Array.isArray(response.data) ? response.data : [];
-            
-                setChatSummaries(summaries);
-                console.log(summaries);
-                setFilteredSummaries(summaries);
-            } catch (error) {
-                console.error('채팅 요약 불러오기 오류:', error);
-            }
-        };
-    
+        
         fetchChatSummaries(); // 초기 데이터 로딩
+        // setFilteredSummaries(chatSummaries)
+        
     
         //5초마다 주기적으로 호출
         //const intervalId = setInterval(fetchChatSummaries, 5000); 
@@ -80,9 +67,12 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
             return;
         }
 
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+
         try {
             const response = await axios.post(
-                "http://localhost:8000/chat/search",
+                `http://${serverIp}:${port}/chat/search`,
                 {
                     query: searchQuery,
                     token: "Bearer " + jwtToken,
@@ -126,7 +116,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail }) => {
         return grouped;
     };
 
-    const groupedSummaries = groupByDate(filteredSummaries);
+    const groupedSummaries = groupByDate(chatSummaries);
 
     return (
         <div className="pc-chat-body">
