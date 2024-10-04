@@ -57,4 +57,38 @@
 
 
 ### 프로젝트 소개
+채팅을 기반으로 하여 다양한 형태의 전문적인 육아 지식을 보다 간편하게 접근 할 수 있는 AI 육아 솔루션 제공 플랫폼 <br>
+
+
+<hr> 
+
+
+## 시작 가이드
+### Requirements
+For building and running the application you need:
+- []()
+<br>
+
+### Installation
+#### Frontend
+```bash
+$ git clone https://github.com/Yangpa-NurturingPartner/front.git
+$ cd front
+$ npm install
+```
+
+
+#### Backend
+```bash
+$ git clone https://github.com/Yangpa-NurturingPartner/Back.git
+$ cd Back
+```
+
+
+#### AI
+```bash
+$ git clone https://github.com/Yangpa-NurturingPartner/AI.git
+$ cd AI
+```
+  
 
