@@ -56,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                 onClick={async () => {
                     navigate('/chat', { state: { showAsk: true } });
                     setShowChatDetail(false);
+                    setShowAsk(true);
                     await endSession(); // 기존 채팅 종료
                     await endstartChat(); // 새로운 채팅 시작
                 }}

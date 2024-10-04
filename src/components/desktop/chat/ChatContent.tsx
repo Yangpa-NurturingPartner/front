@@ -140,10 +140,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     return (
         <div className="pc-show-chat">
             <div className="pc-chat-part">
+            {showAsk && (
                 <ChatPartDefault 
-                    onQuestionClick={handleQuestionClick}
-                    onSubmit={handleSubmit}
+                onQuestionClick={handleQuestionClick}
+                onSubmit={handleSubmit}
                 />
+            )}
             </div>
 
             <div className="pc-chat-content">
