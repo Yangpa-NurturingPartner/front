@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, FormControl, MenuItem, Select, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 
@@ -11,9 +11,11 @@ export interface commDateprops {
 
 const CommDate: React.FC<commDateprops> = ({
                                                setWrite,
-                                               selectedPeriod, setSelectedPeriod,
-                                               searchUserQuery
+                                               selectedPeriod,
+                                               setSelectedPeriod,
+                                               searchUserQuery,
                                            }) => {
+    const [inputValue, setInputValue] = useState(""); // 입력된 값을 저장하는 상태
 
     const handlePeriodChange = (event: any) => {
         setSelectedPeriod(event.target.value);
@@ -26,10 +28,7 @@ const CommDate: React.FC<commDateprops> = ({
     return (
         <div className={"pc-comm-header-date"}>
             <Box display="flex" alignItems="center" gap={1}>
-                <FormControl
-                    variant="outlined"
-                    size="small"
-                >
+                <FormControl variant="outlined" size="small">
                     <Select
                         value={selectedPeriod}
                         onChange={handlePeriodChange}
@@ -47,27 +46,30 @@ const CommDate: React.FC<commDateprops> = ({
                         variant="outlined"
                         size="small"
                         sx={makeSx}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
                         InputProps={{
                             endAdornment: (
-                                <img src={"/img/search.png"} alt={""} style={{width: "1.5rem"}}/>
+                                <img
+                                    src={"/img/search.png"}
+                                    alt={""}
+                                    style={{width: "1.5rem", cursor:"pointer"}}
+                                    onClick={() => searchUserQuery(inputValue)}
+                                />
                             ),
                         }}
                         onKeyUp={(e: any) => {
-                            if (e.key === "Enter") searchUserQuery(e.target.value);
+                            if (e.key === "Enter") searchUserQuery(inputValue);
                         }}
                     />
                 </FormControl>
             </Box>
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setWrite(true)}
-            >
+            <Button variant="contained" color="primary" onClick={() => setWrite(true)}>
                 글쓰기
             </Button>
         </div>
     );
-}
+};
 
 export default CommDate;

@@ -13,17 +13,19 @@ export interface commheaderprops {
     setSelectedList: React.Dispatch<React.SetStateAction<number>>;
     setSelectedPage: React.Dispatch<React.SetStateAction<number>>;
     selectedPeriod: "all" | "month" | "week";
+    fetchCommunityData: () => Promise<void>;
     setSelectedPeriod: React.Dispatch<React.SetStateAction<"all" | "month" | "week">>;
     searchUserQuery: (query: string) => Promise<void>;
-    resetWrite: (back?: (number | undefined)) => void
+    resetWrite: (back?: (number | undefined)) => void;
+    ignoreFetchRef: React.MutableRefObject<boolean>;
 }
 
 const CommHeader: React.FC<commheaderprops> = ({
                                                    write, setWrite,
                                                    selectedList, setSelectedList,
-                                                   setSelectedPage,
+                                                   setSelectedPage, fetchCommunityData,
                                                    selectedPeriod, setSelectedPeriod,
-                                                   searchUserQuery, resetWrite
+                                                   searchUserQuery, resetWrite, ignoreFetchRef
                                                }) => {
 
     const navigate = useNavigate();
@@ -32,6 +34,7 @@ const CommHeader: React.FC<commheaderprops> = ({
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setSelectedPage(1);
         setSelectedList(newValue);
+        ignoreFetchRef.current = false;
         resetWrite(0);
     };
 
@@ -42,7 +45,9 @@ const CommHeader: React.FC<commheaderprops> = ({
             <Tabs
                 value={selectedList}
                 onChange={handleTabChange}
-                onClick={()=> {if(location.pathname !== "/community") navigate("/community");}}
+                onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                    if (location.pathname !== "/community") navigate("/community");
+                }}
                 variant="fullWidth"
                 textColor="primary"
                 TabIndicatorProps={{
@@ -52,7 +57,7 @@ const CommHeader: React.FC<commheaderprops> = ({
                 }}
                 sx={{borderBottom: "1px solid black"}}
             >
-                <Tab label="전체" sx={choiseSx} value={0}/>
+                <Tab label="전체" sx={choiseSx} value={0} onClick={() => fetchCommunityData()}/>
                 <Tab label="공지사항" sx={choiseSx} value={50}/>
                 {/*<Tab label="인기" sx={choiseSx}/>*/}
                 {/*<Tab label="이벤트" sx={choiseSx} />*/}

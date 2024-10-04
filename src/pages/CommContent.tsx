@@ -37,7 +37,7 @@ const CommContent: React.FC = () => {
     } = useCommunity(boardId);
 
     // 데이터 로딩 및 에러 처리
-    if (loading) return <p>로딩 중...</p>;
+    if (loading) return <img src={"/img/LoagingRolling.gif"} alt={""}/>;
     if (error) return <p>{error}</p>;
 
     // 게시물 데이터, 댓글 데이터 분리

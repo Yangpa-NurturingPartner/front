@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import axios, {AxiosResponse} from "axios";
 import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
@@ -18,7 +18,7 @@ export const useCommunity = (boardId?: number) => {
     const [pageCount, setPageCount] = useState<number>(0);
     // 선택한 페이지
     const [selectedPage, setSelectedPage] = useState<number>(1);
-    // 선텍한 목록
+    // 선택한 목록
     const [selectedList, setSelectedList] = useState<number>(0);
     // 검색 기간 선택
     const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'month' | 'week'>('all');
@@ -37,8 +37,17 @@ export const useCommunity = (boardId?: number) => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // 플래그 추가
+    const ignoreFetchRef = useRef(false);
+
     // 데이터를 가져오는 함수
     const fetchCommunityData = async () => {
+        // `searchUserQuery`에서 `setSelectedList`가 호출되었을 때 무시하도록 함
+        if (ignoreFetchRef.current) {
+            ignoreFetchRef.current = false; // 플래그 초기화
+            return;
+        }
+
         try {
             setLoading(true);
             setError(null);
@@ -72,7 +81,6 @@ export const useCommunity = (boardId?: number) => {
         fetchCommunityData();
     }, [selectedPage, selectedList, boardId]);
 
-
     // 사용자 쿼리에 따른 게시물 가져오는 함수
     const searchUserQuery = async (query: string) => {
         try {
@@ -80,9 +88,12 @@ export const useCommunity = (boardId?: number) => {
             if (location.pathname !== "/community") navigate("/community");
             setError(null); // 에러 초기화
 
+            // `setSelectedList` 실행 전 플래그를 설정하여 `useEffect` 방지
+            ignoreFetchRef.current = true;
+            setSelectedList(0);
+
             // 빈 검색어인 경우 기본 게시물 목록을 가져옴
             if (!query.trim()) {
-                // 빈 검색어일 때는 페이지 번호와 게시판 코드를 초기화
                 const response: AxiosResponse<any, any> = await axios.post(`http://${serverIp}:${port}/community/boards`, {
                     boardCode: 0,
                     pageNo: 1,
@@ -107,7 +118,6 @@ export const useCommunity = (boardId?: number) => {
             setLoading(false);
         }
     };
-
 
     // 게시물 작성 함수
     const writeBoard = async () => {
@@ -155,7 +165,6 @@ export const useCommunity = (boardId?: number) => {
         }
     };
 
-
     // 초기화
     const resetWrite = (back?: number) => {
         setSelectedBoardCode(100);
@@ -165,7 +174,12 @@ export const useCommunity = (boardId?: number) => {
         setWrite(false);
 
         if (location.pathname !== "/community") navigate("/community");
-    }
+    };
+
+    // 플래그를 리셋하는 함수
+    const resetIgnoreFetch = () => {
+        ignoreFetchRef.current = false;
+    };
 
 
     return {
@@ -175,10 +189,10 @@ export const useCommunity = (boardId?: number) => {
         selectedList, setSelectedList,
         selectedPeriod, setSelectedPeriod,
         searchUserQuery, fetchCommunityData,
-
         selectedBoardCode, setSelectedBoardCode,
         title, setTitle,
         content, setContent,
-        file, setFile, writeBoard, resetWrite
+        file, setFile, writeBoard, resetWrite,
+        ignoreFetchRef, resetIgnoreFetch
     };
 };

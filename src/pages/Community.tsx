@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import Goback from "../components/common/Goback";
 import "../css/commCss.scss";
 import CommHeader from "../components/desktop/comm/CommHeader";
@@ -9,7 +9,6 @@ import {Outlet, useLocation} from "react-router-dom";
 import {useCommunity} from "../hook/useCommunity";
 
 const Community: React.FC = () => {
-
     const location = useLocation();
     const isRootPath = location.pathname === "/community";
 
@@ -21,12 +20,54 @@ const Community: React.FC = () => {
         selectedPage, setSelectedPage,
         selectedList, setSelectedList,
         selectedPeriod, setSelectedPeriod,
-        searchUserQuery,
+        searchUserQuery, fetchCommunityData,
         selectedBoardCode, setSelectedBoardCode,
         title, setTitle,
         content, setContent,
-        file, setFile, writeBoard, resetWrite
+        file, setFile,
+        writeBoard, resetWrite,
+        ignoreFetchRef
     } = useCommunity();
+
+    const renderContent = () => {
+        if (write) {
+            return (
+                <CommWrite
+                    setWrite={setWrite}
+                    selectedBoardCode={selectedBoardCode}
+                    setSelectedBoardCode={setSelectedBoardCode}
+                    title={title}
+                    setTitle={setTitle}
+                    content={content}
+                    setContent={setContent}
+                    file={file}
+                    setFile={setFile}
+                    writeBoard={writeBoard}
+                    resetWrite={resetWrite}
+                />
+            );
+        }
+
+        if (!isRootPath) {
+            return <Outlet/>;
+        }
+
+        if (loading) return <img src={"/img/LoagingRolling.gif"} alt={""}/>;
+        if (error) return <p>{error}</p>;
+
+        return (
+            <>
+                <CommContent data={communityData}/>
+                <Pagination
+                    count={pageCount}
+                    color="primary"
+                    sx={{marginTop: "3rem"}}
+                    page={selectedPage}
+                    onChange={(e: React.ChangeEvent<unknown>, value: number) => setSelectedPage(value)}
+                />
+            </>
+        );
+    };
 
     return (
         <div>
@@ -37,49 +78,15 @@ const Community: React.FC = () => {
                     setWrite={setWrite}
                     selectedList={selectedList}
                     setSelectedList={setSelectedList}
+                    fetchCommunityData={fetchCommunityData}
                     setSelectedPage={setSelectedPage}
                     selectedPeriod={selectedPeriod}
                     setSelectedPeriod={setSelectedPeriod}
                     searchUserQuery={searchUserQuery}
                     resetWrite={resetWrite}
+                    ignoreFetchRef={ignoreFetchRef}
                 />
-
-                {write ? (
-                    <CommWrite
-                        setWrite={setWrite}
-                        selectedBoardCode={selectedBoardCode}
-                        setSelectedBoardCode={setSelectedBoardCode}
-                        title={title} setTitle={setTitle}
-                        content={content} setContent={setContent}
-                        file={file} setFile={setFile} writeBoard={writeBoard}
-                        resetWrite={resetWrite}
-                    />
-                ) : (
-                    <>
-                        {!isRootPath ? (
-                            <Outlet/>
-                        ) : (
-                            <>
-                                {loading ? (
-                                    <p>로딩 중...</p>
-                                ) : error ? (
-                                    <p>{error}</p>
-                                ) : (
-                                    <CommContent
-                                        data={communityData}
-                                    />
-                                )}
-                                <Pagination
-                                    count={pageCount}
-                                    color="primary"
-                                    sx={{marginTop: "3rem"}}
-                                    page={selectedPage}
-                                    onChange={(e: React.ChangeEvent<unknown>, value: number) => setSelectedPage(value)}
-                                />
-                            </>
-                        )}
-                    </>
-                )}
+                {renderContent()}
             </div>
         </div>
     );
