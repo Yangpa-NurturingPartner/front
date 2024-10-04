@@ -157,7 +157,7 @@ body {
       justify-content: space-around;
       width: 80%;
       margin-top: 4rem;
-
+  
       .pc-ask-question {
         display: flex;
         justify-content: center;
@@ -166,8 +166,16 @@ body {
         border-radius: 15px;
         width: 25%;
         height: 4.5vh;
+        cursor: pointer; 
+        &:hover {
+          background-color: #e6e4e4; 
+        }
       }
     }
+  }
+  
+  .hidden {
+    display: none;
   }
 
   .pc-chat-input {
@@ -244,7 +252,7 @@ body {
 }
 
 .message.bot {
-  background-color: #ffffff;
+  background-color: #e6e4e4; 
   margin-right: auto;
 }
 

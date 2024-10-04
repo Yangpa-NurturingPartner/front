@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Goback from "../../common/Goback";
 import SidebarContent from "./Sidebarcontent";
+import axios from "axios";
+
+interface ChatSummary {
+    session_id: string;
+    end_time: string;
+    summ_answer: string;
+}
+
 
 interface SidebarProps {
     isCollapsed: boolean;
@@ -9,16 +17,30 @@ interface SidebarProps {
     viewChatDetail: (session_id: string) => void;
     endSession: () => void;
     endstartChat: () => void; 
+    showChatDetail: boolean;
+    setShowChatDetail: (value: boolean) => void; 
+    showAsk: boolean;
+    setShowAsk: (value: boolean) => void; 
+    fetchChatSummaries: () => Promise<void>;
+    chatSummaries: ChatSummary[];
+    setChatSummaries:any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, endstartChat, endSession }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,
+     endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries
+     }) => {
     const navigate = useNavigate();
+    const [showChatDetail, setShowChatDetail] = useState(false);
+    const [showAsk, setShowAsk] = useState(true);
+
+    
     
     return (
         <>
             <Goback where={"채팅"} />
             <div className={`pc-chat-sidebar ${isCollapsed ? "collapsed" : ""}`}>
-                {!isCollapsed && <SidebarContent viewChatDetail={viewChatDetail} />}
+                {!isCollapsed && <SidebarContent viewChatDetail={viewChatDetail} fetchChatSummaries={fetchChatSummaries}
+                 chatSummaries={chatSummaries} setChatSummaries={setChatSummaries}/>}
             </div>
             <div className={"pc-chat-sidebar-btn"}>
                 <img
@@ -28,24 +50,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     style={{ cursor: "pointer" }}
                 />
                 <div className={"pc-chat-sidebar-btn-newchat"}>
-                <img
-                    src={"/img/write.png"}
-                    alt={""}
-                    onClick={async () => {
-                        navigate('/chat', { state: null });
-                        window.location.reload();
-                        await endSession(); //기존 채팅 종료
-                        await endstartChat(); //새로운 채팅 시작
-                     }}
-                    style={{
-                        cursor: "pointer",
-                        position: "absolute",
-                        left: isCollapsed ? '4vw' : '13vw',
-                        bottom: "0.2vh",
-                        transition: "left 0.3s ease"
-                    }}
-                />
-                </div>
+            <img
+                src={"/img/write.png"}
+                alt={""}
+                onClick={async () => {
+                    navigate('/chat', { state: { showAsk: true } });
+                    setShowChatDetail(false);
+                    await endSession(); // 기존 채팅 종료
+                    await endstartChat(); // 새로운 채팅 시작
+                }}
+                style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    left: isCollapsed ? '4vw' : '13vw',
+                    bottom: "0.2vh",
+                    transition: "left 0.3s ease"
+                }}
+            />
+        </div>
+
             </div>
         </>
     );
