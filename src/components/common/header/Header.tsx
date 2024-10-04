@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../../redux/store';
 import { setSelectedProfile } from '../../../redux/slices/profileSlice';
 import "../commonCss.scss";
@@ -10,6 +11,7 @@ import HeaderMenu from "./HeaderMenu";
 const Header: React.FC = () => {
     const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const profileList = useSelector((state: RootState) => state.profile.profiles);
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
@@ -29,11 +31,21 @@ const Header: React.FC = () => {
         }
     };
 
+    const handleLogoClick = () => {
+        navigate('/');
+    };
+
     return (
         <div>
             <div className={isPortrait ? "ph-header" : "pc-header"}>
                 <div className={isPortrait ? "" : "pc-img-div"}>
-                    <img className={isPortrait ? "ph-logo-img" : "pc-logo-img"} src="/img/logo.png" alt={""} />
+                    <img
+                        className={isPortrait ? "ph-logo-img" : "pc-logo-img"}
+                        src="/img/logo.png"
+                        alt={""}
+                        onClick={handleLogoClick}
+                        style={{ cursor: 'pointer' }}
+                    />
                 </div>
 
                 <div className={isPortrait ? "ph-choose-child" : "pc-choose-child"}>
