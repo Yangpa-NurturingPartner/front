@@ -72,7 +72,8 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:8000/chat/message', {
+            const apiUrl = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
+            const response = await axios.post(`${apiUrl}/chat/message`, {
                 session_id,
                 chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken")
