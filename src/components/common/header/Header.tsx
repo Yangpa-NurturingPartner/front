@@ -6,25 +6,18 @@ import { setSelectedProfile } from '../../../redux/slices/profileSlice';
 import "../commonCss.scss";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import HeaderMenu from "./HeaderMenu";
-import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-
-    const navigate = useNavigate();
-
-    const onClickHandler = () => navigate("/");
-
-
     const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
     const dispatch = useDispatch();
     const profileList = useSelector((state: RootState) => state.profile.profiles);
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
     useEffect(() => {
+        if (!Array.isArray(profileList)) return;
         // console.log('Selected profile in Header:', selectedProfile);
         // console.log('Profile list in Header:', profileList);
     }, [selectedProfile, profileList]);
-    
 
     const handleChange = (event: SelectChangeEvent) => {
         const selectedChildId = Number(event.target.value);
@@ -38,12 +31,9 @@ const Header: React.FC = () => {
 
     return (
         <div>
-            <div className={isPortrait ? "ph-header" : "pc-header"} >
-            
+            <div className={isPortrait ? "ph-header" : "pc-header"}>
                 <div className={isPortrait ? "" : "pc-img-div"}>
-                <img className={isPortrait ? "ph-logo-img" : "pc-logo-img"} src="/img/logo.png" 
-                    alt={""} onClick={onClickHandler}
-                    style = {{cursor: "pointer"}}/>
+                    <img className={isPortrait ? "ph-logo-img" : "pc-logo-img"} src="/img/logo.png" alt={""} />
                 </div>
 
                 <div className={isPortrait ? "ph-choose-child" : "pc-choose-child"}>
@@ -55,7 +45,7 @@ const Header: React.FC = () => {
                             inputProps={{ 'aria-label': 'Without label' }}
                             style={{ height: "100%" }}
                         >
-                            {profileList.map((profile) => (
+                            {Array.isArray(profileList) && profileList.map((profile) => (
                                 <MenuItem key={profile.childId} value={profile.childId.toString()}>
                                     {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
                                 </MenuItem>

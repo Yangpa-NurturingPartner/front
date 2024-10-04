@@ -1,10 +1,9 @@
 import React, {useState, useRef} from "react";
 import Button from "@mui/material/Button";
-import {useNavigate} from "react-router-dom";
-import {styled} from "@mui/system";
-import TextField from "@mui/material/TextField";
+import {useNavigate, useParams} from "react-router-dom";
 import CommContentComments from "../components/desktop/comm/content/CommContentComments";
 import CommContentShow from "../components/desktop/comm/content/CommContentShow";
+import {useCommunity} from "../hook/useCommunity";
 
 export const blue = {
     100: '#DAECFF',
@@ -29,27 +28,31 @@ export const grey = {
 };
 
 const CommContent: React.FC = () => {
-    const navigate = useNavigate();
+    const {id} = useParams<{ id: string }>();
+    const boardId = parseInt(id || "0", 10);
 
+    // useCommunity에 boardId 전달하여 상세 게시물 가져오기
+    const {
+        communityData, loading, error, fetchCommunityData
+    } = useCommunity(boardId);
+
+    // 데이터 로딩 및 에러 처리
+    if (loading) return <img src={"/img/LoagingRolling.gif"} alt={""}/>;
+    if (error) return <p>{error}</p>;
+
+    // 게시물 데이터, 댓글 데이터 분리
+    const {board, comments, files}: any = communityData;
 
     return (
         <div className={"pc-comm-content-body"}>
-            <div className={"pc-comm-content-btn"}>
-                <Button
-                    sx={{
-                        backgroundColor: "#dddddd",
-                        color: "white",
-                        marginBottom: "0.5rem"
-                    }}
-                    onClick={() => navigate("/community")}
-                >뒤로 가기</Button>
-            </div>
-
-            <CommContentShow/>
-
-            <CommContentComments/>
+            <CommContentShow board={board} files={files}/>
+            <CommContentComments
+                comments={comments}
+                boardId={boardId}
+                fetchComments={fetchCommunityData}
+            />
         </div>
     );
-}
+};
 
 export default CommContent;

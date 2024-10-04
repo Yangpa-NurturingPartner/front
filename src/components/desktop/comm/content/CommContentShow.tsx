@@ -3,8 +3,16 @@ import {styled} from "@mui/system";
 import TextField from "@mui/material/TextField";
 import {blue, grey} from "../../../../pages/CommContent";
 
-const CommContentShow:React.FC = () => {
-    const imgRef = useRef<HTMLImageElement | null>(null); // 이미지에 대한 참조 생성
+interface BoardProps {
+    board: {
+        title: string;
+        board_contents: string;
+    };
+    files: any;
+}
+
+const CommContentShow: React.FC<BoardProps> = ({board, files}) => {
+    const imgRef = useRef<HTMLImageElement | null>(null);
 
     const handleFullScreen = () => {
         if (imgRef.current) {
@@ -39,7 +47,7 @@ const CommContentShow:React.FC = () => {
                 <Textarea
                     minRows={1}
                     maxRows={1}
-                    value="제목"
+                    value={board.title}
                     sx={{
                         width: "100%",
                         marginBottom: "1vh",
@@ -57,7 +65,7 @@ const CommContentShow:React.FC = () => {
                 <Textarea
                     multiline
                     minRows={25}
-                    value="글 내용"
+                    value={board.board_contents}
                     sx={{
                         width: "100%",
                         marginBottom: "1vh",
@@ -71,14 +79,18 @@ const CommContentShow:React.FC = () => {
                     tabIndex={-1}
                 />
 
-                <img
-                    className={"pc-comm-content-img"}
-                    src={"/img/mainPaint.png"}
-                    alt={""}
-                    onClick={handleFullScreen}
-                    ref={imgRef}
-                    style={{cursor: "pointer"}}
-                />
+                {
+                    files.length > 0
+                        ? <img
+                            className={"pc-comm-content-img"}
+                            src={files[0].name}
+                            alt={""}
+                            onClick={handleFullScreen}
+                            ref={imgRef}
+                            style={{cursor: "pointer"}}
+                        />
+                        : <></>
+                }
             </div>
         </>
     )

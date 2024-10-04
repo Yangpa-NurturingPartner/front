@@ -4,6 +4,10 @@ import {styled} from "@mui/material/styles";
 
 export interface commWriteBtnprops {
     setWrite: React.Dispatch<React.SetStateAction<boolean>>;
+    file: any;
+    setFile: any;
+    writeBoard: any;
+    resetWrite: any;
 }
 
 const FileInputLabel = styled("label")(({theme}) => ({
@@ -29,19 +33,23 @@ const FileInputLabel = styled("label")(({theme}) => ({
     },
 }));
 
-export const CommWriteBtn: React.FC<commWriteBtnprops> = ({setWrite}) => {
+export const CommWriteBtn: React.FC<commWriteBtnprops> = ({setWrite, file, setFile, writeBoard, resetWrite}) => {
     const [filePreview, setFilePreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
+            setFile(file);
+
             const reader = new FileReader();
+
             reader.onloadend = () => {
                 setFilePreview(reader.result as string);
+                setFileName(file.name);
             };
+
             reader.readAsDataURL(file);
-            setFileName(file.name);
         }
     };
 
@@ -52,7 +60,9 @@ export const CommWriteBtn: React.FC<commWriteBtnprops> = ({setWrite}) => {
                     {/*<LoadingButton loading variant="outlined">*/}
                     {/*    Submit*/}
                     {/*</LoadingButton>*/}
-                    <Button variant="contained">확인</Button>
+                    <Button variant="contained"
+                            onClick={writeBoard}
+                    >확인</Button>
 
                     <FileInputLabel className="preview">
                         <span>첨부 파일 선택</span>
@@ -61,6 +71,7 @@ export const CommWriteBtn: React.FC<commWriteBtnprops> = ({setWrite}) => {
                             className="file"
                             style={{display: "none"}}
                             onChange={handleFileChange}
+                            accept=".jpg, .png"
                         />
                     </FileInputLabel>
                 </div>
