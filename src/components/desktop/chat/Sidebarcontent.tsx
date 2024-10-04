@@ -54,7 +54,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
         // setFilteredSummaries(chatSummaries)
         
     
-        //5초마다 주기적으로 호출
+        // 5초마다 주기적으로 호출
         //const intervalId = setInterval(fetchChatSummaries, 5000); 
         //return () => clearInterval(intervalId);
     }, []);

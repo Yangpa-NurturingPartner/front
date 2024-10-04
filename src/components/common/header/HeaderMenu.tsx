@@ -11,6 +11,7 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import {setSelectedProfile} from "../../../redux/slices/profileSlice";
 
 interface HeaderMenuProps {
     selectedProfile: any;
@@ -41,6 +42,20 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
         localStorage.removeItem('profileList');
         // 로그인 페이지로 리다이렉트
         navigate('/login');
+    };
+
+    const handleNavigateProfileList = () => {
+        navigate('/profile');
+    };
+
+    const handleNavigateEditProfile = () => {
+        if (selectedProfile) {
+            navigate('/profile?action=edit')
+        }
+    };
+
+    const handleNavigateAddProfile = () => {
+        navigate('/profile?action=add');
     };
 
     return (
@@ -109,18 +124,18 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> Profile
+                <MenuItem onClick={handleNavigateProfileList}>
+                    <Avatar /> Profile List
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <Avatar /> My account
+                <MenuItem onClick={handleNavigateEditProfile}>
+                    <Avatar /> My profile
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleNavigateAddProfile}>
                     <ListItemIcon>
                         <PersonAdd fontSize="small" />
                     </ListItemIcon>
-                    Add another account
+                    Add another profile
                 </MenuItem>
                 <MenuItem onClick={handleClose}>
                     <ListItemIcon>

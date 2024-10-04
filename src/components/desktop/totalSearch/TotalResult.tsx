@@ -1,44 +1,81 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
-const TotalResult: React.FC = () => {
+interface TotalResultProps {
+    searchQuery: string;
+}
+
+const TotalResult: React.FC<TotalResultProps> = ({ searchQuery }) => {
+    const searchResults = useSelector((state: RootState) => state.totalSearch.searchResults);
+
+    useEffect(() => {
+        console.log('searchResults in TotalResult:', searchResults);
+    }, [searchResults]);
+
+    const {
+        chat_results = [],
+        video_results = [],
+        community_results = [],
+        document_results = []
+    } = searchResults || {};
+
     return (
-        <div className={"pc-total-result-box"}>
-            <div className={"pc-total-result-2"}>
-                <div className={"pc-total-result-1"}>
-                    <span>관련 문서</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 문서 검색 내용</div>
-                        <div>2. 문서 검색 내용</div>
-                        <div>3. 문서 검색 내용</div>
-                    </div>
-                </div>
+        <div>
+            <h2>검색 결과: {searchQuery}</h2>
 
-                <div className={"pc-total-result-1"}>
-                    <span>관련 영상</span>
-                    <div className={"pc-total-search-list"}>
-                        <img src={"/img/mainPaint.png"} alt={""}/>
-                    </div>
-                </div>
+            <div>
+                <h3>채팅 결과</h3>
+                {chat_results.length > 0 ? (
+                    chat_results.map((result: any, index: number) => (
+                        <div key={index}>
+                            <strong>질문:</strong> {result.query}<br />
+                            <strong>답변:</strong> {result.answer}
+                        </div>
+                    ))
+                ) : (
+                    <p>채팅 결과가 없습니다.</p>
+                )}
             </div>
 
-            <div className={"pc-total-result-2"}>
-                <div className={"pc-total-result-1"}>
-                    <span>커뮤니티</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 커뮤니티 검색 내용</div>
-                        <div>2. 커뮤니티 검색 내용</div>
-                        <div>3. 커뮤니티 검색 내용</div>
-                    </div>
-                </div>
+            <div>
+                <h3>비디오 결과</h3>
+                {video_results.length > 0 ? (
+                    video_results.map((result: any, index: number) => (
+                        <div key={index}>
+                            <a href={result.url} target="_blank" rel="noopener noreferrer">{result.title}</a>
+                        </div>
+                    ))
+                ) : (
+                    <p>비디오 결과가 없습니다.</p>
+                )}
+            </div>
 
-                <div className={"pc-total-result-1"}>
-                    <span>예전 채팅</span>
-                    <div className={"pc-total-search-list"}>
-                        <div>1. 예전 채팅</div>
-                        <div>2. 예전 채팅</div>
-                        <div>3. 예전 채팅</div>
-                    </div>
-                </div>
+            <div>
+                <h3>커뮤니티 결과</h3>
+                {community_results.length > 0 ? (
+                    community_results.map((result: any, index: number) => (
+                        <div key={index}>
+                            <strong>{result.title}</strong><br />
+                            <p>{result.board_contents}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p>커뮤니티 결과가 없습니다.</p>
+                )}
+            </div>
+
+            <div>
+                <h3>문서 결과</h3>
+                {document_results.length > 0 ? (
+                    document_results.map((result: any, index: number) => (
+                        <div key={index}>
+                            <a href={result.url} target="_blank" rel="noopener noreferrer">{result.title}</a>
+                        </div>
+                    ))
+                ) : (
+                    <p>문서 결과가 없습니다.</p>
+                )}
             </div>
         </div>
     );

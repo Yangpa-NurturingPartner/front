@@ -12,7 +12,7 @@ const SearchNavigate: React.FC = () => {
                 <span className={"pc-search-navigate-icon-title"}>채팅하기</span>
                 <div className={"pc-search-navigate-icon-span"}>
                     <span>육아 고민이 있을 때</span><br/>
-                    <span>AI에게 물어보세요</span>
+                    <span>양파에게 물어보세요</span>
                 </div>
             </div>
 

@@ -45,7 +45,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         const email = localStorage.getItem('email');
 
         if (!jwtToken || !email) {
-            // console.error("JWT token or email is missing");
+            console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
@@ -57,10 +57,12 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
                 imageBase64 = base64String ? base64String : null;
             }
 
+            const serverIp: string | undefined = process.env.REACT_APP_HOST;
+            const port: string | undefined = process.env.REACT_APP_BACK_PORT;
             const method = selectedProfile ? 'PUT' : 'POST';
             const url = selectedProfile
-                ? `http://localhost:8080/api/profiles/${selectedProfile.childId}`
-                : 'http://localhost:8080/api/profiles/add';
+                ? `http://${serverIp}:${port}/api/profiles/${selectedProfile.childId}`
+                : `http://${serverIp}:${port}/api/profiles/add`;
 
             const response = await fetch(url, {
                 method: method,
@@ -78,7 +80,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             });
 
             if (!response.ok) {
-                // console.error('HTTP Error:', response.status, response.statusText);
+                console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to add or update profile');
             }
 
@@ -86,7 +88,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
             // console.log("Profile added/updated successfully:", result);
             onProfileAdded();
         } catch (error) {
-            // console.error('Error adding or updating profile:', error);
+            console.error('Error adding or updating profile:', error);
         }
     };
 
@@ -94,35 +96,32 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
         if (!selectedProfile) return;
 
         const jwtToken = localStorage.getItem('jwtToken');
-        const email = localStorage.getItem('email');
 
-        if (!jwtToken || !email) {
-            // console.error("JWT token or email is missing");
+        if (!jwtToken) {
+            console.error("JWT token or email is missing");
             navigate("/login");
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/profiles/${selectedProfile.childId}`, {
+            const serverIp: string | undefined = process.env.REACT_APP_HOST;
+            const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+            const response = await fetch(`http://${serverIp}:${port}/api/profiles/${selectedProfile.childId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    memberUser: { userEmail: email }
-                })
+                }
             });
 
             if (!response.ok) {
-                // console.error('HTTP Error:', response.status, response.statusText);
+                console.error('HTTP Error:', response.status, response.statusText);
                 throw new Error('Failed to delete profile');
             }
 
             // console.log("Profile deleted successfully");
             onProfileAdded();
         } catch (error) {
-            // console.error('Error deleting profile:', error);
+            console.error('Error deleting profile:', error);
         }
     };
 

@@ -1,17 +1,39 @@
-import React, {useState} from "react";
+// src/pages/Search.tsx
+
+import React, { useState, useEffect } from "react";
 import Goback from "../components/common/Goback";
 import "../css/totalSearchCss.scss"
-import {TextField} from "@mui/material";
+import { TextField } from "@mui/material";
 import TotalQuestionBox from "../components/desktop/totalSearch/TotalQuestionBox";
 import TotalResult from "../components/desktop/totalSearch/TotalResult";
+import { totalSearchResult } from "../apis/TotalSearchApiCalls";
+import { useDispatch } from "react-redux";
+import { RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const TotalSearch: React.FC = () => {
 
     const [find, setFind] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    // 잘못된 state 접근 수정 또는 사용하지 않는다면 제거
+    // const searchResults = useSelector((state: any) => state.searchResults);
 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (find) {
+            dispatch(totalSearchResult(searchQuery) as any);
+        }
+    }, [dispatch, searchQuery, find]);
+
+    const handleSearch = () => {
+        setFind(true); // 검색 결과를 보여주기 위해 find를 true로 설정
+    };
+    
     const handleKeyPress = (event: any) => {
         if (event === 'Enter') {
-            setFind(!find);
+            setFind(true); // toggle 대신 항상 true로 설정
+            handleSearch()
         }
     };
 
@@ -38,8 +60,7 @@ const TotalSearch: React.FC = () => {
                 color: "black",
             },
         },
-    };
-
+    }; 
 
     return (
         <>
@@ -55,20 +76,26 @@ const TotalSearch: React.FC = () => {
                 <div className={"pc-total-search"}>
                     <TextField
                         id="outlined-basic"
-                        placeholder="검색어를 입력하세요."
+                        placeholder="검색할 자료를 입력하세요"
                         variant="outlined"
                         sx={makeSx}
                         InputProps={{
                             endAdornment: (
-                                <img src={"/img/search.png"} alt={""} style={{width: "2rem"}}/>
+                                <img 
+                                    src={"/img/search.png"} 
+                                    alt={""} 
+                                    style={{width: "2rem", cursor: "pointer"}} 
+                                    onClick={handleSearch}
+                                />
                             ),
                         }}
                         onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e.key)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     />
                 </div>
 
                 {
-                    find ? <TotalResult/>
+                    find ? <TotalResult searchQuery={searchQuery} />
                         : <TotalQuestionBox/>
                 }
             </div>

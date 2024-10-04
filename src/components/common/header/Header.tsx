@@ -14,6 +14,7 @@ const Header: React.FC = () => {
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
 
     useEffect(() => {
+        if (!Array.isArray(profileList)) return;
         // console.log('Selected profile in Header:', selectedProfile);
         // console.log('Profile list in Header:', profileList);
     }, [selectedProfile, profileList]);
@@ -44,7 +45,7 @@ const Header: React.FC = () => {
                             inputProps={{ 'aria-label': 'Without label' }}
                             style={{ height: "100%" }}
                         >
-                            {profileList.map((profile) => (
+                            {Array.isArray(profileList) && profileList.map((profile) => (
                                 <MenuItem key={profile.childId} value={profile.childId.toString()}>
                                     {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
                                 </MenuItem>

@@ -1,7 +1,10 @@
 {
   "name": "front",
   "version": "0.1.0",
+<<<<<<< HEAD
   "proxy": "http://localhost:8000",
+=======
+>>>>>>> 02f8e95ebf9a38322c52588d608e7e90cd3deef8
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -31,6 +34,8 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
+    "redux": "^5.0.1",
+    "redux-actions": "^3.0.3",
     "sass": "^1.78.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",

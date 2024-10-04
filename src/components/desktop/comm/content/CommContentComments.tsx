@@ -1,10 +1,25 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from "@mui/material/Button";
 import {styled} from "@mui/system";
 import TextField from "@mui/material/TextField";
 import {blue, grey} from "../../../../pages/CommContent";
+import axios from "axios";
 
-const CommContentComments: React.FC = () => {
+interface CommentProps {
+    comments: {
+        comment_no: number;
+        comments_name: string;
+        comments_contents: string;
+        comments_date: string;
+    }[];
+    boardId: number;
+    fetchComments: () => void;
+}
+
+
+const CommContentComments: React.FC<CommentProps> = ({comments, boardId, fetchComments}) => {
+    const [commentText, setCommentText] = useState<string>("");
+
 
     const Textarea = styled(TextField)(({theme}) => `
     font-family: 'IBM Plex Sans', sans-serif;
@@ -21,41 +36,71 @@ const CommContentComments: React.FC = () => {
     }
   `);
 
+    const addComment = async () => {
+        try {
+            const serverIp: string | undefined = process.env.REACT_APP_HOST;
+            const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+
+            await axios.post(`http://${serverIp}:${port}/community/boards/addComment`, {
+                token: "Bearer " + localStorage.getItem("jwtToken"),
+                board_no: boardId,
+                comments_contents: commentText
+            });
+
+            setCommentText("");
+            fetchComments();
+        } catch (error) {
+            console.error("Failed to add comment:", error);
+            alert("댓글을 추가하는 데 실패했습니다.");
+        }
+    };
+
     return (
         <div className={"pc-comm-content-comments"}>
             <span style={{fontSize: "2rem", fontWeight: "bold"}}>댓글</span>
             <div className={"pc-comm-content-comments-write"}>
-                <Textarea
+                <TextField
                     multiline
                     minRows={3}
                     placeholder="내용을 적어주세요"
-                    sx={{width: "93%"}}
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    fullWidth
+                    sx={{
+                        width: "93%",
+                        fontFamily: 'IBM Plex Sans, sans-serif',
+                        fontWeight: 400,
+                        lineHeight: 1.5,
+                        color: 'black',
+                        backgroundColor: 'white',
+                        '&:hover': {
+                            borderColor: blue[400],
+                        },
+                        '&:focus': {
+                            borderColor: blue[400],
+                            boxShadow: `0 0 0 3px ${blue[200]}`,
+                        }
+                    }}
                 />
                 <Button
                     sx={{
                         backgroundColor: "#007FFF",
                         color: "white"
-                    }}>확인</Button>
+                    }}
+                    onClick={addComment}
+                >확인</Button>
             </div>
 
             <div className={"pc-comm-content-comments-part"}>
-                {Array.from({length: 4}).map((_, index: number) => {
+                {comments.map((comment) => {
                     return (
-                        <div className={"pc-comm-content-comments-charm"}>
+                        <div className={"pc-comm-content-comments-charm"} key={comment.comment_no}>
                             <div className={"pc-comm-content-comments-first"}>
                                 <p>
-                                    댓글 부모 닉네임 <span>시간</span>
+                                    {comment.comments_name} <span>{comment.comments_date}</span>
                                 </p>
                                 <span>
-                                    댓글 부모 내용
-                                </span>
-                            </div>
-                            <div className={"pc-comm-content-comments-second"}>
-                                <p>
-                                    댓글 자식 닉네임 <span>시간</span>
-                                </p>
-                                <span>
-                                    댓글 자식 내용
+                                    {comment.comments_contents}
                                 </span>
                             </div>
                         </div>
