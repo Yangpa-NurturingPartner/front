@@ -1,5 +1,3 @@
-// src/pages/Search.tsx
-
 import React, { useState, useEffect } from "react";
 import Goback from "../components/common/Goback";
 import "../css/totalSearchCss.scss"
@@ -7,34 +5,45 @@ import { TextField } from "@mui/material";
 import TotalQuestionBox from "../components/desktop/totalSearch/TotalQuestionBox";
 import TotalResult from "../components/desktop/totalSearch/TotalResult";
 import { totalSearchResult } from "../apis/TotalSearchApiCalls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
+import { clearSearchResults } from "../redux/slices/totalSearchSlice";
 
 const TotalSearch: React.FC = () => {
-
     const [find, setFind] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    // 잘못된 state 접근 수정 또는 사용하지 않는다면 제거
-    // const searchResults = useSelector((state: any) => state.searchResults);
+    const [submittedQuery, setSubmittedQuery] = useState('');
+    const isLoading = useSelector((state: RootState) => state.totalSearch.isLoading);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (find) {
-            dispatch(totalSearchResult(searchQuery) as any);
-        }
-    }, [dispatch, searchQuery, find]);
+        // 컴포넌트가 언마운트될 때 상태 초기화
+        return () => {
+            setFind(false);
+            setSearchQuery('');
+            setSubmittedQuery('');
+            dispatch(clearSearchResults());
+        };
+    }, [dispatch]);
 
-    const handleSearch = () => {
-        setFind(true); // 검색 결과를 보여주기 위해 find를 true로 설정
+    const handleSearch = async () => {
+        setFind(true);
+        setSubmittedQuery(searchQuery);
+        dispatch(totalSearchResult(searchQuery) as any);
     };
     
     const handleKeyPress = (event: any) => {
-        if (event === 'Enter') {
-            setFind(true); // toggle 대신 항상 true로 설정
-            handleSearch()
+        if (event.key === 'Enter') {
+            handleSearch();
         }
+    };
+
+    const handleQuestionClick = async (question: string) => {
+        setSearchQuery(question);
+        setSubmittedQuery(question);
+        setFind(true);
+        dispatch(totalSearchResult(question) as any);
     };
 
     const makeSx = {
@@ -74,29 +83,29 @@ const TotalSearch: React.FC = () => {
                 }
 
                 <div className={"pc-total-search"}>
-                    <TextField
-                        id="outlined-basic"
-                        placeholder="검색할 자료를 입력하세요"
-                        variant="outlined"
-                        sx={makeSx}
-                        InputProps={{
-                            endAdornment: (
-                                <img 
-                                    src={"/img/search.png"} 
-                                    alt={""} 
-                                    style={{width: "2rem", cursor: "pointer"}} 
-                                    onClick={handleSearch}
-                                />
-                            ),
-                        }}
-                        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e.key)}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                    />
+                <TextField
+                    id="outlined-basic"
+                    placeholder="검색할 자료를 입력하세요"
+                    variant="outlined"
+                    sx={makeSx}
+                    InputProps={{
+                        endAdornment: (
+                            <img 
+                                src={"/img/search.png"} 
+                                alt={""} 
+                                style={{width: "2rem", cursor: "pointer"}} 
+                                onClick={handleSearch}
+                            />
+                        ),
+                    }}
+                    onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                />
                 </div>
 
                 {
-                    find ? <TotalResult searchQuery={searchQuery} />
-                        : <TotalQuestionBox/>
+                    find ? <TotalResult searchQuery={submittedQuery} isLoading={isLoading} />
+                        : <TotalQuestionBox handleQuestionClick={handleQuestionClick} />
                 }
             </div>
         </>
