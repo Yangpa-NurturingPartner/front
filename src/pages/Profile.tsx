@@ -32,11 +32,10 @@ const Profile: React.FC = () => {
         if (action === 'edit' && selectedProfile) {
             setRegis(true);
         } else if (action === 'add') {
-            dispatch(setSelectedProfile(null));
             setRegis(true);
         }
-
-    }, [location.search, selectedProfile]);
+        console.log("Redux selectedProfile:", selectedProfile);
+    }, [location.search]);
 
     const serverIp: string | undefined = process.env.REACT_APP_HOST;
     const port: string | undefined = process.env.REACT_APP_BACK_PORT;
