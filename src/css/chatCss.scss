@@ -139,10 +139,9 @@ body {
     flex-direction: column;
     padding-bottom: 8vh; /* pc-chat-input과 겹치지 않도록 하단 여백 추가 */
     background-color: white;
-  }
-
-  .pc-chat-part.blank {
-    background-color: white; 
+    &.blank {
+      visibility: hidden;
+    } 
   }
 
   .pc-ask {

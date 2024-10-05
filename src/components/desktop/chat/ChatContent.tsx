@@ -138,9 +138,11 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
     };
 
+    const hasMainQuery = localStorage.getItem('mainQuery') !== null;
+
     return (
         <div className="pc-show-chat">
-             <div className={`pc-chat-part ${messages.length > 0 ? 'blank' : ''}`}>
+             <div className={`pc-chat-part ${messages.length > 0 || hasMainQuery ? 'blank' : ''}`}>
                 {showAsk && (
                     <ChatPartDefault 
                     onQuestionClick={handleQuestionClick}

@@ -58,6 +58,7 @@ interface ChatSummary {
     // 세션 종료 함수
     const endSession = async () => {
         console.log("Endsession 실행됨");
+        localStorage.removeItem("mainQuery"); 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
         try { await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { sessionId: localStorage.getItem("localsession_id") } 
@@ -86,10 +87,18 @@ interface ChatSummary {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
         setShowChatDetail(false);
         console.log("showChatDetail? " + showChatDetail);
-    
+        const storedProfile = localStorage.getItem("selectedProfile");
+        let profile;
+        if (storedProfile) {
+            profile = JSON.parse(storedProfile);
+            console.log("childId: " + profile.childId);
+        } else {
+            console.log("selectedProfile이 없습니다.");
+        }
+            
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-            child_id: 1 
+            child_id: profile.childId 
         };
 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
