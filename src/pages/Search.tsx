@@ -28,11 +28,13 @@ const TotalSearch: React.FC = () => {
     }, [dispatch]);
 
     const handleSearch = async () => {
-        setFind(true);
-        setSubmittedQuery(searchQuery);
-        dispatch(totalSearchResult(searchQuery) as any);
+        if (searchQuery.trim() !== '') {
+            setFind(true);
+            setSubmittedQuery(searchQuery);
+            dispatch(totalSearchResult(searchQuery) as any);
+        }
     };
-    
+
     const handleKeyPress = (event: any) => {
         if (event.key === 'Enter') {
             handleSearch();
@@ -88,6 +90,7 @@ const TotalSearch: React.FC = () => {
                     placeholder="검색할 자료를 입력하세요"
                     variant="outlined"
                     sx={makeSx}
+                    value={searchQuery}  // 이 줄 추가
                     InputProps={{
                         endAdornment: (
                             <img 
