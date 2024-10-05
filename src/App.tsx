@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Testpage from "./pages/Testpage";
@@ -10,9 +10,21 @@ import CommContent from "./pages/CommContent";
 import TotalSearch from "./pages/Search";
 import Profile from "./pages/Profile";
 
-
 const App: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    // jwtToken 확인 후 리다이렉션
+    useEffect(() => {
+        const token = localStorage.getItem('jwtToken');
+        if (!token && location.pathname !== '/login') {
+            navigate('/login');
+        }
+        
+        // else if (token && location.pathname === '/login') {
+        //     navigate('/');
+        // }
+    }, [location, navigate]);
 
     return (
         <div style={{ margin: 0 }}>
