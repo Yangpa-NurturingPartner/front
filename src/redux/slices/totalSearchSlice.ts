@@ -9,6 +9,7 @@ interface SearchResult {
 
 interface TotalSearchState {
   searchResults: SearchResult;
+  isLoading: boolean;
 }
 
 const initialState: TotalSearchState = {
@@ -17,18 +18,28 @@ const initialState: TotalSearchState = {
     video_results: [],
     community_results: [],
     document_results: []
-  }
+  },
+  isLoading: false
 };
 
 const totalSearchSlice = createSlice({
   name: 'totalSearch',
   initialState,
   reducers: {
+    startSearch: (state) => {
+      state.isLoading = true;
+      state.searchResults = initialState.searchResults; // 결과 초기화
+    },
     fetchTotalSearchResult: (state, action: PayloadAction<SearchResult>) => {
       state.searchResults = action.payload;
+      state.isLoading = false;
+    },
+    clearSearchResults: (state) => {
+      state.searchResults = initialState.searchResults;
+      state.isLoading = false;
     }
   }
 });
 
-export const { fetchTotalSearchResult } = totalSearchSlice.actions;
+export const { startSearch, fetchTotalSearchResult, clearSearchResults } = totalSearchSlice.actions;
 export default totalSearchSlice.reducer;
