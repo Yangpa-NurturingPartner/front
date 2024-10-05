@@ -14,6 +14,7 @@ interface ProfileAddOrRegistProps {
 }
 
 const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onProfileAdded, selectedProfile }) => {
+    const [title, setTitle] = useState<string>(selectedProfile ? "프로필 수정" : "아이 등록");
     const [selectedImage, setSelectedImage] = useState<string | null>(selectedProfile?.imageProfile || null);
     const [name, setName] = useState<string>(selectedProfile?.name || "");
     const [birthdate, setBirthdate] = useState<Dayjs | null>(selectedProfile ? dayjs(selectedProfile.birthdate) : null);
@@ -21,11 +22,19 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log("selectedProfile changed:", selectedProfile);
         if (selectedProfile) {
+            setTitle("프로필 수정")
             setName(selectedProfile.name);
             setBirthdate(dayjs(selectedProfile.birthdate));
             setSex(selectedProfile.sex);
             setSelectedImage(selectedProfile.imageProfile ? `data:image/png;base64,${selectedProfile.imageProfile}` : null);
+        } else {
+            setTitle("아이 등록");
+            setName('');
+            setBirthdate(null);
+            setSex(null);
+            setSelectedImage(null);
         }
     }, [selectedProfile]);
 
@@ -128,7 +137,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
     return (
         <>
             <div className={"pc-profile-ar-title"}>
-                <span>{selectedProfile ? "프로필 수정" : "아이 등록"}</span>
+                <span>{title}</span>
             </div>
 
             <div className={"pc-profile-ar-close"} onClick={() => setRegis(false)}>
