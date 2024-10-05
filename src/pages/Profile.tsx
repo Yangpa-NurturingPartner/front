@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
         } else if (action === 'add') {
             setRegis(true);
         }
-        console.log("Redux selectedProfile:", selectedProfile);
+        // console.log("Redux selectedProfile:", selectedProfile);
     }, [location.search]);
 
     const serverIp: string | undefined = process.env.REACT_APP_HOST;

@@ -22,7 +22,7 @@ const ProfileAddOrRegist: React.FC<ProfileAddOrRegistProps> = ({ setRegis, onPro
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("selectedProfile changed:", selectedProfile);
+        // console.log("selectedProfile changed:", selectedProfile);
         if (selectedProfile) {
             setTitle("프로필 수정")
             setName(selectedProfile.name);

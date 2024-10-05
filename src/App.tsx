@@ -21,7 +21,7 @@ const App: React.FC = () => {
     }
     return (
         <div style={{ margin: 0 }}>
-            {location.pathname !== '/login' && location.pathname !== '/profile' && <Header />}
+            {location.pathname !== '/login' && <Header />}
             <Routes>
                 <Route path="/" element={<Main />} />
                 <Route path="/test" element={<Testpage />} />

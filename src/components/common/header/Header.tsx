@@ -35,7 +35,9 @@ const Header: React.FC = () => {
     };
 
     const handleLogoClick = () => {
-        navigate('/');
+        if (location.pathname !== '/profile') {
+            navigate('/');
+        }
     };
 
     return (
@@ -47,7 +49,7 @@ const Header: React.FC = () => {
                         src="/img/logo.png"
                         alt={""}
                         onClick={handleLogoClick}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: location.pathname !== '/profile' ? 'pointer' : 'default' }}
                     />
                 </div>
                 
