@@ -107,17 +107,17 @@ body {
   right: 0;
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
-  overflow: hidden;
+  overflow-y: hidden;
   width: calc(100vw - 15vw); /* 사이드바 너비에 맞게 채팅 기록 너비 설정 */
 
   &.collapsed { /* 사이드바가 접힐 때 */
     left: 5; 
-    width: calc(100vw - 10vw);/* 사이드바가 접힐 때 채팅 기록이 전체 화면을 차지하도록 설정 */
+    width: calc(100vw - 15vw);/* 사이드바가 접힐 때 채팅 기록이 전체 화면을 차지하도록 설정 */
   }
 
   &.expanded { /* 사이드바가 확장될 때 */
     left: 15vw;
-    width: calc(100vw - 15vw); 
+    width: calc(100vw - 13vw); 
   }
 }
 
@@ -125,7 +125,7 @@ body {
   font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   height: 95%;
   padding: 5px 20px 20px 20px;
@@ -134,10 +134,18 @@ body {
 
   .pc-chat-part {
     width: 100%;
-    height: 90%;
+    margin-top : 180px;
     display: flex;
     flex-direction: column;
-    padding-bottom: 8vh; /* pc-chat-input과 겹치지 않도록 하단 여백 추가 */
+    padding-bottom: 8vh; 
+    background-color: white;
+    &.blank {
+      margin-top: 0;
+      height: 0; 
+      padding: 0; 
+      visibility: hidden;
+    } 
+    flex-grow: 1;
   }
 
   .pc-ask {
@@ -174,10 +182,6 @@ body {
     }
   }
   
-  .hidden {
-    display: none;
-  }
-
   .pc-chat-input {
     bottom: 1vh;
     left: 0;
@@ -192,6 +196,7 @@ body {
     }
   }
 }
+
 .chat-container {
   display: flex;
   flex-direction: column;

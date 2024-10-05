@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { RootState } from '../../../redux/store';
 import { setSelectedProfile } from '../../../redux/slices/profileSlice';
 import "../commonCss.scss";
@@ -14,6 +14,9 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
     const profileList = useSelector((state: RootState) => state.profile.profiles);
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
+
+
+    const location = useLocation();
 
     useEffect(() => {
         if (!Array.isArray(profileList)) return;
@@ -32,7 +35,9 @@ const Header: React.FC = () => {
     };
 
     const handleLogoClick = () => {
-        navigate('/');
+        if (location.pathname !== '/profile') {
+            navigate('/');
+        }
     };
 
     return (
@@ -44,28 +49,33 @@ const Header: React.FC = () => {
                         src="/img/logo.png"
                         alt={""}
                         onClick={handleLogoClick}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: location.pathname !== '/profile' ? 'pointer' : 'default' }}
                     />
                 </div>
-
+                
                 <div className={isPortrait ? "ph-choose-child" : "pc-choose-child"}>
-                    <FormControl sx={{ m: 1, minWidth: 100 }}>
-                        <Select
-                            value={selectedProfile ? selectedProfile.childId.toString() : ""}
-                            onChange={handleChange}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            style={{ height: "100%" }}
-                        >
-                            {Array.isArray(profileList) && profileList.map((profile) => (
-                                <MenuItem key={profile.childId} value={profile.childId.toString()}>
-                                    {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    
 
-                    {isPortrait ? <></> : <HeaderMenu selectedProfile={selectedProfile} />}
+                    {isPortrait || location.pathname === '/profile' ? <></> : 
+                    <>
+                    <FormControl sx={{ m: 1, minWidth: 100 }}>
+                    <Select
+                        value={selectedProfile ? selectedProfile.childId.toString() : ""}
+                        onChange={handleChange}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        style={{ height: "100%" }}
+                    >
+                        {Array.isArray(profileList) && profileList.map((profile) => (
+                            <MenuItem key={profile.childId} value={profile.childId.toString()}>
+                                {`${profile.name} (${new Date().getFullYear() - new Date(profile.birthdate).getFullYear()}세)`}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                    <HeaderMenu selectedProfile={selectedProfile} />
+                    </>
+                    }
                 </div>
             </div>
         </div>

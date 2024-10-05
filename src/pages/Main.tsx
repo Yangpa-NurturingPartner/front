@@ -12,10 +12,19 @@ import axios from "axios";
     const navigate = useNavigate();
     const [showAsk, setShowAsk] = useState(false);
 
+    const storedProfile = localStorage.getItem("selectedProfile");
+        let profile;
+        if (storedProfile) {
+            profile = JSON.parse(storedProfile);
+            console.log("childId: " + profile.childId);
+        } else {
+            console.log("selectedProfile이 없습니다.");
+        }
+
     const requestData = {
         oldSession_id: localStorage.getItem("oldSession_id"), // 기존 세션 ID
         jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-        child_id: 1
+        child_id: profile.childId
     };
 
     // 새로운 채팅
@@ -34,8 +43,6 @@ import axios from "axios";
             });
             setSessionId(response.data.data.session_id);
             setShowAsk(false);
-            console.log("sessionId1 = " + response.data.data.session_id);
-            console.log("showAsk Main = " + showAsk);
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
@@ -45,25 +52,17 @@ import axios from "axios";
             startNewChat();
     }, []); 
 
-    // 질문과 답변을 채팅 페이지로 보냄
-    const handleMainQuery = async (query: string) => { 
+    // 질문을 채팅 페이지로 보냄
+    const handleMainQuery = (query: string) => { 
         console.log("질문 제출:", query);
+        localStorage.setItem('mainQuery', query);
         setQuery(query);
-
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
-
-        try {
-            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                session_id: sessionId,
-                chat_detail: query,
-                token: "Bearer " + localStorage.getItem("jwtToken")
-            });
-            navigate('/chat', { state: { sessionId, query, answer: response.data.data.answer } });
-        } catch (error) {
-            console.error("질문 제출 오류:", error);
-        }
+        setShowAsk(false);
+    
+        // 세션 ID와 query를 navigate할 때 state로 넘겨줌
+        navigate('/chat', { state: { sessionId, query } });
     };
+    
 
     return (
         <div className={"pc-mainpage"}>
