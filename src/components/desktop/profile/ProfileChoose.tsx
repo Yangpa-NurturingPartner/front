@@ -10,7 +10,7 @@ interface ProfileChooseProps {
 
 const ProfileChoose: React.FC<ProfileChooseProps> = ({ setRegis, profileData, setSelectedProfile, onAddNewProfile, onSelectProfile }) => {
     const handleEditProfile = (profile: any) => {
-        console.log("Editing profile:", profile);
+        // console.log("Editing profile:", profile);
         setSelectedProfile(profile);
         setRegis(true);
     };
