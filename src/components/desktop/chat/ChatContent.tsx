@@ -137,6 +137,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
 
     };
+    
 
     const hasMainQuery = localStorage.getItem('mainQuery') !== null;
 
