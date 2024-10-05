@@ -14,7 +14,7 @@ interface ChatContentProps {
     messages: Message[];
     setMessages: Dispatch<SetStateAction<Message[]>>;
     query: string;
-    setQuery: Dispatch<SetStateAction<string>>;
+    setQuery: React.Dispatch<React.SetStateAction<string | null>>;
     isChatEnded: boolean;
     endstartChat: () => void;
     session_id: string;
