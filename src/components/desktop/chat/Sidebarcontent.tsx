@@ -58,6 +58,14 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
         //const intervalId = setInterval(fetchChatSummaries, 5000); 
         //return () => clearInterval(intervalId);
     }, []);
+
+    useEffect(() => {
+        if (searchQuery === "") {
+            // 검색어가 빈 문자열이면 전체 채팅 요약본 로드
+            fetchChatSummaries();
+        }
+    }, [searchQuery]);
+    
     
 
     const searchChatSummaries = async () => {

@@ -12,10 +12,19 @@ import axios from "axios";
     const navigate = useNavigate();
     const [showAsk, setShowAsk] = useState(false);
 
+    const storedProfile = localStorage.getItem("selectedProfile");
+        let profile;
+        if (storedProfile) {
+            profile = JSON.parse(storedProfile);
+            console.log("childId: " + profile.childId);
+        } else {
+            console.log("selectedProfile이 없습니다.");
+        }
+
     const requestData = {
         oldSession_id: localStorage.getItem("oldSession_id"), // 기존 세션 ID
         jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-        child_id: 1
+        child_id: profile.childId
     };
 
     // 새로운 채팅
@@ -34,8 +43,6 @@ import axios from "axios";
             });
             setSessionId(response.data.data.session_id);
             setShowAsk(false);
-            console.log("sessionId1 = " + response.data.data.session_id);
-            console.log("showAsk Main = " + showAsk);
         } catch (error) {
             console.error("새로운 채팅 세션 시작 오류:", error);
         }
@@ -48,7 +55,9 @@ import axios from "axios";
     // 질문과 답변을 채팅 페이지로 보냄
     const handleMainQuery = async (query: string) => { 
         console.log("질문 제출:", query);
+        localStorage.setItem('mainQuery', query);
         setQuery(query);
+        setShowAsk(false);
 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT; 

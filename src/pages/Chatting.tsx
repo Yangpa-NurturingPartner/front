@@ -58,6 +58,7 @@ interface ChatSummary {
     // 세션 종료 함수
     const endSession = async () => {
         console.log("Endsession 실행됨");
+        localStorage.removeItem("mainQuery"); 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
         try { await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { sessionId: localStorage.getItem("localsession_id") } 
@@ -84,10 +85,20 @@ interface ChatSummary {
     // 새로운 채팅 시작 함수
     const endstartChat = async () => {
         console.log("채팅 종료 및 새 세션 시작 요청 전송");
-    
+        setShowChatDetail(false);
+        console.log("showChatDetail? " + showChatDetail);
+        const storedProfile = localStorage.getItem("selectedProfile");
+        let profile;
+        if (storedProfile) {
+            profile = JSON.parse(storedProfile);
+            console.log("childId: " + profile.childId);
+        } else {
+            console.log("selectedProfile이 없습니다.");
+        }
+            
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-            child_id: 1 
+            child_id: profile.childId 
         };
 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
@@ -158,7 +169,7 @@ interface ChatSummary {
             if (initialQuery && initialAnswer && !isInitialQueryAnswered) {
                 await addInitialMessages(); 
                 setIsInitialQueryAnswered(true);
-                console.log("메인페이지에서 받아옴");
+                console.log("tqtq " + addInitialMessages());
                 setInitialQuery(null); 
                 setInitialAnswer(null);
             }
@@ -208,6 +219,15 @@ interface ChatSummary {
             console.error('채팅 요약 불러오기 오류:', error);
         }
     };
+
+    useEffect(() => {
+        if (!showChatDetail) {
+            // showChatDetail이 false가 되었을 때만 기본 화면으로 이동
+            setMessages([]);
+            setShowAsk(true);
+            navigate('/chat', { state: null });
+        }
+    }, [showChatDetail]);
     
     return (
         <>
