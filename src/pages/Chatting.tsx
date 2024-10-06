@@ -136,8 +136,17 @@ const Chatting: React.FC = () => {
         }
     };
 
+    //메세지 추가시 출력 + 스크롤
     useEffect(() => {
-        if (session_id) {
+        const messagesContainer = document.getElementById('messages-container');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }, [messages]);
+
+    useEffect(() => {
+        if (!session_id) {
+            endstartChat();
             const mainQuery = localStorage.getItem("mainQuery");
             if (mainQuery) {
                 fetchInitialAnswer(mainQuery);
@@ -145,7 +154,7 @@ const Chatting: React.FC = () => {
                 console.error("mainQuery가 null입니다. fetchInitialAnswer를 호출할 수 없습니다.");
             }
         }
-    }, [session_id]);
+    }, []);
 
     useEffect(() => {
         // 페이지를 나갈 때

@@ -59,6 +59,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
     }, [navigate]);
 
+    //스크롤 자동 내리기
     const scrollToBottom = () => {
         if (messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -66,7 +67,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     };
 
     useEffect(() => {
-        scrollToBottom(); //messages가 업데이트될 때마다 스크롤 아래로 내리기
+        scrollToBottom(); 
     }, [messages]);
 
     //질문 제출
@@ -156,11 +157,10 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
 
     };
 
-    const hasMainQuery = localStorage.getItem('mainQuery') !== null;
 
     return (
         <div className="pc-show-chat">
-             <div className={`pc-chat-part ${messages.length > 0 || hasMainQuery ? 'blank' : ''}`}>
+             <div className={`pc-chat-part ${messages.length > 0 ? 'blank' : ''}`}>
                 {showAsk && (
                     <ChatPartDefault 
                     onQuestionClick={handleQuestionClick}
