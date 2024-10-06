@@ -6,7 +6,7 @@ body {
 .pc-chat-sidebar {
   height: calc(100vh - 4.5rem);
   background: #59A6FA;
-  width: 15vw;
+  width: 16vw;
   transition: width 0.3s ease, opacity 0.3s ease, left 0.3s ease;
   overflow: hidden;
   position: relative;
@@ -127,8 +127,8 @@ body {
   justify-content: flex-start;
   align-items: center;
   margin-top: 12px;
-  height: 90%;
-  padding: 5px 20px 20px 20px;
+  height: 95%;
+  padding: 0px 5px 5px 5px;
   position: relative;
   overflow-x: hidden;
 
@@ -194,8 +194,8 @@ body {
     bottom: 1vh;
     left: 0;
     right: 0;
-    padding: 10px 20px;
-    background-color: #ffffff;
+    width: 80vw;
+    padding: 0px 0px 0px 0px ;
     display: flex;
     justify-content: center;
 
@@ -214,8 +214,9 @@ body {
 }
 
 .chat-header {
-  padding: 10px 20px;
+  padding: 10px 20px 10px 10px;
   z-index: 1000;
+  margin-left: 10px;
   width:100%;
   background-color: white;
 }
@@ -228,10 +229,8 @@ body {
 
 .message-container {
   flex-grow: 1;
-  height: 50%;
-  width: 90%;
-  padding: 30px;
-  padding-bottom: 8vh; /*pc-chat-input 높이만큼의 여백추가 */
+  width: 85%;
+  padding: 60px;
 
   .message {
     font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
