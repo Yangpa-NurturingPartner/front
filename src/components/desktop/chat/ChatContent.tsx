@@ -74,10 +74,8 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     const handleSubmit = async () => {
         setShowAsk(false);
         if (!session_id) {
-            console.log("sessionID 받아오기");
             await endstartChat();
         } else {
-            console.log("123123");
             await sendMessage();
         }
     };
@@ -129,16 +127,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         navigate('/chat', { state: { query } });
     };
 
-
     return (
         <div className="pc-show-chat">
-             <div className={`pc-chat-part ${messages.length > 0 ? 'blank' : ''}`}>
-                {showAsk && (
+            <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
                     <ChatPartDefault 
                     onQuestionClick={handleQuestionClick}
                     onSubmit={handleSubmit}
                     />
-                )}
             </div>
     
             <div className="pc-chat-content">
