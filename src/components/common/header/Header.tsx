@@ -19,15 +19,33 @@ const Header: React.FC = () => {
     const location = useLocation();
     const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
 
+    // 암호화 키가 설정되지 않은 경우 경고 메시지 출력
+    if (!encryptionKey) {
+        console.warn('Encryption key is not set. Please set REACT_APP_ENCRYPTION_KEY in the environment variables.');
+    }
+
     // 암호화 함수
     const encryptData = (data: string) => {
+        if (!encryptionKey) {
+            console.error('Encryption key is not set. Cannot encrypt data.');
+            return data; // 키가 없는 경우 암호화하지 않고 원본 데이터 반환 (안전하지 않음)
+        }
         return CryptoJS.AES.encrypt(data, encryptionKey).toString();
     };
 
     // 복호화 함수
     const decryptData = (cipherText: string) => {
-        const bytes = CryptoJS.AES.decrypt(cipherText, encryptionKey);
-        return bytes.toString(CryptoJS.enc.Utf8);
+        if (!encryptionKey) {
+            console.error('Encryption key is not set. Cannot decrypt data.');
+            return null; // 키가 없는 경우 null 반환
+        }
+        try {
+            const bytes = CryptoJS.AES.decrypt(cipherText, encryptionKey);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        } catch (error) {
+            console.error('Failed to decrypt data:', error);
+            return null;
+        }
     };
 
     useEffect(() => {
@@ -35,9 +53,13 @@ const Header: React.FC = () => {
         if (encryptedProfile) {
             try {
                 const decryptedProfile = decryptData(encryptedProfile);
-                dispatch(setSelectedProfile(JSON.parse(decryptedProfile)));
+                if (decryptedProfile) {
+                    dispatch(setSelectedProfile(JSON.parse(decryptedProfile)));
+                } else {
+                    console.error('Decrypted profile is null.');
+                }
             } catch (error) {
-                console.error('Failed to decrypt profile:', error);
+                console.error('Failed to parse profile:', error);
             }
         }
 
