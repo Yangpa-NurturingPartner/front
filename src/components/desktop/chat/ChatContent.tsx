@@ -121,12 +121,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     };
 
     //간편질문 클릭 시 바로 전송
-    const handleQuestionClick = async (question: string) => {
+    const handleQuestionClick = (question: string) => {
         setShowAsk(false);
         localStorage.setItem("question", question);
         setIsLoading(true);
-        setQuery('');
-        await handleSubmit();
+        setQuery(question);
+        navigate('/chat', { state: { query } });
     };
 
 
