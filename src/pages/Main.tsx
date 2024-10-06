@@ -12,10 +12,29 @@ import axios from "axios";
     const navigate = useNavigate();
     const [showAsk, setShowAsk] = useState(false);
 
+    const CryptoJS = require('crypto-js');
+    const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
+
+      // 복호화 함수
+      const decryptData = (cipherText: string) => {
+          if (!encryptionKey) {
+              console.error('Encryption key is not set. Cannot decrypt data.');
+              return null; // 키가 없을 때 null 반환
+          }
+          try {
+              const bytes = CryptoJS.AES.decrypt(cipherText, encryptionKey);
+              return bytes.toString(CryptoJS.enc.Utf8);
+          } catch (error) {
+              console.error('Failed to decrypt data:', error);
+              return null;
+          }
+      };
+
     const storedProfile = localStorage.getItem("selectedProfile");
         let profile;
         if (storedProfile) {
-            profile = JSON.parse(storedProfile);
+            const decryptedProfile = decryptData(storedProfile);
+            profile = JSON.parse(decryptedProfile);
             console.log("childId: " + profile.childId);
         } else {
             console.log("selectedProfile이 없습니다.");
