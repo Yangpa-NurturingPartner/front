@@ -62,9 +62,8 @@ body {
   overflow-y: auto;
   flex-grow: 1;
   padding: 0.5rem 0.5rem;
-  position: relative;  /* 추가: 상대적 위치 설정 */
+  position: relative;
 
-  /* 웹킷 기반 브라우저용 스크롤바 스타일 */
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -77,7 +76,7 @@ body {
   .pc-chat-body-searchHistory-box {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    padding-right: 10px;  /* 내용이 스크롤바와 겹치지 않도록 패딩 추가 */
+    padding-right: 10px;
 
     .pc-chat-body-day {
       font-size: 1.2rem;
@@ -108,11 +107,11 @@ body {
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
   overflow-y: hidden;
-  width: calc(100vw - 15vw); /* 사이드바 너비에 맞게 채팅 기록 너비 설정 */
+  width: 100%; 
 
   &.collapsed { /* 사이드바가 접힐 때 */
     left: 5; 
-    width: calc(100vw - 15vw);/* 사이드바가 접힐 때 채팅 기록이 전체 화면을 차지하도록 설정 */
+    width: 100%;
   }
 
   &.expanded { /* 사이드바가 확장될 때 */
@@ -127,17 +126,25 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  height: 95%;
+  height: 100%;
   padding: 5px 20px 20px 20px;
   position: relative;
-  overflow-y: auto;
+  overflow-y: auto; /* 길어지면 스크롤 표시 */
+
+  .pc-show-chat::-webkit-scrollbar {
+    width: 8px; /* 스크롤바 두께 */
+  }
+
+  .pc-show-chat::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
 
   .pc-chat-part {
     width: 100%;
-    margin-top : 180px;
+    margin-top : 160px;
     display: flex;
     flex-direction: column;
-    padding-bottom: 8vh; 
     background-color: white;
     &.blank {
       margin-top: 0;
@@ -200,7 +207,7 @@ body {
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   width:100%;
   background-color: #f5f5f5;
 }
@@ -225,7 +232,6 @@ body {
 
 .message-container {
   flex-grow: 1;
-  overflow-y: auto;
   width: 80vw;
   padding: 50px;
   padding-bottom: 8vh; /*pc-chat-input 높이만큼의 여백추가 */

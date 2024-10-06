@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom'; 
 import { TextField, IconButton, CircularProgress } from "@mui/material";
 import { Search } from '@mui/icons-material';
@@ -25,6 +25,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     const [isLoading, setIsLoading] = useState(false);
     const [showAsk, setShowAsk] = useState(true);
     const navigate = useNavigate();
+    const messageEndRef = useRef<HTMLDivElement | null>(null);
 
     const makeSx = {
         width: "70%",
@@ -57,6 +58,16 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             navigate('/chat', { state: null });
         }
     }, [navigate]);
+
+    const scrollToBottom = () => {
+        if (messageEndRef.current) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    useEffect(() => {
+        scrollToBottom(); //messages가 업데이트될 때마다 스크롤 아래로 내리기
+    }, [messages]);
 
     const handleSubmit = async () => {
         setShowAsk(false);
@@ -164,6 +175,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                             </div>
                         </div>
                     ))}
+                    <div ref={messageEndRef} />
                 </div>
     
                 {isLoading && (

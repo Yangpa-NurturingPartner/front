@@ -75,13 +75,12 @@ const Chatting: React.FC = () => {
 
     // 새로운 채팅 시작 함수
     const endstartChat = async () => {
-        console.log("채팅 종료 및 새 세션 시작 요청 전송");
+        console.log("endstartChat 실행됨");
         setShowChatDetail(false);
         const storedProfile = localStorage.getItem("selectedProfile");
         let profile;
         if (storedProfile) {
             profile = JSON.parse(storedProfile);
-            console.log("childId: " + profile.childId);
         } else {
             console.log("selectedProfile이 없습니다.");
         }
@@ -97,8 +96,8 @@ const Chatting: React.FC = () => {
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/start-new-chat`, requestData, {
                 headers: {
-                    'Content-Type': 'application/json', // 요청 본문 형식
-                    'Authorization': requestData.jwtToken, // JWT 토큰을 Authorization 헤더에 포함
+                    'Content-Type': 'application/json',
+                    'Authorization': requestData.jwtToken, 
                 }
             });
     
@@ -114,7 +113,7 @@ const Chatting: React.FC = () => {
                 setSession_id(newSession_id); 
                 localStorage.setItem("localsession_id", newSession_id); 
                 console.log("endstartChat + 채팅 새로 시작");
-                navigate('/chat', { state: { sessionId: newSession_id } }); // 새 세션 ID 전달
+                navigate('/chat', { state: { sessionId: newSession_id } }); 
             } else {
                 console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
             }
@@ -183,10 +182,10 @@ const Chatting: React.FC = () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             console.log("페이지 새로고침");
             if (!sessionId) {
-                endSession(); // 채팅페이지에서 채팅
+                endSession(); // 채팅페이지에서 채팅종료
             }
         };
-    }, [sessionId]);
+    }, []);
 
     const fetchChatSummaries = async () => {
         const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
