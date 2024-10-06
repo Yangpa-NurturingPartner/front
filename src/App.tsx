@@ -14,10 +14,17 @@ const App: React.FC = () => {
     const location = useLocation();
     const token = localStorage.getItem('jwtToken');
     // 토큰 유무에 따라 리다이렉트 처리
+    // 1. 토큰이 없고 주소가 로그인 페이지 일 경우
     if (!token && location.pathname !== '/login') {
         return <Navigate to="/login" replace />;
+
+        // 2. 토큰이 있고 주소가 로그인 페이지 일 경우
     } else if (token && location.pathname === '/login') {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/profile" replace />;
+
+        // 3. 토큰이 있는데 주소가 로그인이 아닐경우
+    } else if (token && location.pathname === '/' && !localStorage.getItem('selectedProfile')) {
+        return <Navigate to="/profile" replace />;
     }
     return (
         <div style={{ margin: 0 }}>
