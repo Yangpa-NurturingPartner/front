@@ -92,60 +92,31 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         const question = localStorage.getItem("question");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-    
-        if (question) {
-            const userMessage: Message = { type: "user", text: question };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
-            setIsLoading(true);
-            console.log("question: ", question);
-    
-            try {
-                const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                    session_id,
-                    chat_detail: question,
-                    token: "Bearer " + localStorage.getItem("jwtToken"),
-                });
-    
-                const botAnswer = response.data.data.answer || '답변이 없습니다.';
-                const botMessage: Message = { type: "bot", text: botAnswer };
-    
-                setMessages((prevMessages) => [...prevMessages, botMessage]);
-                localStorage.removeItem("question");
-                fetchChatSummaries();
-            } catch (error: any) {
-                const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
-                setMessages((prevMessages) => [...prevMessages, errorMessage]);
-                console.error("오류 발생:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        } else {
-            const userMessage: Message = { type: "user", text: query };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
-            setIsLoading(true);
-            console.log("질문 제출 아이디: ", session_id);
-            console.log("query: ", query);
-    
-            try {
-                const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                    session_id,
-                    chat_detail: query,
-                    token: "Bearer " + localStorage.getItem("jwtToken"),
-                });
-    
-                const botAnswer = response.data.data.answer || '답변이 없습니다.';
-                const botMessage: Message = { type: "bot", text: botAnswer };
-    
-                setMessages((prevMessages) => [...prevMessages, botMessage]);
-                setQuery(''); // 쿼리 초기화
-                fetchChatSummaries();
-            } catch (error: any) {
-                const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
-                setMessages((prevMessages) => [...prevMessages, errorMessage]);
-                console.error("오류 발생:", error);
-            } finally {
-                setIsLoading(false);
-            }
+
+        const userMessage: Message = { type: question ? "user" : "user", text: question || query };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
+                session_id,
+                chat_detail: question || query,
+                token: "Bearer " + localStorage.getItem("jwtToken"),
+            });
+
+            const botAnswer = response.data.data.answer || '답변이 없습니다.';
+            const botMessage: Message = { type: "bot", text: botAnswer };
+
+            setMessages((prevMessages) => [...prevMessages, botMessage]);
+            localStorage.removeItem("question");
+            setQuery(''); 
+            fetchChatSummaries();
+        } catch (error: any) {
+            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
+            setMessages((prevMessages) => [...prevMessages, errorMessage]);
+            console.error("오류 발생:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
