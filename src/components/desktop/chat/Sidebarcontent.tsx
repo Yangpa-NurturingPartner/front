@@ -49,17 +49,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
     };
 
     useEffect(() => {
-        
-        fetchChatSummaries(); // 초기 데이터 로딩
-        // setFilteredSummaries(chatSummaries)
-        
-    
-        // 5초마다 주기적으로 호출
-        //const intervalId = setInterval(fetchChatSummaries, 5000); 
-        //return () => clearInterval(intervalId);
-    }, []);
-
-    useEffect(() => {
         if (searchQuery === "") {
             // 검색어가 빈 문자열이면 전체 채팅 요약본 로드
             fetchChatSummaries();

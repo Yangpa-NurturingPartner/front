@@ -21,7 +21,7 @@ interface ChatContentProps {
     fetchChatSummaries: () => Promise<void>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, session_id,fetchChatSummaries }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id,fetchChatSummaries }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [showAsk, setShowAsk] = useState(true);
     const navigate = useNavigate();
@@ -69,50 +69,57 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         scrollToBottom(); //messages가 업데이트될 때마다 스크롤 아래로 내리기
     }, [messages]);
 
+    //질문 제출
     const handleSubmit = async () => {
         setShowAsk(false);
-
-        if (isChatEnded || !session_id || !query.trim()) {
-            if (isChatEnded) {
-                alert('채팅이 종료되었습니다. 새 채팅을 시작해주세요.');
-            }
-            return;
+    
+        if (!session_id) {
+            await endstartChat();
+        } else {
+            sendMessage();
         }
-
-        setShowAsk(false);
-        const userMessage: Message = { type: 'user', text: query };
-        setMessages(prevMessages => [...prevMessages, userMessage]);
-
-        setIsLoading(true);
-
-        
+    };
+    
+    const sendMessage = async () => {
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+    
+        const userMessage: Message = { type: "user", text: query };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+    
+        setIsLoading(true);
+        console.log("질문 제출 아이디: ", session_id);
+        console.log("query: ", query);
 
+    
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
                 chat_detail: query,
-                token: "Bearer " + localStorage.getItem("jwtToken")
+                token: "Bearer " + localStorage.getItem("jwtToken"),
             });
-
+    
             const botAnswer = response.data.data.answer || '답변이 없습니다.';
-            const botMessage: Message = { type: 'bot', text: botAnswer };
-
-            console.log(serverIp);
-            console.log(port)
-
-            setMessages(prevMessages => [...prevMessages, botMessage]);
+            const botMessage: Message = { type: "bot", text: botAnswer };
+    
+            setMessages((prevMessages) => [...prevMessages, botMessage]);
             setQuery('');
             fetchChatSummaries();
         } catch (error: any) {
-            const errorMessage: Message = { type: 'error', text: error.response?.data?.message || '오류가 발생했습니다.' };
-            setMessages(prevMessages => [...prevMessages, errorMessage]);
-            console.error('오류 발생:', error);
+            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
+            setMessages((prevMessages) => [...prevMessages, errorMessage]);
+            console.error("오류 발생:", error);
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (session_id && query) { 
+            sendMessage(); 
+        }
+    }, [session_id]);
+    
 
     //간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (question: string) => {
@@ -148,7 +155,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
 
     };
-    
 
     const hasMainQuery = localStorage.getItem('mainQuery') !== null;
 
@@ -198,7 +204,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                                 handleSubmit(); 
                             }
                         }}
-                        disabled={isChatEnded || isLoading} 
+                        disabled={isLoading} 
                         className="pc-chat-body-searchInput"
                     />
                     <div style={{ display: 'flex', marginTop: '10px' }}>

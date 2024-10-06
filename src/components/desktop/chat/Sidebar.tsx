@@ -26,14 +26,10 @@ interface SidebarProps {
     setChatSummaries:any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,
-     endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries
-     }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const navigate = useNavigate();
     const [showChatDetail, setShowChatDetail] = useState(false);
     const [showAsk, setShowAsk] = useState(true);
-
-    
     
     return (
         <>
@@ -58,7 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                     setShowChatDetail(false);
                     setShowAsk(true);
                     await endSession(); // 기존 채팅 종료
-                    await endstartChat(); // 새로운 채팅 시작
                 }}
                 style={{
                     cursor: "pointer",

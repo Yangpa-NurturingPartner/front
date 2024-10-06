@@ -52,26 +52,30 @@ const Chatting: React.FC = () => {
 
     // 세션 종료 함수
     const endSession = async () => {
+        await new Promise<void>((resolve) => {
+            setSession_id(null);
+            resolve(); 
+        });
         console.log("Endsession 실행됨");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+        setMessages([]); // 화면에 보여지는 메시지 초기화
+        setShowChatDetail(false);
+        setShowAsk(true);
+        setIsChatEnded(true);
+        setQuery('');
         try {
-            await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { session_id:session_id }});
-            console.log("채팅이 종료되었습니다.");
-            setMessages([]); // 화면에 보여지는 메시지 초기화
-            setShowChatDetail(false);
-            setShowAsk(true);
-            setIsChatEnded(true);
+            await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { session_id: session_id }});
+            console.log("채팅이 종료되었습니다.");    
         } catch (error) {
             const axiosError = error as AxiosError;
             console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
         }
+        console.log("endsession? " + session_id);
     };
 
     //새 세션id받아오기
     const endstartChat = async () => {
-        console.log("endstartChat 실행됨");
-        setShowChatDetail(false);
         const storedProfile = localStorage.getItem("selectedProfile");
         let profile;
         if (storedProfile) { profile = JSON.parse(storedProfile);} else {console.log("selectedProfile이 없습니다.");}
@@ -92,17 +96,9 @@ const Chatting: React.FC = () => {
                 }
             });
 
-            const newSession_id = response.data.data.session_id;
-
-            setMessages([]);
-            setQuery('');
-            setIsChatEnded(false);
-            setShowAsk(true);
-
-            if (newSession_id) {
-                setSession_id(newSession_id);
-                console.log("session_id 새로 받아옴 = " + newSession_id);
-                navigate('/chat', { state: { session_id: newSession_id } });
+            if (response.data.data.session_id) {
+                setSession_id(response.data.data.session_id);
+                navigate('/chat', { state: { session_id: response.data.data.session_id } });
             } else {
                 console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
             }
@@ -121,14 +117,11 @@ const Chatting: React.FC = () => {
         setIsLoading(true); // 요청 전에 로딩 시작
         try {
             const userQuery = query; 
-            console.log("query테스트 " + query);
-            console.log("??? " + session_id);
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id: session_id,
                 chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken")
             });
-            console.log("userQuery ? " + userQuery);
             const userMessage: Message = { type: 'user', text: userQuery };
             const botMessage: Message = { type: 'bot', text: response.data.data.answer };
             setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
@@ -145,7 +138,6 @@ const Chatting: React.FC = () => {
 
     useEffect(() => {
         if (session_id) {
-            console.log("session_id 업데이트됨:", session_id);
             const mainQuery = localStorage.getItem("mainQuery");
             if (mainQuery) {
                 fetchInitialAnswer(mainQuery);
@@ -156,15 +148,10 @@ const Chatting: React.FC = () => {
     }, [session_id]);
 
     useEffect(() => {
-        if(!session_id){
-            endstartChat(); 
-        }
-
         // 페이지를 나갈 때
         const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
             console.log("handleBeforeUnload 실행됨");
             if (session_id) {
-                await setSession_id(null);
                 endSession();
             }
         };
@@ -173,10 +160,7 @@ const Chatting: React.FC = () => {
 
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
-            console.log("페이지 새로고침");
-            if (!session_id) {
-                endSession(); // 채팅페이지에서 채팅종료
-            }
+            endSession();
         };
     }, []);
 
@@ -206,7 +190,6 @@ const Chatting: React.FC = () => {
         if (!showChatDetail) {
             setMessages([]);
             setShowAsk(true);
-            navigate('/chat', { state: null });
         }
     }, [showChatDetail]);
 
