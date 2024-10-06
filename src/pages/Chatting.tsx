@@ -154,7 +154,7 @@ const Chatting: React.FC = () => {
                 console.error("mainQuery가 null입니다. fetchInitialAnswer를 호출할 수 없습니다.");
             }
         }
-    }, []);
+    }, [isChatEnded]);
 
     useEffect(() => {
         // 페이지를 나갈 때
