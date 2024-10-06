@@ -52,6 +52,7 @@ const Chatting: React.FC = () => {
 
     // 세션 종료 함수
     const endSession = async () => {
+        localStorage.setItem("end", "end");
         await new Promise<void>((resolve) => {
             setSession_id(null);
             resolve();
@@ -76,6 +77,7 @@ const Chatting: React.FC = () => {
 
     //새 세션id받아오기
     const endstartChat = async () => {
+        localStorage.removeItem("end");
         const storedProfile = localStorage.getItem("selectedProfile");
         let profile;
         if (storedProfile) { profile = JSON.parse(storedProfile); } else { console.log("selectedProfile이 없습니다."); }
