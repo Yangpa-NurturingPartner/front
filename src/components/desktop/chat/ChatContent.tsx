@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom'; 
 import { TextField, IconButton, CircularProgress } from "@mui/material";
-import { Search } from '@mui/icons-material';
+import { QuestionAnswer, Search } from '@mui/icons-material';
 import axios from "axios";
 import ChatPartDefault from "./ChatPartDefault";
 
@@ -73,38 +73,43 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     //질문 제출
     const handleSubmit = async () => {
         setShowAsk(false);
-    
         if (!session_id) {
+            console.log("sessionID 받아오기");
             await endstartChat();
         } else {
-            sendMessage();
+            console.log("123123");
+            await sendMessage();
         }
     };
+
+    useEffect(() => {
+        if (session_id && query) {
+            sendMessage();
+        }
+    }, [session_id]); 
     
     const sendMessage = async () => {
+        const question = localStorage.getItem("question");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-    
-        const userMessage: Message = { type: "user", text: query };
-        setMessages((prevMessages) => [...prevMessages, userMessage]);
-    
-        setIsLoading(true);
-        console.log("질문 제출 아이디: ", session_id);
-        console.log("query: ", query);
 
-    
+        const userMessage: Message = { type: question ? "user" : "user", text: question || query };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setIsLoading(true);
+
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
-                chat_detail: query,
+                chat_detail: question || query,
                 token: "Bearer " + localStorage.getItem("jwtToken"),
             });
-    
+
             const botAnswer = response.data.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: "bot", text: botAnswer };
-    
+
             setMessages((prevMessages) => [...prevMessages, botMessage]);
-            setQuery('');
+            localStorage.removeItem("question");
+            setQuery(''); 
             fetchChatSummaries();
         } catch (error: any) {
             const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
@@ -115,46 +120,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
     };
 
-    useEffect(() => {
-        if (session_id && query) { 
-            sendMessage(); 
-        }
-    }, [session_id]);
-    
-
     //간편질문 클릭 시 바로 전송
-    const handleQuestionClick = async (question: string) => {
+    const handleQuestionClick = (question: string) => {
         setShowAsk(false);
-        const userMessage: Message = { type: 'user', text: question };
-        setMessages(prevMessages => [...prevMessages, userMessage]);
-
-        console.log("간편질문 클릭! " + messages);
-
+        localStorage.setItem("question", question);
         setIsLoading(true);
-
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT; 
-
-        try {
-            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                session_id,
-                chat_detail: question,
-                token: "Bearer " + localStorage.getItem("jwtToken")
-            });
-
-            const botAnswer = response.data.data.answer || '답변이 없습니다.';
-            const botMessage: Message = { type: 'bot', text: botAnswer };
-
-            setMessages(prevMessages => [...prevMessages, botMessage]);
-            setQuery('');
-        } catch (error: any) {
-            const errorMessage: Message = { type: 'error', text: error.response?.data?.message || '오류가 발생했습니다.' };
-            setMessages(prevMessages => [...prevMessages, errorMessage]);
-            console.error('오류 발생:', error);
-        } finally {
-            setIsLoading(false);
-        }
-
+        setQuery(question);
+        navigate('/chat', { state: { query } });
     };
 
 
