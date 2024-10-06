@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Goback from "../../common/Goback";
 import SidebarContent from "./Sidebarcontent";
-import axios from "axios";
 
 interface ChatSummary {
     session_id: string;

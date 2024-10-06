@@ -31,7 +31,7 @@ const Chatting: React.FC = () => {
     const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    
+
     // 채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
@@ -54,7 +54,7 @@ const Chatting: React.FC = () => {
     const endSession = async () => {
         await new Promise<void>((resolve) => {
             setSession_id(null);
-            resolve(); 
+            resolve();
         });
         console.log("Endsession 실행됨");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
@@ -65,8 +65,8 @@ const Chatting: React.FC = () => {
         setIsChatEnded(true);
         setQuery('');
         try {
-            await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { session_id: session_id }});
-            console.log("채팅이 종료되었습니다.");    
+            await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { session_id: session_id } });
+            console.log("채팅이 종료되었습니다.");
         } catch (error) {
             const axiosError = error as AxiosError;
             console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
@@ -78,7 +78,7 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         const storedProfile = localStorage.getItem("selectedProfile");
         let profile;
-        if (storedProfile) { profile = JSON.parse(storedProfile);} else {console.log("selectedProfile이 없습니다.");}
+        if (storedProfile) { profile = JSON.parse(storedProfile); } else { console.log("selectedProfile이 없습니다."); }
 
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
@@ -109,14 +109,14 @@ const Chatting: React.FC = () => {
     };
 
     //메인에서 보낸 질문
-    const fetchInitialAnswer = async (query:string) => {
+    const fetchInitialAnswer = async (query: string) => {
         localStorage.removeItem("mainQuery");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
         setIsLoading(true); // 요청 전에 로딩 시작
         try {
-            const userQuery = query; 
+            const userQuery = query;
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id: session_id,
                 chat_detail: query,
@@ -223,7 +223,6 @@ const Chatting: React.FC = () => {
                     <ChatDetail chatDetail={chatDetail} />
                 ) : (
                     <>
-                        {isLoading && <CircularProgress style={{ margin: '20px auto', display: 'block' }} />}
                         <ChatContent
                             messages={messages}
                             setMessages={setMessages}
