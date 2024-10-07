@@ -37,26 +37,31 @@ const Chatting: React.FC = () => {
 
     //질문 보내기
     const handleSubmit = async () => {
-        if (!session_id) {
-            console.log("handleSubmit");
+        console.log("handleSubmit 호출");
+        if (!session_id || localStorage.getItem("clickQuery")) {
+            console.log("handleSubmit session_id없음");
             await endstartChat();
             while (!session_id) {
                 await new Promise((resolve) => setTimeout(resolve, 100));
             }
+            localStorage.removeItem("clickQuery");
         }
         else {
+            console.log("handleSubmit -> else");
             setIsChatEnded(false);
             await sendMessage();
         }
     };
 
     useEffect(() => {
+        console.log("test -> session_id and query");
         if (session_id && query) {
             sendMessage();
         }
     }, [session_id]);
 
     const sendMessage = async () => {
+        console.log("sendMessage호출됨");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
@@ -171,6 +176,7 @@ const Chatting: React.FC = () => {
 
     //메인에서 보낸 질문
     const fetchInitialAnswer = async (query: string) => {
+        console.log("fetchInitial 호출됨");
         setIsLoading(true);
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
@@ -192,7 +198,7 @@ const Chatting: React.FC = () => {
                 console.error("기타 오류:", error);
             }
         } finally {
-            setIsLoading(false);
+            await setIsLoading(false);
         }
     };
 
@@ -204,13 +210,15 @@ const Chatting: React.FC = () => {
         }
     }, [messages]);
 
+    //메인에서 보낸 query
     useEffect(() => {
         if (!session_id) {
             endstartChat();
             if (query) {
                 fetchInitialAnswer(query);
+                console.log("fetchInitail 실행");
             } else {
-                console.error("mainQuery가 null입니다. fetchInitialAnswer를 호출할 수 없습니다.");
+                console.log("mainQuery가 null입니다.");
             }
         }
     }, [isChatEnded]);

@@ -11,8 +11,7 @@ const Main: React.FC = () => {
     const navigate = useNavigate();
     const CryptoJS = require('crypto-js');
     const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
-    const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
-
+ 
     // 복호화 함수
     const decryptData = (cipherText: string) => {
         if (!encryptionKey) {
@@ -27,16 +26,6 @@ const Main: React.FC = () => {
             return null;
         }
     };
-
-    const storedProfile = localStorage.getItem("selectedProfile");
-    let profile;
-    if (storedProfile) {
-        const decryptedProfile = decryptData(storedProfile);
-        profile = JSON.parse(decryptedProfile);
-        console.log("childId: " + profile.childId);
-    } else {
-        console.log("selectedProfile이 없습니다.");
-    }
 
 
     // 질문을 채팅 페이지로 보냄

@@ -72,11 +72,15 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
 
     //간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (query: string) => {
-        setSession_id(null);
-        console.log("질문 클릭:", query);
+        localStorage.setItem("clickQuery", query);
+        await new Promise<void>((resolve) => {
+            setSession_id(null);
+            setTimeout(resolve, 0);
+        });
         setQuery(query);
+        console.log("질문 클릭:", query);  
         setIsLoading(true);
-        await navigate('/chat', { state: { query } });
+        await navigate('/chat', { state: { session_id : null, query: query } });
     };
 
     return (
