@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from "../components/desktop/chat/Sidebar";
-import { CircularProgress } from "@mui/material";
 import "../css/chatCss.scss";
 import ChatContent from "../components/desktop/chat/ChatContent";
 import ChatDetail from "../components/desktop/chat/ChatDetail";
 import axios, { AxiosError } from 'axios';
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface Message {
     type: 'user' | 'bot' | 'error';
@@ -31,6 +32,7 @@ const Chatting: React.FC = () => {
     const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
 
     // 채팅 상세 내용 보기 함수
     const viewChatDetail = async (session_id: string) => {
@@ -78,13 +80,18 @@ const Chatting: React.FC = () => {
     //새 세션id받아오기
     const endstartChat = async () => {
         localStorage.removeItem("end");
-        const storedProfile = localStorage.getItem("selectedProfile");
-        let profile;
-        if (storedProfile) { profile = JSON.parse(storedProfile); } else { console.log("selectedProfile이 없습니다."); }
+        if (!childId) {
+            alert("선택된 아이가 없습니다.");
+            return;
+        }
+
+        const child_num = childId;
+
+        console.log("child_id = " + child_num);
 
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
-            child_id: profile.childId
+            child_id: child_num
         };
 
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
