@@ -30,13 +30,18 @@ import { RootState } from '../redux/store';
       };
 
     const storedProfile = localStorage.getItem("selectedProfile");
+    
     let profile;
-    if (storedProfile) {
+
+    try {if (storedProfile) {
         const decryptedProfile = decryptData(storedProfile);
         profile = JSON.parse(decryptedProfile);
         console.log("childId: " + profile.childId);
     } else {
         console.log("selectedProfile이 없습니다.");
+    }}
+    catch (error) {
+        navigate('/login');
     }
 
     

@@ -35,13 +35,14 @@ const Chatting: React.FC = () => {
     const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
 
     // 채팅 상세 내용 보기 함수
-    const viewChatDetail = async (session_id: string) => {
+    const viewChatDetail = async (sessionId: string) => {
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         try {
-            const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${session_id}`);
+            const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${sessionId}`);
             setChatDetail(response.data.data);
             setShowChatDetail(true);
+            setSession_id(sessionId);
         } catch (error) {
             console.error('채팅 상세 불러오기 오류:', error);
         }
@@ -77,8 +78,20 @@ const Chatting: React.FC = () => {
     };
 
     //새 세션id받아오기
-    const endstartChat = async () => {
+    const endstartChat = async (sessionIdFromMessage?: string) => {
         localStorage.removeItem("end");
+        
+        if (sessionIdFromMessage) {
+            setSession_id(sessionIdFromMessage);
+            viewChatDetail(sessionIdFromMessage);
+            return;
+        }
+
+        // 새 탭에서 열린 경우 childId 체크를 건너뜁니다.
+        if (window.opener) {
+            return;
+        }
+
         if (!childId) {
             alert("선택된 아이가 없습니다.");
             return;
@@ -204,6 +217,32 @@ const Chatting: React.FC = () => {
             setShowAsk(true);
         }
     }, [showChatDetail]);
+
+    useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.type === 'OPEN_CHAT') {
+                const receivedSessionId = event.data.session_id;
+                setSession_id(receivedSessionId);
+                viewChatDetail(receivedSessionId);
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        // 새 탭에서 열린 경우 즉시 세션 ID를 확인합니다.
+        if (window.opener && location.search) {
+            const params = new URLSearchParams(location.search);
+            const sessionId = params.get('session_id');
+            if (sessionId) {
+                setSession_id(sessionId);
+                viewChatDetail(sessionId);
+            }
+        }
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+        };
+    }, []);
 
     return (
         <>
