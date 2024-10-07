@@ -57,17 +57,15 @@ const Chatting: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log("test -> session_id and query");
+        console.log("test -> session_id:", session_id, "query:", query);
         if (session_id && query) {
+            console.log("test 222");
             sendMessage();
         }
     }, [session_id]);
 
     const sendMessage = async () => {
         console.log("sendMessage호출됨");
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
         const userMessage: Message = { type: "user", text: query || "" };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setIsLoading(true);
@@ -277,6 +275,8 @@ const Chatting: React.FC = () => {
                 {showChatDetail ? (
                     <ChatDetail
                         chatDetail={chatDetail}
+                        setSession_id={setSession_id}
+                        setQuery={setQuery}
                     />
                 ) : (
                     <>
