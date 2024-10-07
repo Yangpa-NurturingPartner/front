@@ -19,6 +19,7 @@ interface ChatSummary {
     summ_answer: string;
 }
 
+
 const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
@@ -32,10 +33,72 @@ const Chatting: React.FC = () => {
     const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const [oldSessionId, setOldSessionId] = useState<string | null>(null);
     const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
 
-    // 채팅 상세 내용 보기 함수
+
+    //질문 보내기
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        setShowAsk(false);
+
+        if (!session_id) {
+            await endstartChat();
+            while (!session_id) {
+                await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+            console.log("new : ", session_id);
+        }
+        else {
+            setIsChatEnded(false);
+            await sendMessage();
+            console.log("sendMessage");
+        }
+    };
+
+    useEffect(() => {
+        if (session_id && query) {
+            sendMessage();
+        }
+    }, [session_id]);
+
+    const sendMessage = async () => {
+        if(!session_id){
+            console.log("endstartChatRRRRRR");
+            endstartChat();
+            return;
+        }
+        const serverIp: string | undefined = process.env.REACT_APP_HOST;
+        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+        setIsLoading(true);
+
+        const userMessage: Message = { type: "user", text: query || '' };
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        try {
+            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
+                session_id,
+                chat_detail: query,
+                token: "Bearer " + localStorage.getItem("jwtToken"),
+            });
+
+            const botAnswer = response.data.data.answer || '답변이 없습니다.';
+            const botMessage: Message = { type: "bot", text: botAnswer };
+
+            setMessages((prevMessages) => [...prevMessages, botMessage]);
+            setQuery('');
+            fetchChatSummaries();
+        } catch (error: any) {
+            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
+            setMessages((prevMessages) => [...prevMessages, errorMessage]);
+            console.error("오류 발생:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    // 채팅 상세 내용 보기
     const viewChatDetail = async (session_id: string) => {
+        setOldSessionId(session_id);
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         try {
@@ -47,12 +110,12 @@ const Chatting: React.FC = () => {
         }
     };
 
-    // 사이드바 토글 함수
+    // 사이드바 토글
     const toggleSidebar = () => {
         setSidebarCollapsed(prev => !prev);
     };
 
-    // 세션 종료 함수
+    // 세션 종료 
     const endSession = async () => {
         localStorage.setItem("end", "end");
         await new Promise<void>((resolve) => {
@@ -104,7 +167,8 @@ const Chatting: React.FC = () => {
 
             if (response.data.data.session_id) {
                 setSession_id(response.data.data.session_id);
-                navigate('/chat', { state: { session_id: response.data.data.session_id } });
+                const session_id = response.data.data.session_id;
+                navigate('/chat', { state: { session_id: session_id} });
             } else {
                 console.error('endstartChat + 세션 ID를 받아오지 못했습니다.');
             }
@@ -119,7 +183,7 @@ const Chatting: React.FC = () => {
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
-        setIsLoading(true); // 요청 전에 로딩 시작
+        setIsLoading(true);
         try {
             const userQuery = query;
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
@@ -137,7 +201,7 @@ const Chatting: React.FC = () => {
                 console.error("기타 오류:", error);
             }
         } finally {
-            setIsLoading(false); // 요청 완료 후 로딩 종료
+            setIsLoading(false);
         }
     };
 
@@ -159,10 +223,10 @@ const Chatting: React.FC = () => {
             }
         }
     }, [isChatEnded]);
-    
-// 페이지를 나갈 때
+
+    // 페이지를 나갈 때
     useEffect(() => {
-        
+
         const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
             if (session_id) {
                 endSession();
@@ -177,6 +241,7 @@ const Chatting: React.FC = () => {
         };
     }, []);
 
+    //요약본 불러오기
     const fetchChatSummaries = async () => {
         const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
@@ -223,18 +288,28 @@ const Chatting: React.FC = () => {
             />
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
-                    <ChatDetail chatDetail={chatDetail} />
+                    <ChatDetail
+                        query={query || ''}
+                        setQuery={setQuery}
+                        chatDetail={chatDetail}
+                        isChatEnded={isChatEnded}
+                        session_id={session_id || ''}
+                        oldSessionId={oldSessionId || ''}
+                        setSessionId={setSession_id}
+                        fetchChatSummaries={fetchChatSummaries}
+                    />
                 ) : (
                     <>
                         <ChatContent
+                            handleSubmit={handleSubmit}
                             messages={messages}
                             setMessages={setMessages}
                             query={query || ''}
                             setQuery={setQuery}
                             isChatEnded={isChatEnded}
-                            endstartChat={endstartChat}
-                            session_id={session_id || ''}
-                            fetchChatSummaries={fetchChatSummaries}
+                            isLoading={isLoading}
+                            setIsLoading={setIsLoading}
+
                         />
                     </>
                 )}

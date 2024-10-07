@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                 src={"/img/write.png"}
                 alt={""}
                 onClick={async () => {
-                    navigate('/chat', { state: { showAsk: true } });
+                    navigate('/chat');
                     setShowChatDetail(false);
                     await endSession(); // 기존 채팅 종료
                 }}
