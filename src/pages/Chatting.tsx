@@ -113,6 +113,7 @@ const Chatting: React.FC = () => {
     const endSession = async () => {
         setIsLoading(false);
         localStorage.setItem("end", "end");
+        localStorage.removeItem("nowChatting");
         await new Promise<void>((resolve) => {
             setSession_id(null);
             resolve();
@@ -134,6 +135,7 @@ const Chatting: React.FC = () => {
 
     //새 세션id받아오기
     const endstartChat = async () => {
+        localStorage.setItem("nowChatting", "nowChatting");
         localStorage.removeItem("end");
         if (!childId) {
             alert("선택된 아이가 없습니다.");
@@ -182,15 +184,19 @@ const Chatting: React.FC = () => {
             const userMessage: Message = { type: 'user', text: userQuery };
             const botMessage: Message = { type: 'bot', text: response.data.data.answer };
             setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
+
+            setMessages(prevMessages => {
+                const updatedMessages = [...prevMessages, userMessage, botMessage];
+                setIsLoading(false); 
+                return updatedMessages; 
+            });
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 console.error("AxiosError 발생:", error.response.data);
             } else {
                 console.error("기타 오류:", error);
             }
-        } finally {
-            await setIsLoading(false);
-        }
+        } 
     };
 
     //메세지 추가시 출력 + 스크롤
@@ -251,12 +257,6 @@ const Chatting: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        if (!showChatDetail) {
-            setMessages([]);
-        }
-    }, [showChatDetail]);
-
     return (
         <>
             <Sidebar
@@ -277,10 +277,12 @@ const Chatting: React.FC = () => {
                         chatDetail={chatDetail}
                         setSession_id={setSession_id}
                         setQuery={setQuery}
+                        setShowChatDetail={setShowChatDetail}
                     />
                 ) : (
                     <>
                         <ChatContent
+                            chatDetail={chatDetail}
                             handleSubmit={handleSubmit}
                             messages={messages}
                             setMessages={setMessages}
@@ -291,6 +293,7 @@ const Chatting: React.FC = () => {
                             setIsLoading={setIsLoading}
                             endStartChat={endstartChat}
                             setSession_id={setSession_id}
+                            session_id={session_id}
                         />
                     </>
                 )}

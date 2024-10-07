@@ -23,9 +23,8 @@ interface SidebarProps {
     setChatSummaries:any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, showChatDetail, setShowChatDetail, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const navigate = useNavigate();
-    const [showChatDetail, setShowChatDetail] = useState(false);
     
     return (
         <>
