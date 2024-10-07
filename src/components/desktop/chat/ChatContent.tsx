@@ -87,18 +87,17 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     }, [session_id]); 
     
     const sendMessage = async () => {
-        const question = localStorage.getItem("question");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
-        const userMessage: Message = { type: question ? "user" : "user", text: question || query };
+        const userMessage: Message = { type: "user", text: query };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setIsLoading(true);
 
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
-                chat_detail: question || query,
+                chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken"),
             });
 
@@ -106,7 +105,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
             const botMessage: Message = { type: "bot", text: botAnswer };
 
             setMessages((prevMessages) => [...prevMessages, botMessage]);
-            localStorage.removeItem("question");
             setQuery(''); 
             fetchChatSummaries();
         } catch (error: any) {

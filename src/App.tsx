@@ -23,7 +23,7 @@ const App: React.FC = () => {
         return <Navigate to="/profile" replace />;
 
         // 3. 토큰이 있는데 주소가 로그인이 아닐경우
-    } else if (token && location.pathname === '/' && !localStorage.getItem('selectedProfile')) {
+    } else if (token && location.pathname !== '/profile' && !localStorage.getItem('selectedProfile')) {
         return <Navigate to="/profile" replace />;
     }
     return (

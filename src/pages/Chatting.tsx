@@ -59,7 +59,6 @@ const Chatting: React.FC = () => {
             setSession_id(null);
             resolve();
         });
-        console.log("Endsession 실행됨");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         setMessages([]); // 화면에 보여지는 메시지 초기화
@@ -86,8 +85,6 @@ const Chatting: React.FC = () => {
         }
 
         const child_num = childId;
-
-        console.log("child_id = " + child_num);
 
         const requestData = {
             jwtToken: "Bearer " + localStorage.getItem("jwtToken"),
@@ -119,7 +116,6 @@ const Chatting: React.FC = () => {
 
     //메인에서 보낸 질문
     const fetchInitialAnswer = async (query: string) => {
-        localStorage.removeItem("mainQuery");
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
@@ -156,19 +152,18 @@ const Chatting: React.FC = () => {
     useEffect(() => {
         if (!session_id) {
             endstartChat();
-            const mainQuery = localStorage.getItem("mainQuery");
-            if (mainQuery) {
-                fetchInitialAnswer(mainQuery);
+            if (query) {
+                fetchInitialAnswer(query);
             } else {
                 console.error("mainQuery가 null입니다. fetchInitialAnswer를 호출할 수 없습니다.");
             }
         }
     }, [isChatEnded]);
-
+    
+// 페이지를 나갈 때
     useEffect(() => {
-        // 페이지를 나갈 때
+        
         const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-            console.log("handleBeforeUnload 실행됨");
             if (session_id) {
                 endSession();
             }
@@ -197,7 +192,6 @@ const Chatting: React.FC = () => {
             });
 
             const summaries = Array.isArray(response.data.data) ? response.data.data : [];
-            console.log(summaries);
             setChatSummaries(summaries);
         } catch (error) {
             console.error('채팅 요약 불러오기 오류:', error);

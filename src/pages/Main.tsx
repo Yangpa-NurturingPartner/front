@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import SearchPart from "../components/desktop/main/SearchPart";
 import "../css/mainCsss.scss";
 import SearchNavigate from "../components/desktop/main/SearchNavigate";
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
   const Main: React.FC = () => {
     const [query, setQuery] = useState<string>(''); 
@@ -10,6 +12,7 @@ import SearchNavigate from "../components/desktop/main/SearchNavigate";
     const [showAsk, setShowAsk] = useState(false);
     const CryptoJS = require('crypto-js');
     const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
+    const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
 
       // 복호화 함수
       const decryptData = (cipherText: string) => {
@@ -27,19 +30,19 @@ import SearchNavigate from "../components/desktop/main/SearchNavigate";
       };
 
     const storedProfile = localStorage.getItem("selectedProfile");
-        let profile;
-        if (storedProfile) {
-            const decryptedProfile = decryptData(storedProfile);
-            profile = JSON.parse(decryptedProfile);
-            console.log("childId: " + profile.childId);
-        } else {
-            console.log("selectedProfile이 없습니다.");
-        }
+    let profile;
+    if (storedProfile) {
+        const decryptedProfile = decryptData(storedProfile);
+        profile = JSON.parse(decryptedProfile);
+        console.log("childId: " + profile.childId);
+    } else {
+        console.log("selectedProfile이 없습니다.");
+    }
 
-        // 질문을 채팅 페이지로 보냄
+    
+    // 질문을 채팅 페이지로 보냄
     const handleMainQuery = (query: string) => { 
         console.log("질문 제출:", query);
-        localStorage.setItem("mainQuery", query);
         setQuery(query);
         setShowAsk(false);
         navigate('/chat', { state: { query } });
