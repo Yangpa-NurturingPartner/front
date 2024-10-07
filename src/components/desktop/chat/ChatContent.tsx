@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { TextField, IconButton, CircularProgress } from "@mui/material";
-import { QuestionAnswer, Search } from '@mui/icons-material';
-import axios from "axios";
+import { Search } from '@mui/icons-material';
+
 import ChatPartDefault from "./ChatPartDefault";
 
 interface Message {
@@ -16,14 +16,14 @@ interface ChatContentProps {
     query: string;
     setQuery: React.Dispatch<React.SetStateAction<string | null>>;
     isChatEnded: boolean;
-    endstartChat: () => void;
-    session_id: string;
-    fetchChatSummaries: () => Promise<void>;
+    handleSubmit: () => Promise<void>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    endStartChat: () => Promise<void>;
+    setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id,fetchChatSummaries }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
+const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,80 +67,36 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     };
 
     useEffect(() => {
-        scrollToBottom(); 
+        scrollToBottom();
     }, [messages]);
 
-    //질문 제출
-    const handleSubmit = async () => {
-        setShowAsk(false);
-        if (!session_id) {
-            await endstartChat();
-        } else {
-            await sendMessage();
-        }
-    };
-
-    useEffect(() => {
-        if (session_id && query) {
-            sendMessage();
-        }
-    }, [session_id]); 
-    
-    const sendMessage = async () => {
-        const question = localStorage.getItem("question");
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
-        const userMessage: Message = { type: question ? "user" : "user", text: question || query };
-        setMessages((prevMessages) => [...prevMessages, userMessage]);
-        setIsLoading(true);
-
-        try {
-            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                session_id,
-                chat_detail: question || query,
-                token: "Bearer " + localStorage.getItem("jwtToken"),
-            });
-
-            const botAnswer = response.data.data.answer || '답변이 없습니다.';
-            const botMessage: Message = { type: "bot", text: botAnswer };
-
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-            localStorage.removeItem("question");
-            setQuery(''); 
-            fetchChatSummaries();
-        } catch (error: any) {
-            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
-            setMessages((prevMessages) => [...prevMessages, errorMessage]);
-            console.error("오류 발생:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     //간편질문 클릭 시 바로 전송
-    const handleQuestionClick = (question: string) => {
-        setShowAsk(false);
-        localStorage.setItem("question", question);
+    const handleQuestionClick = async (query: string) => {
+        localStorage.setItem("clickQuery", query);
+        await new Promise<void>((resolve) => {
+            setSession_id(null);
+            setTimeout(resolve, 0);
+        });
+        setQuery(query);
+        console.log("질문 클릭:", query);
         setIsLoading(true);
-        setQuery(question);
-        navigate('/chat', { state: { query } });
+        await navigate('/chat', { state: { session_id: null, query: query } });
     };
 
     return (
         <div className="pc-show-chat">
             <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
-                    <ChatPartDefault 
+                <ChatPartDefault
                     onQuestionClick={handleQuestionClick}
                     onSubmit={handleSubmit}
-                    />
+                />
             </div>
-    
+
             <div className="pc-chat-content">
                 <div className="message-container">
                     {messages.map((msg, index) => (
                         <div key={index}>
-                            <div 
+                            <div
                                 className={`message ${msg.type}`}
                                 style={{ fontSize: '15px' }}
                             >
@@ -150,13 +106,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                     ))}
                     <div ref={messageEndRef} />
                 </div>
-    
+
                 {isLoading && (
                     <div style={{ textAlign: 'center', margin: '20px 0' }}>
                         <CircularProgress />
                     </div>
                 )}
-    
+
                 <form className="pc-chat-input">
                     <TextField
                         id="outlined-basic"
@@ -168,19 +124,19 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
                         onKeyPress={(e) => {
                             if (e.key === 'Enter') {
                                 e.preventDefault();
-                                handleSubmit(); 
+                                handleSubmit();
                             }
                         }}
-                        disabled={isLoading} 
+                        disabled={isLoading}
                         className="pc-chat-body-searchInput"
                     />
                     <div style={{ display: 'flex', marginTop: '10px' }}>
-                        <IconButton 
-                            type="button" 
-                            onClick={handleSubmit} 
+                        <IconButton
+                            type="button"
+                            onClick={handleSubmit}
                             disabled={isChatEnded || isLoading}
                         >
-                            <Search /> 
+                            <Search />
                         </IconButton>
                     </div>
                 </form>
@@ -188,5 +144,5 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         </div>
     );
 }
-    
+
 export default ChatContent;

@@ -10,6 +10,7 @@ interface ProfileChooseProps {
 
 const ProfileChoose: React.FC<ProfileChooseProps> = ({ setRegis, profileData, setSelectedProfile, onAddNewProfile, onSelectProfile }) => {
     const handleEditProfile = (profile: any) => {
+        // console.log("Editing profile:", profile);
         setSelectedProfile(profile);
         setRegis(true);
     };
@@ -34,7 +35,7 @@ const ProfileChoose: React.FC<ProfileChooseProps> = ({ setRegis, profileData, se
                                 <img src={"/img/setup.png"} alt={""} />
                             </div>
                             <img
-                                src={profile.imageProfile ? `data:image/png;base64,${profile.imageProfile}` : "/img/child1.png"}
+                                src={profile.imageProfile ? `data:image/png;base64,${profile.imageProfile}` : "/img/profile.png"}
                                 alt={profile.name || "child"}
                             />
                             <span>{profile.name || `아이 ${index + 1}`}</span>

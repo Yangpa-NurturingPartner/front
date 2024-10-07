@@ -16,10 +16,7 @@ interface SidebarContentProps {
     setChatSummaries:any;
 }
 
-const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchChatSummaries,
-     chatSummaries, setChatSummaries }) => {
-    
-    const [filteredSummaries, setFilteredSummaries] = useState<ChatSummary[]>([]);
+const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const makeSx = {
@@ -55,8 +52,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
         }
     }, [searchQuery]);
     
-    
-
+    //요약본 검색
     const searchChatSummaries = async () => {
         const jwtToken = localStorage.getItem("jwtToken");
         if (!jwtToken) {
@@ -88,9 +84,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
         }
     };
 
+// 검색어가 있을 때만 검색 실행
     const handleSearch = () => {
         if (searchQuery) {
-            searchChatSummaries(); // 검색어가 있을 때만 검색 실행
+            searchChatSummaries(); 
         }
     };
 
@@ -121,7 +118,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
             placeholder="히스토리 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown} // Enter 키 입력 이벤트 추가
+            onKeyDown={handleKeyDown}
             variant="outlined"
             sx={{
                 ...makeSx,
@@ -132,7 +129,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
             InputProps={{
                 endAdornment: (
                     <InputAdornment position="end">
-                        <IconButton onClick={handleSearch}> {/* 검색 버튼 클릭 이벤트 추가 */}
+                        <IconButton onClick={handleSearch}>
                             <SearchIcon style={{ color: "#999" }} />
                         </IconButton>
                     </InputAdornment>

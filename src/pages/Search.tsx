@@ -28,22 +28,24 @@ const TotalSearch: React.FC = () => {
     }, [dispatch]);
 
     const handleSearch = async () => {
-        setFind(true);
-        setSubmittedQuery(searchQuery);
-        dispatch(totalSearchResult(searchQuery) as any);
+        if (searchQuery.trim() !== '') {
+            setFind(true);
+            setSubmittedQuery(searchQuery);
+            dispatch(totalSearchResult(searchQuery) as any);
+        }
     };
-    
+
     const handleKeyPress = (event: any) => {
         if (event.key === 'Enter') {
             handleSearch();
         }
     };
 
-    const handleQuestionClick = async (question: string) => {
-        setSearchQuery(question);
-        setSubmittedQuery(question);
+    const handleQuestionClick = async (query: string) => {
+        setSearchQuery(query);
+        setSubmittedQuery(query);
         setFind(true);
-        dispatch(totalSearchResult(question) as any);
+        dispatch(totalSearchResult(query) as any);
     };
 
     const makeSx = {
@@ -88,6 +90,7 @@ const TotalSearch: React.FC = () => {
                     placeholder="검색할 자료를 입력하세요"
                     variant="outlined"
                     sx={makeSx}
+                    value={searchQuery}  // 이 줄 추가
                     InputProps={{
                         endAdornment: (
                             <img 

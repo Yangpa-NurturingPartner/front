@@ -8,10 +8,10 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import {setSelectedProfile} from "../../../redux/slices/profileSlice";
+import { useDispatch } from 'react-redux';
+import { setSelectedProfile } from "../../../redux/slices/profileSlice";
 
 interface HeaderMenuProps {
     selectedProfile: any;
@@ -21,6 +21,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         // 디버깅: 선택된 프로필 데이터 확인
@@ -55,6 +56,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
     };
 
     const handleNavigateAddProfile = () => {
+        dispatch(setSelectedProfile(null));
         navigate('/profile?action=add');
     };
 
@@ -76,13 +78,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
                                 alt=""
                                 style={{ width: '100%', height: '100%', borderRadius: '50%' }}
                             />
-                        ) : (
-                            <img
-                                src="/img/child1.png"
-                                alt=""
-                                style={{width: '100%', height: '100%', borderRadius: '50%'}}
-                            />
-                        )}
+                        ) : null}
                     </Avatar>
                 </IconButton>
             </Tooltip>
@@ -136,12 +132,6 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
                         <PersonAdd fontSize="small" />
                     </ListItemIcon>
                     Add another profile
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                        <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
