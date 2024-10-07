@@ -22,7 +22,7 @@ interface ChatDetailProps {
   oldSessionId: string;
   setSessionId: React.Dispatch<React.SetStateAction<string | null>>;
   fetchChatSummaries: () => Promise<void>;
-  isLoading:boolean;
+  isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -88,7 +88,12 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchC
   }, [chatDetail]);
 
   //과거 채팅방에서 이어 채팅
-  const handleChatSubmit = async () => {
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (isLoading) return;
+
+    console.log("handleChatSubmit");
     setSessionId(oldSessionId);
     const serverIp: string | undefined = process.env.REACT_APP_HOST;
     const port: string | undefined = process.env.REACT_APP_BACK_PORT;
@@ -148,7 +153,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchC
           )}< div ref={messageEndRef} />
         </div>
 
-        <form className="pc-chat-input">
+        <form className="pc-chat-input" onSubmit={handleChatSubmit}>
           <TextField
             id="outlined-basic"
             placeholder="육아 고민을 적어주세요"
@@ -156,19 +161,12 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchC
             sx={makeSx}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleChatSubmit();
-              }
-            }}
             disabled={isLoading}
             className="pc-chat-body-searchInput"
           />
           <div style={{ display: 'flex', marginTop: '10px' }}>
             <IconButton
-              type="button"
-              onClick={handleChatSubmit}
+              type="submit" 
               disabled={isChatEnded || isLoading}
             >
               <Search />

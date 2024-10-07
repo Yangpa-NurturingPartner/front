@@ -193,7 +193,6 @@ const Chatting: React.FC = () => {
             }
         } finally {
             setIsLoading(false);
-            console.log("답변완료");
         }
     };
 

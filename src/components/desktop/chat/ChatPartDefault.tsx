@@ -14,7 +14,6 @@ const ChatPartDefault: React.FC<ChatPartDefaultProps> = ({ onQuestionClick, onSu
     ];
 
     const handleQuestionClick = (query: string) => {
-        console.log("클릭됨");
         onQuestionClick(query); 
         onSubmit(); 
     };
