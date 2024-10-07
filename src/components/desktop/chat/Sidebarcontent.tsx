@@ -84,9 +84,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
         }
     };
 
+// 검색어가 있을 때만 검색 실행
     const handleSearch = () => {
         if (searchQuery) {
-            searchChatSummaries(); // 검색어가 있을 때만 검색 실행
+            searchChatSummaries(); 
         }
     };
 
@@ -117,7 +118,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
             placeholder="히스토리 검색"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown} // Enter 키 입력 이벤트 추가
+            onKeyDown={handleKeyDown}
             variant="outlined"
             sx={{
                 ...makeSx,

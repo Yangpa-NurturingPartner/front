@@ -23,7 +23,7 @@ interface ChatContentProps {
     setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, messages, handleSubmit,  query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -78,9 +78,9 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
             setTimeout(resolve, 0);
         });
         setQuery(query);
-        console.log("질문 클릭:", query);  
+        console.log("질문 클릭:", query);
         setIsLoading(true);
-        await navigate('/chat', { state: { session_id : null, query: query } });
+        await navigate('/chat', { state: { session_id: null, query: query } });
     };
 
     return (
@@ -88,7 +88,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
             <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
                 <ChatPartDefault
                     onQuestionClick={handleQuestionClick}
-                    onSubmit={handleSubmit} 
+                    onSubmit={handleSubmit}
                 />
             </div>
 

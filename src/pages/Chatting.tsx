@@ -34,6 +34,9 @@ const Chatting: React.FC = () => {
     const [oldSessionId, setOldSessionId] = useState<string | null>(null);
     const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
 
+    const serverIp: string | undefined = process.env.REACT_APP_HOST;
+    const port: string | undefined = process.env.REACT_APP_BACK_PORT;
+
 
     //질문 보내기
     const handleSubmit = async () => {
@@ -91,11 +94,9 @@ const Chatting: React.FC = () => {
         }
     };
 
-    // 채팅 상세 내용 보기
+    //과거 채팅 상세 보기
     const viewChatDetail = async (session_id: string) => {
         setOldSessionId(session_id);
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         try {
             const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data.data);
@@ -118,8 +119,6 @@ const Chatting: React.FC = () => {
             setSession_id(null);
             resolve();
         });
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         setMessages([]); // 화면에 보여지는 메시지 초기화
         setShowChatDetail(false);
         setIsChatEnded(true);
@@ -150,9 +149,6 @@ const Chatting: React.FC = () => {
             child_id: child_num
         };
 
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/start-new-chat`, requestData, {
                 headers: {
@@ -178,9 +174,6 @@ const Chatting: React.FC = () => {
     const fetchInitialAnswer = async (query: string) => {
         console.log("fetchInitial 호출됨");
         setIsLoading(true);
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
         try {
             const userQuery = query;
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
@@ -239,10 +232,10 @@ const Chatting: React.FC = () => {
 
     //요약본 불러오기
     const fetchChatSummaries = async () => {
+        console.log("fetchChatSummaries 실행")
         const jwtToken = "Bearer " + localStorage.getItem("jwtToken");
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
+        //해당 user의 session_id가져오기
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/user-chat-record`, {
                 'token': jwtToken
@@ -253,6 +246,7 @@ const Chatting: React.FC = () => {
             });
 
             const summaries = Array.isArray(response.data.data) ? response.data.data : [];
+            console.log("summaries", summaries);
             setChatSummaries(summaries);
         } catch (error) {
             console.error('채팅 요약 불러오기 오류:', error);
@@ -282,16 +276,7 @@ const Chatting: React.FC = () => {
             <div className={`content-container ${isSidebarCollapsed ? "collapsed" : "expanded"}`}>
                 {showChatDetail ? (
                     <ChatDetail
-                        query={query || ''}
-                        setQuery={setQuery}
                         chatDetail={chatDetail}
-                        isChatEnded={isChatEnded}
-                        session_id={session_id || ''}
-                        oldSessionId={oldSessionId || ''}
-                        setSessionId={setSession_id}
-                        fetchChatSummaries={fetchChatSummaries}
-                        isLoading={isLoading}
-                        setIsLoading={setIsLoading}
                     />
                 ) : (
                     <>
@@ -305,7 +290,7 @@ const Chatting: React.FC = () => {
                             isLoading={isLoading}
                             setIsLoading={setIsLoading}
                             endStartChat={endstartChat}
-                            setSession_id={setSession_id || ''}
+                            setSession_id={setSession_id}
                         />
                     </>
                 )}

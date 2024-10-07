@@ -1,13 +1,4 @@
-import { Search } from '@mui/icons-material';
-import { IconButton, TextField } from '@mui/material';
-import axios from 'axios';
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-
-interface Message {
-  type: 'user' | 'bot' | 'error';
-  text: string;
-  timestamp: string;
-}
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ChatDetailProps {
   chatDetail: {
@@ -15,51 +6,19 @@ interface ChatDetailProps {
     answer: string;
     qa_time: string;
   }[];
-  query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string | null>>;
-  isChatEnded: boolean;
-  session_id: string;
-  oldSessionId: string;
-  setSessionId: React.Dispatch<React.SetStateAction<string | null>>;
-  fetchChatSummaries: () => Promise<void>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchChatSummaries, setSessionId, oldSessionId, isChatEnded, query, setQuery, chatDetail, session_id }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail }) => {
+  const [messages, setMessages] = useState<{ type: 'user' | 'bot'; text: string; timestamp: string }[]>([]);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
-  const makeSx = {
-    width: "100%",
-    backgroundColor: "#F4F4F4",
-    borderRadius: "15px",
-    border: "none",
-    boxShadow: "2px 2px 5px #DADADA",
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        border: "none",
-      },
-      "&:hover fieldset": {
-        border: "none",
-      },
-      "&.Mui-focused fieldset": {
-        border: "none",
-      },
-    },
-    "& .MuiInputLabel-root": {
-      color: "rgb(AAAAAA)",
-      "&.Mui-focused": {
-        display: "none",
-        color: "black",
-      },
-    },
-  };
 
   useEffect(() => {
-    console.log("과거 채팅방 session_id: " + oldSessionId);
-  }, [oldSessionId]);
+    const newMessages = chatDetail.map(detail => ({ type: 'user' as 'user', text: detail.query, timestamp: detail.qa_time }));
+    const botMessages = chatDetail.map(detail => ({ type: 'bot' as 'bot', text: detail.answer, timestamp: detail.qa_time }));
+    setMessages([...newMessages, ...botMessages]);
+  }, [chatDetail]);
 
-  //스크롤
+  //스크롤 자동 내리기
   const scrollToBottom = () => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -69,60 +28,6 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchC
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  //메세지 업데이트
-  useEffect(() => {
-    const newMessages = chatDetail.map(detail => ({
-      type: 'user' as 'user',
-      text: detail.query,
-      timestamp: detail.qa_time,
-    }));
-
-    const botMessages = chatDetail.map(detail => ({
-      type: 'bot' as 'bot',
-      text: detail.answer,
-      timestamp: detail.qa_time,
-    }));
-
-    setMessages([...newMessages, ...botMessages]);
-  }, [chatDetail]);
-
-  //과거 채팅방에서 이어 채팅
-  const handleChatSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (isLoading) return;
-
-    console.log("handleChatSubmit");
-    setSessionId(oldSessionId);
-    const serverIp: string | undefined = process.env.REACT_APP_HOST;
-    const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
-    const userMessage: Message = { type: "user", text: query || '', timestamp: new Date().toISOString() };
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-        session_id: oldSessionId,
-        chat_detail: query,
-        token: "Bearer " + localStorage.getItem("jwtToken"),
-      });
-
-      const botAnswer = response.data.data.answer || '답변이 없습니다.';
-      const botMessage: Message = { type: "bot", text: botAnswer, timestamp: new Date().toISOString() };
-
-      setMessages((prevMessages) => [...prevMessages, botMessage]);
-      setQuery('');
-      fetchChatSummaries();
-    } catch (error: any) {
-      const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다.", timestamp: new Date().toISOString() };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
-      console.error("오류 발생:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="pc-show-chat">
@@ -147,32 +52,11 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchC
                   </div>
                 </div>
               ))
-
           ) : (
             <div className="no-records">채팅 기록이 없습니다.</div>
-          )}< div ref={messageEndRef} />
+          )}
+          <div ref={messageEndRef} />
         </div>
-
-        <form className="pc-chat-input" onSubmit={handleChatSubmit}>
-          <TextField
-            id="outlined-basic"
-            placeholder="육아 고민을 적어주세요"
-            variant="outlined"
-            sx={makeSx}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            disabled={isLoading}
-            className="pc-chat-body-searchInput"
-          />
-          <div style={{ display: 'flex', marginTop: '10px' }}>
-            <IconButton
-              type="submit" 
-              disabled={isChatEnded || isLoading}
-            >
-              <Search />
-            </IconButton>
-          </div>
-        </form>
       </div>
     </div>
   );
