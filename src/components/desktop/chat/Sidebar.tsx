@@ -18,8 +18,6 @@ interface SidebarProps {
     endstartChat: () => void; 
     showChatDetail: boolean;
     setShowChatDetail: (value: boolean) => void; 
-    showAsk: boolean;
-    setShowAsk: (value: boolean) => void; 
     fetchChatSummaries: () => Promise<void>;
     chatSummaries: ChatSummary[];
     setChatSummaries:any;
@@ -28,7 +26,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const navigate = useNavigate();
     const [showChatDetail, setShowChatDetail] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
     
     return (
         <>

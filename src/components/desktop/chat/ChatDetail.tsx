@@ -22,10 +22,11 @@ interface ChatDetailProps {
   oldSessionId: string;
   setSessionId: React.Dispatch<React.SetStateAction<string | null>>;
   fetchChatSummaries: () => Promise<void>;
+  isLoading:boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatDetail: React.FC<ChatDetailProps> = ({ fetchChatSummaries, setSessionId, oldSessionId, isChatEnded, query, setQuery, chatDetail, session_id }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const ChatDetail: React.FC<ChatDetailProps> = ({ isLoading, setIsLoading, fetchChatSummaries, setSessionId, oldSessionId, isChatEnded, query, setQuery, chatDetail, session_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const messageEndRef = useRef<HTMLDivElement | null>(null);
   const makeSx = {
@@ -86,6 +87,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ fetchChatSummaries, setSessionI
     setMessages([...newMessages, ...botMessages]);
   }, [chatDetail]);
 
+  //과거 채팅방에서 이어 채팅
   const handleChatSubmit = async () => {
     setSessionId(oldSessionId);
     const serverIp: string | undefined = process.env.REACT_APP_HOST;

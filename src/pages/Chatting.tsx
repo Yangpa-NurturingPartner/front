@@ -19,7 +19,6 @@ interface ChatSummary {
     summ_answer: string;
 }
 
-
 const Chatting: React.FC = () => {
     const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
@@ -29,7 +28,6 @@ const Chatting: React.FC = () => {
     const [session_id, setSession_id] = useState<string | null>(location.state?.session_id || null);
     const [chatDetail, setChatDetail] = useState<any[]>([]);
     const [showChatDetail, setShowChatDetail] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
     const [chatSummaries, setChatSummaries] = useState<ChatSummary[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -39,20 +37,16 @@ const Chatting: React.FC = () => {
 
     //질문 보내기
     const handleSubmit = async () => {
-        setIsLoading(true);
-        setShowAsk(false);
-
         if (!session_id) {
+            console.log("handleSubmit");
             await endstartChat();
             while (!session_id) {
                 await new Promise((resolve) => setTimeout(resolve, 100));
             }
-            console.log("new : ", session_id);
         }
         else {
             setIsChatEnded(false);
             await sendMessage();
-            console.log("sendMessage");
         }
     };
 
@@ -63,17 +57,12 @@ const Chatting: React.FC = () => {
     }, [session_id]);
 
     const sendMessage = async () => {
-        if(!session_id){
-            console.log("endstartChatRRRRRR");
-            endstartChat();
-            return;
-        }
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-        setIsLoading(true);
 
-        const userMessage: Message = { type: "user", text: query || '' };
+        const userMessage: Message = { type: "user", text: query || "" };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setIsLoading(true);
 
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
@@ -86,7 +75,7 @@ const Chatting: React.FC = () => {
             const botMessage: Message = { type: "bot", text: botAnswer };
 
             setMessages((prevMessages) => [...prevMessages, botMessage]);
-            setQuery('');
+            setQuery(''); 
             fetchChatSummaries();
         } catch (error: any) {
             const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
@@ -96,6 +85,7 @@ const Chatting: React.FC = () => {
             setIsLoading(false);
         }
     };
+
     // 채팅 상세 내용 보기
     const viewChatDetail = async (session_id: string) => {
         setOldSessionId(session_id);
@@ -117,6 +107,7 @@ const Chatting: React.FC = () => {
 
     // 세션 종료 
     const endSession = async () => {
+        setIsLoading(false);
         localStorage.setItem("end", "end");
         await new Promise<void>((resolve) => {
             setSession_id(null);
@@ -126,7 +117,6 @@ const Chatting: React.FC = () => {
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
         setMessages([]); // 화면에 보여지는 메시지 초기화
         setShowChatDetail(false);
-        setShowAsk(true);
         setIsChatEnded(true);
         setQuery('');
         try {
@@ -136,6 +126,7 @@ const Chatting: React.FC = () => {
             const axiosError = error as AxiosError;
             console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
         }
+        setSession_id(null);
         console.log("endsession? " + session_id);
     };
 
@@ -180,10 +171,10 @@ const Chatting: React.FC = () => {
 
     //메인에서 보낸 질문
     const fetchInitialAnswer = async (query: string) => {
+        setIsLoading(true);
         const serverIp: string | undefined = process.env.REACT_APP_HOST;
         const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
-        setIsLoading(true);
         try {
             const userQuery = query;
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
@@ -202,6 +193,7 @@ const Chatting: React.FC = () => {
             }
         } finally {
             setIsLoading(false);
+            console.log("답변완료");
         }
     };
 
@@ -226,15 +218,12 @@ const Chatting: React.FC = () => {
 
     // 페이지를 나갈 때
     useEffect(() => {
-
         const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
             if (session_id) {
                 endSession();
             }
         };
-
         window.addEventListener("beforeunload", handleBeforeUnload);
-
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
             endSession();
@@ -266,7 +255,6 @@ const Chatting: React.FC = () => {
     useEffect(() => {
         if (!showChatDetail) {
             setMessages([]);
-            setShowAsk(true);
         }
     }, [showChatDetail]);
 
@@ -280,8 +268,6 @@ const Chatting: React.FC = () => {
                 endSession={endSession}
                 showChatDetail={showChatDetail}
                 setShowChatDetail={setShowChatDetail}
-                showAsk={showAsk}
-                setShowAsk={setShowAsk}
                 fetchChatSummaries={fetchChatSummaries}
                 chatSummaries={chatSummaries}
                 setChatSummaries={setChatSummaries}
@@ -297,6 +283,8 @@ const Chatting: React.FC = () => {
                         oldSessionId={oldSessionId || ''}
                         setSessionId={setSession_id}
                         fetchChatSummaries={fetchChatSummaries}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
                     />
                 ) : (
                     <>
@@ -309,7 +297,8 @@ const Chatting: React.FC = () => {
                             isChatEnded={isChatEnded}
                             isLoading={isLoading}
                             setIsLoading={setIsLoading}
-
+                            endStartChat={endstartChat}
+                            setSession_id={setSession_id || ''}
                         />
                     </>
                 )}

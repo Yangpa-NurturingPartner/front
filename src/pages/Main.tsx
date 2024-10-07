@@ -7,10 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
 const Main: React.FC = () => {
-    const [isLoading, setIsLoading] = useState(false);
     const [query, setQuery] = useState<string>('');
     const navigate = useNavigate();
-    const [showAsk, setShowAsk] = useState(false);
     const CryptoJS = require('crypto-js');
     const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
     const childId = useSelector((state: RootState) => state.profile.selectedProfile?.childId);
@@ -45,8 +43,6 @@ const Main: React.FC = () => {
     const handleMainQuery = (query: string) => {
         console.log("질문 제출:", query);
         setQuery(query);
-        setShowAsk(false);
-        setIsLoading(true);
         navigate('/chat', { state: { query } });
     };
 

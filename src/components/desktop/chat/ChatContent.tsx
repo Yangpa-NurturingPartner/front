@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { TextField, IconButton, CircularProgress } from "@mui/material";
-import { QuestionAnswer, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 
 import ChatPartDefault from "./ChatPartDefault";
 
@@ -19,10 +19,11 @@ interface ChatContentProps {
     handleSubmit: () => Promise<void>;
     isLoading: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    endStartChat: () => Promise<void>;
+    setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, handleSubmit,  query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
-    const [showAsk, setShowAsk] = useState(true);
+const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, messages, handleSubmit,  query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -70,12 +71,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, handleSubmit,  quer
     }, [messages]);
 
     //간편질문 클릭 시 바로 전송
-    const handleQuestionClick = (query: string) => {
-        console.log("질문 클릭:", query);
+    const handleQuestionClick = async (query: string) => {
+        setSession_id(null);
+        console.log("질문 제출:", query);
         setQuery(query);
-        setShowAsk(false);
         setIsLoading(true);
-        navigate('/chat', { state: { query } });
+        await navigate('/chat', { state: { query } });
     };
 
     return (
