@@ -182,15 +182,19 @@ const Chatting: React.FC = () => {
             const userMessage: Message = { type: 'user', text: userQuery };
             const botMessage: Message = { type: 'bot', text: response.data.data.answer };
             setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
+
+            setMessages(prevMessages => {
+                const updatedMessages = [...prevMessages, userMessage, botMessage];
+                setIsLoading(false); 
+                return updatedMessages; 
+            });
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 console.error("AxiosError 발생:", error.response.data);
             } else {
                 console.error("기타 오류:", error);
             }
-        } finally {
-            await setIsLoading(false);
-        }
+        } 
     };
 
     //메세지 추가시 출력 + 스크롤
