@@ -11,6 +11,12 @@ interface Message {
 }
 
 interface ChatContentProps {
+    chatDetail: {
+        query: string;
+        answer: string;
+        qa_time: string;
+        session_id: string; 
+    }[] | null;
     messages: Message[];
     setMessages: Dispatch<SetStateAction<Message[]>>;
     query: string;
@@ -23,7 +29,7 @@ interface ChatContentProps {
     setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, chatDetail, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +65,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
         }
     }, [navigate]);
 
-    //스크롤 자동 내리기
+    // 스크롤 자동 내리기
     const scrollToBottom = () => {
         if (messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -70,7 +76,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
         scrollToBottom();
     }, [messages]);
 
-    //간편질문 클릭 시 바로 전송
+    // 간편질문 클릭 시 바로 전송
     const handleQuestionClick = async (query: string) => {
         localStorage.setItem("clickQuery", query);
         await new Promise<void>((resolve) => {
@@ -94,16 +100,20 @@ const ChatContent: React.FC<ChatContentProps> = ({ setSession_id, endStartChat, 
 
             <div className="pc-chat-content">
                 <div className="message-container">
-                    {messages.map((msg, index) => (
-                        <div key={index}>
-                            <div
-                                className={`message ${msg.type}`}
-                                style={{ fontSize: '15px' }}
-                            >
-                                <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
+                    {chatDetail ? (
+                        messages.map((msg, index) => (
+                            <div key={index}>
+                                <div
+                                    className={`message ${msg.type}`}
+                                    style={{ fontSize: '15px' }}
+                                >
+                                    <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <div className="no-records">채팅 기록이 없습니다.</div>
+                    )}
                     <div ref={messageEndRef} />
                 </div>
 

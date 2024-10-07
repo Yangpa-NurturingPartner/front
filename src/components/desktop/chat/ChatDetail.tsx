@@ -12,9 +12,10 @@ interface ChatDetailProps {
   }[];
   setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
   setQuery: React.Dispatch<React.SetStateAction<string | null>>;
+  setShowChatDetail: (value: boolean) => void; 
 }
 
-const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, setSession_id, setQuery }) => {
+const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, setSession_id, setQuery }) => {
   const [messages, setMessages] = useState<{ type: 'user' | 'bot'; text: string; timestamp: string }[]>([]);
   const [oldSessionId, setOldSessionId] = useState<string | null>(null);
   const [query, setLocalQuery] = useState<string>('');
@@ -65,6 +66,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail, setSession_id, setQ
   }, [messages]);
 
   const handleChatSubmit = async (e: React.FormEvent) => {
+    setShowChatDetail(false);
     e.preventDefault();
     await new Promise<void>((resolve) => {
       setSession_id(oldSessionId);

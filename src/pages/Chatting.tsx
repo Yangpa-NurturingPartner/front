@@ -251,12 +251,6 @@ const Chatting: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        if (!showChatDetail) {
-            setMessages([]);
-        }
-    }, [showChatDetail]);
-
     return (
         <>
             <Sidebar
@@ -277,10 +271,12 @@ const Chatting: React.FC = () => {
                         chatDetail={chatDetail}
                         setSession_id={setSession_id}
                         setQuery={setQuery}
+                        setShowChatDetail={setShowChatDetail}
                     />
                 ) : (
                     <>
                         <ChatContent
+                            chatDetail={chatDetail}
                             handleSubmit={handleSubmit}
                             messages={messages}
                             setMessages={setMessages}
