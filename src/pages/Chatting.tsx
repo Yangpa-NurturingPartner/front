@@ -113,6 +113,7 @@ const Chatting: React.FC = () => {
     const endSession = async () => {
         setIsLoading(false);
         localStorage.setItem("end", "end");
+        localStorage.removeItem("nowChatting");
         await new Promise<void>((resolve) => {
             setSession_id(null);
             resolve();
@@ -134,6 +135,7 @@ const Chatting: React.FC = () => {
 
     //새 세션id받아오기
     const endstartChat = async () => {
+        localStorage.setItem("nowChatting", "nowChatting");
         localStorage.removeItem("end");
         if (!childId) {
             alert("선택된 아이가 없습니다.");
@@ -291,6 +293,7 @@ const Chatting: React.FC = () => {
                             setIsLoading={setIsLoading}
                             endStartChat={endstartChat}
                             setSession_id={setSession_id}
+                            session_id={session_id}
                         />
                     </>
                 )}
