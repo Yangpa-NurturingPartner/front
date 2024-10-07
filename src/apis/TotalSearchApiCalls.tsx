@@ -3,11 +3,11 @@
 import axios from "axios";
 import { fetchTotalSearchResult, startSearch } from "../redux/slices/totalSearchSlice";
 
-// 하드코딩된 토큰 (실험용)
-const hardcodedToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiZW1haWwiOiJqYW5naGV5amlAZ21haWwuY29tIiwibmFtZSI6Iuyepe2YnOyngCIsImlhdCI6MTcyNzg1ODU1OX0.stK1UATn86vfnv6i3JTF45sk1QPnI1hm54YZ0v99vfk";
 
 // searchQuery와 하드코딩된 토큰을 받아 백엔드에 요청하는 함수
 export const totalSearchResult = (searchQuery: string) => {
+
+    const hardcodedToken = localStorage.getItem("jwtToken");
     return async (dispatch: any) => {
         dispatch(startSearch()); // 검색 시작 시 로딩 상태 설정 및 이전 결과 초기화
         try {
