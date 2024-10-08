@@ -97,7 +97,7 @@ $ cd AI
 
 ## Stacks ⚙
 ### Frontend & Backend
-![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=spring&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
 
@@ -107,9 +107,7 @@ $ cd AI
 ![DataGrip](https://img.shields.io/badge/DataGrip-000000?style=flat&logo=datagrip&logoColor=white)
 
 ### AI
-![LangChain](https://img.shields.io/badge/LangChain-065535?style=flat)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
-![Whisper](https://img.shields.io/badge/Whisper-1C1E21?style=flat)
 
 ### Development Tools
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat&logo=intellij-idea&logoColor=white)
@@ -131,7 +129,8 @@ $ cd AI
         <td align="center"><strong>채팅 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center"></td>
+        <td align="center">![main](https://github.com/user-attachments/assets/37b20a15-c4e4-4791-9346-6fb6492682ef)
+</td>
         <td align="center"></td>
     </tr>
     <tr>
