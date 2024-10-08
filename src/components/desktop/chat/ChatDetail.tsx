@@ -8,11 +8,11 @@ interface ChatDetailProps {
     query: string;
     answer: string;
     qa_time: string;
-    session_id: string; 
+    session_id: string;
   }[];
   setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
   setQuery: React.Dispatch<React.SetStateAction<string | null>>;
-  setShowChatDetail: (value: boolean) => void; 
+  setShowChatDetail: (value: boolean) => void;
 }
 
 const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, setSession_id, setQuery }) => {
@@ -36,22 +36,22 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
     border: "none",
     boxShadow: "2px 2px 5px #DADADA",
     "& .MuiOutlinedInput-root": {
-        "& fieldset": {
-            border: "none",
-        },
-        "&:hover fieldset": {
-            border: "none",
-        },
-        "&.Mui-focused fieldset": {
-            border: "none",
-        },
+      "& fieldset": {
+        border: "none",
+      },
+      "&:hover fieldset": {
+        border: "none",
+      },
+      "&.Mui-focused fieldset": {
+        border: "none",
+      },
     },
     "& .MuiInputLabel-root": {
-        color: "rgb(AAAAAA)",
-        "&.Mui-focused": {
-            display: "none",
-            color: "black",
-        },
+      color: "rgb(AAAAAA)",
+      "&.Mui-focused": {
+        display: "none",
+        color: "black",
+      },
     },
   };
 
@@ -60,7 +60,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -79,49 +79,55 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
 
   return (
     <div className="pc-show-chat">
-        <div className="pc-chat-content">
-            <header className="chat-header">
-                <h1>채팅 기록</h1>
-            </header>
-            <div className="message-container">
-                {messages.length > 0 ? (
-                    messages
-                        .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-                        .map((msg, index) => (
-                            <div key={index}>
-                                <div
-                                    className={`message ${msg.type}`}
-                                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }} // 줄바꿈을 유지하는 스타일
-                                >
-                                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
-                                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
-                                </div>
-                            </div>
-                        ))
-                ) : (
-                    <div className="no-records">채팅 기록이 없습니다.</div>
-                )}
-                <div ref={messageEndRef} />
-            </div>
-
-            <form className="pc-chat-input" onSubmit={handleChatSubmit}>
-                <TextField
-                    placeholder="질문을 입력하세요"
-                    variant="outlined"
-                    sx={makeSx}
-                    value={query}
-                    onChange={(e) => {
-                        setLocalQuery(e.target.value);
-                        setQuery(e.target.value); 
-                    }}
-                />
-                <IconButton type="button">
-                    <Search />
-                </IconButton>
-            </form>
+      <div className="pc-chat-content">
+        <header className="chat-header">
+          <h1>채팅 기록</h1>
+        </header>
+        <div className="message-container">
+          {messages.length > 0 ? (
+            messages
+              .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+              .map((msg, index) => (
+                <div key={index}>
+                  <div
+                    className={`message ${msg.type}`}
+                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }} // 줄바꿈을 유지하는 스타일
+                  >
+                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
+                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
+                  </div>
+                </div>
+              ))
+          ) : (
+            <div className="no-records">채팅 기록이 없습니다.</div>
+          )}
+          <div ref={messageEndRef} />
         </div>
+
+        <form className="pc-chat-input" onSubmit={handleChatSubmit}>
+          <TextField
+            placeholder="질문을 입력하세요"
+            variant="outlined"
+            sx={makeSx}
+            value={query}
+            onChange={(e) => {
+              setLocalQuery(e.target.value);
+              setQuery(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault(); 
+                handleChatSubmit(e);  //엔터눌렀을 때 전송
+              }
+            }}
+          />
+          <IconButton type="button" onClick={handleChatSubmit}>
+            <Search />
+          </IconButton>
+        </form>
+      </div>
     </div>
-);
+  );
 }
 
 export default ChatDetail;
