@@ -116,14 +116,18 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
             }}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
-                e.preventDefault(); 
-                handleChatSubmit(e);  //엔터눌렀을 때 전송
+                e.preventDefault();
+                handleChatSubmit(e);  // 엔터를 눌렀을 때 전송
               }
             }}
+            InputProps={{
+              endAdornment: (
+                <IconButton type="button" onClick={handleChatSubmit}>
+                  <Search />
+                </IconButton>
+              ),
+            }}
           />
-          <IconButton type="button" onClick={handleChatSubmit}>
-            <Search />
-          </IconButton>
         </form>
       </div>
     </div>
