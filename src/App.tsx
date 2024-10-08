@@ -23,12 +23,12 @@ const App: React.FC = () => {
         return <Navigate to="/profile" replace />;
 
         // 3. 토큰이 있는데 주소가 로그인이 아닐경우
-    } else if (token && location.pathname !== '/profile' && !localStorage.getItem('selectedProfile')) {
+    } else if (token && location.pathname === '/' && !localStorage.getItem('selectedProfile')) {
         return <Navigate to="/profile" replace />;
     }
     return (
         <div style={{ margin: 0 }}>
-            {location.pathname !== '/login' && location.pathname !== '/profile' && <Header />}
+            {location.pathname !== '/login' && <Header />}
             <Routes>
                 <Route path="/" element={<Main />} />
                 <Route path="/test" element={<Testpage />} />
