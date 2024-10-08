@@ -47,7 +47,7 @@ const Goback: React.FC<GobackProps> = ({where}) => {
                 title={"뒤로가기"}
                 alt="뒤로가기"
                 style={{width: "0.8rem", marginRight: "1rem", cursor: "pointer"}}
-                onClick={() => navigate(-1)}
+                onClick={() => navigate("/")}
             />
             <span
                 style={{

@@ -13,10 +13,18 @@ const Profile: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
+    const CryptoJS = require('crypto-js');
 
     // Redux 상태에서 profileList와 selectedProfile 가져오기
     const profileList = useSelector((state: RootState) => state.profile.profiles);
     const selectedProfile = useSelector((state: RootState) => state.profile.selectedProfile);
+
+    const encryptionKey = process.env.REACT_APP_ENCRYPTION_KEY;
+
+    // 암호화 함수
+    const encryptData = (data: string) => {
+        return CryptoJS.AES.encrypt(data, encryptionKey).toString();
+    };
 
     useEffect(() => {
         const jwtToken = localStorage.getItem('jwtToken');
@@ -82,7 +90,11 @@ const Profile: React.FC = () => {
 
         // Redux에 selectedProfile 설정
         dispatch(setSelectedProfile(profile));
-        localStorage.setItem('selectedProfile', JSON.stringify(profile));
+
+        // 선택된 프로필을 암호화하여 로컬 스토리지에 저장
+        const encryptedProfile = encryptData(JSON.stringify(profile));
+        localStorage.setItem('selectedProfile', encryptedProfile);
+
         navigate("/");
     };
 

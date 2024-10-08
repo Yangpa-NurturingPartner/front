@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import Goback from "../../common/Goback";
 import SidebarContent from "./Sidebarcontent";
-import axios from "axios";
 
 interface ChatSummary {
     session_id: string;
@@ -19,21 +18,13 @@ interface SidebarProps {
     endstartChat: () => void; 
     showChatDetail: boolean;
     setShowChatDetail: (value: boolean) => void; 
-    showAsk: boolean;
-    setShowAsk: (value: boolean) => void; 
     fetchChatSummaries: () => Promise<void>;
     chatSummaries: ChatSummary[];
     setChatSummaries:any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,
-     endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries
-     }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, showChatDetail, setShowChatDetail, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const navigate = useNavigate();
-    const [showChatDetail, setShowChatDetail] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
-
-    
     
     return (
         <>
@@ -54,11 +45,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                 src={"/img/write.png"}
                 alt={""}
                 onClick={async () => {
-                    navigate('/chat', { state: { showAsk: true } });
+                    navigate('/chat');
                     setShowChatDetail(false);
-                    setShowAsk(true);
                     await endSession(); // 기존 채팅 종료
-                    await endstartChat(); // 새로운 채팅 시작
                 }}
                 style={{
                     cursor: "pointer",

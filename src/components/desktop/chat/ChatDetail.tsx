@@ -1,50 +1,86 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { TextField, IconButton } from '@mui/material';
+import { Search } from '@mui/icons-material';
 
 interface ChatDetailProps {
   chatDetail: {
     query: string;
     answer: string;
     qa_time: string;
+    session_id: string;
   }[];
+  setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
+  setQuery: React.Dispatch<React.SetStateAction<string | null>>;
+  setShowChatDetail: (value: boolean) => void;
 }
 
-const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail }) => {
+const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, setSession_id, setQuery }) => {
   const [messages, setMessages] = useState<{ type: 'user' | 'bot'; text: string; timestamp: string }[]>([]);
+  const [oldSessionId, setOldSessionId] = useState<string | null>(null);
+  const [query, setLocalQuery] = useState<string>('');
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // chatDetail prop이 변경될 때마다 messages 초기화
+    const newMessages = chatDetail.map(detail => ({ type: 'user' as 'user', text: detail.query, timestamp: detail.qa_time }));
+    const botMessages = chatDetail.map(detail => ({ type: 'bot' as 'bot', text: detail.answer, timestamp: detail.qa_time }));
+    setMessages([...newMessages, ...botMessages]);
+    setOldSessionId(chatDetail[0].session_id);
+  }, [chatDetail]);
 
-    console.log(chatDetail);
-    /*
-  {
-    "status": "success",
-    "message": "채팅 상세 정보가 성공적으로 반환되었습니다.",
-    "data": [
-        {
-            "qa_id": 731,
-            "query": "오은영 10계명 알려줘",
-            "answer": "오은영 박사의 10계명은 다음과 같습니다:\n\n1. **사랑과 관심을 표현하라**: 아이에게 애정과 관심을 꾸준히 보여준다.\n2. **일관성을 유지하라**: 규칙과 원칙을 일관되게 적용한다.\n3. **자기주도성을 키워주라**: 아이가 스스로 선택하고 결정할 수 있도록 격려한다.\n4. **긍정적인 언어를 사용하라**: 부정적인 표현보다는 긍정적인 언어로 소통한다.\n5. **감정을 존중하라**: 아이의 감정을 이해하고 존중해준다.\n6. **모델이 되어라**: 부모가 먼저 좋은 행동을 보여준다.\n7. **자신감을 심어주라**: 아이의 성취를 인정하고 칭찬한다.\n8. **균형 잡힌 생활을 하라**: 규칙적인 생활습관과 다양한 경험을 제공한다.\n9. **소통을 강화하라**: 아이와의 대화를 통해 서로의 생각을 나눈다.\n10. **사람의 소중함을 가르쳐라**: 타인에 대한 배려와 존중을 가르친다.\n\n이 원칙들은 아이의 건강한 성장과 발달에 도움을 주기 위해 제안된 것입니다.",
-            "session_id": "064b4467-abe8-4cd1-80d1-09b22260c9b3",
-            "qa_time": "2024-10-04T07:19:47.520+00:00"
-        }
-    ]
-}
-    */
+  const makeSx = {
+    width: "70%",
+    backgroundColor: "#F4F4F4",
+    borderRadius: "15px",
+    border: "none",
+    boxShadow: "2px 2px 5px #DADADA",
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        border: "none",
+      },
+      "&:hover fieldset": {
+        border: "none",
+      },
+      "&.Mui-focused fieldset": {
+        border: "none",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgb(AAAAAA)",
+      "&.Mui-focused": {
+        display: "none",
+        color: "black",
+      },
+    },
+  };
 
-    const newMessages = chatDetail.map(detail => ({
-      type: 'user' as 'user', 
-      text: detail.query,
-      timestamp: detail.qa_time,
-    }));
+  const scrollToBottom = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
-    const botMessages = chatDetail.map(detail => ({
-      type: 'bot' as 'bot', 
-      text: detail.answer,
-      timestamp: detail.qa_time,
-    }));
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    setMessages([...newMessages, ...botMessages]); 
-  }, [chatDetail]); //chatDetail이 변경될 때마다 effect 실행
+  const handleChatSubmit = async (e: React.FormEvent) => {
+
+    if (query === null || query.trim() === '') {
+      console.log("입력값이 없습니다. 함수 종료.");
+      return; 
+  }
+    setShowChatDetail(false);
+    e.preventDefault();
+    await new Promise<void>((resolve) => {
+      setSession_id(oldSessionId);
+      setTimeout(resolve, 0);
+    });
+    if (!query.trim() || !oldSessionId) return;
+    console.log("oldSessionId:", oldSessionId, "query:", query);
+    await navigate('/chat', { state: { session_id: oldSessionId, query } });
+  };
 
   return (
     <div className="pc-show-chat">
@@ -58,11 +94,9 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail }) => {
               .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
               .map((msg, index) => (
                 <div key={index}>
-                  <div 
+                  <div
                     className={`message ${msg.type}`}
-                    style={{
-                      fontSize: '15px'
-                    }}
+                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }} // 줄바꿈을 유지하는 스타일
                   >
                     <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
                     <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
@@ -72,7 +106,34 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ chatDetail }) => {
           ) : (
             <div className="no-records">채팅 기록이 없습니다.</div>
           )}
+          <div ref={messageEndRef} />
         </div>
+
+        <form className="pc-chat-input" onSubmit={handleChatSubmit}>
+          <TextField
+            placeholder="질문을 입력하세요"
+            variant="outlined"
+            sx={makeSx}
+            value={query}
+            onChange={(e) => {
+              setLocalQuery(e.target.value);
+              setQuery(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleChatSubmit(e);  // 엔터를 눌렀을 때 전송
+              }
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton type="button" onClick={handleChatSubmit}>
+                  <Search />
+                </IconButton>
+              ),
+            }}
+          />
+        </form>
       </div>
     </div>
   );
