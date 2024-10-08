@@ -42,9 +42,12 @@ const Chatting: React.FC = () => {
     const handleSubmit = async () => {
         console.log("handleSubmit 호출");
 
-        if (query === null || query.trim() === '') {
+
+        if ( query === null || query.trim() === '') {
+            if(!localStorage.getItem("clickQuery")){
             console.log("입력값이 없습니다. 함수 종료.");
             return; 
+            }
         }
     
         if (!session_id || localStorage.getItem("clickQuery")) {

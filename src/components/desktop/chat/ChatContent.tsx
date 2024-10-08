@@ -158,13 +158,14 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                     )}
 
                     <div ref={messageEndRef} />
-                </div>
-
-                {isLoading && (
+                    {isLoading && (
                     <div style={{ textAlign: 'center', margin: '20px 0' }}>
                         <CircularProgress />
                     </div>
                 )}
+                </div>
+
+                
 
                 <form className="pc-chat-input" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <TextField
