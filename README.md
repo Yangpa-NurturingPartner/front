@@ -122,36 +122,41 @@ $ cd AI
 <hr>
 
 
-## 화면 구성📺
+## 화면 구성 📺
 <table>
     <tr>
         <td align="center"><strong>메인 페이지</strong></td>
         <td align="center"><strong>채팅 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center">![main](https://github.com/user-attachments/assets/37b20a15-c4e4-4791-9346-6fb6492682ef)
-</td>
-        <td align="center"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/37b20a15-c4e4-4791-9346-6fb6492682ef" alt="main"/></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/824278ad-85e9-4f8b-9de6-e4290d89c72d" alt="chat"></td>
     </tr>
     <tr>
         <td align="center"><strong>통합검색 페이지</strong></td>
         <td align="center"><strong>커뮤니티 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center"></td>
-        <td align="center"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/5788b70c-67be-4496-96e9-58556d54baf5" alt="search"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/581543cc-f825-43b9-bcce-1aafb40aa0e8" alt="community"></td>
     </tr>
 </table>
 
 <br>
 
 ## API 주소
-
+- 
 
 <hr>
 
 
-## 주요 기능
+## 주요 기능 📦
+### ⭐ AI와의 채팅으로 육아 궁금증 해결
+- AI 기술을 활용하여 사용자의 자녀 연령에 맞는 양육 정보와 팁 제공
+- 부모들은 자녀의 현재 상황에 가장 적합한 육아 방법 쉽게 찾기 가능
+
+### ⭐ 오은영 박사 영상, 블로그 서치
+- 오은영 박사님의 유튜브 영상 및 블로그의 다양한 자료들을 쉽게 
 
 
 
