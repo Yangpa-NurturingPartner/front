@@ -125,12 +125,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                                 <div key={index}>
                                     {detail.query && (
                                         <div className="message user">
-                                            <strong>사용자:</strong> {detail.query}
+                                            <strong></strong> {detail.query}
                                         </div>
                                     )}
                                     {detail.answer ? (
                                         <div className="message bot">
-                                            <strong>양파AI:</strong>
+                                            <strong></strong>
                                             <span style={{ whiteSpace: 'pre-wrap' }}>
                                                 {detail.answer}
                                             </span>
@@ -150,7 +150,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                                         className={`message ${msg.type}`}
                                         style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}
                                     >
-                                        <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
+                                        <strong></strong> {msg.text}
                                     </div>
                                 </div>
                             ))}

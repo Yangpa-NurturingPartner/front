@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { useNavigate } from 'react-router-dom';
 
 interface TotalResultProps {
     searchQuery: string;
     isLoading: boolean;  // isLoading prop 추가
 }
 
-const TotalResult: React.FC<TotalResultProps> = ({ isLoading }) => {
+
+const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => {
     const searchResults = useSelector((state: RootState) => state.totalSearch.searchResults);
 
     const {
@@ -39,11 +39,11 @@ const TotalResult: React.FC<TotalResultProps> = ({ isLoading }) => {
 
     const ResultItem: React.FC<{ result: any, isCommunity?: boolean, isChat?: boolean }> = ({ result, isCommunity = false, isChat = false }) => {
         const [showTooltip, setShowTooltip] = React.useState(false);
-        const navigate = useNavigate();
 
         const handleMouseEnter = () => {
             setShowTooltip(true);
         };
+
 
         const handleMouseLeave = () => {
             setShowTooltip(false);
@@ -53,17 +53,10 @@ const TotalResult: React.FC<TotalResultProps> = ({ isLoading }) => {
             if (isCommunity) {
                 return `/community/${result.board_no}`;
             } else if (isChat) {
-                return `javascript:void(0);`; // 채팅의 경우 href를 비워둡니다.
+                // 여기를 수정합니다
+                return `/chat?session_id=${result.session_id}`;
             } else {
                 return result.url;
-            }
-        };
-
-        const handleClick = (e: React.MouseEvent) => {
-            if (isChat) {
-                e.preventDefault();
-                // 새 탭에서 /chat 페이지를 열고 session_id를 쿼리 파라미터로 전달합니다.
-                window.open(`/chat?session_id=${result.session_id}`, '_blank')?.focus();
             }
         };
 
@@ -94,7 +87,6 @@ const TotalResult: React.FC<TotalResultProps> = ({ isLoading }) => {
                     style={{ position: 'relative', textDecoration: 'none', color: 'inherit' }}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    onClick={handleClick}
                 >
                     {displayText}
                     {showTooltip && <Tooltip text={getTooltipText()} />}
@@ -149,5 +141,6 @@ const TotalResult: React.FC<TotalResultProps> = ({ isLoading }) => {
         </div>
     );
 }
+
 
 export default TotalResult;

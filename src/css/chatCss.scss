@@ -105,19 +105,18 @@ body {
   position: absolute;
   top: 8.3%;
   bottom: 0;
-  right: 0;
+  right: 100%;
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
   overflow-y: hidden;
-  width: 90%; 
 
   &.collapsed { /* 사이드바가 접힐 때 */
-    left: 15vw; 
-    width: 90%;
+    left: 5vw; 
+    width: 100%;
   }
 
   &.expanded { /* 사이드바가 확장될 때 */
-    left: 15vw;
+    left: 14vw;
     width: 90%; 
   }
 }
@@ -159,6 +158,7 @@ body {
   }
 
   .pc-ask {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -193,14 +193,21 @@ body {
   }
   
   .pc-chat-input {
-    bottom: 2vh;
-    left: 18%;
+    bottom: 1vh;
+    left: 0;
     right: 0;
-    width: 75%;
+    width: 90%;
     padding: 0px 0px 0px 0px ;
     display: flex;
     justify-content: center;
-    position: fixed;
+    
+
+    // position: absolute; /* 변경: absolute로 설정 */
+    // bottom: 2vh; /* 아래에서의 간격 */
+    // left: 50%; /* 화면의 50% 위치 */
+    // transform: translateX(-50%); /* 요소를 왼쪽으로 50% 이동하여 가운데 정렬 */
+    // width: 75%; /* 너비 설정 */
+
     .pc-chat-icon {
       width: 5rem;
     }
@@ -260,7 +267,7 @@ body {
 .message.user {
   background-color: #E3F0FE;
   margin-left: auto;
-  margin-right: 200px; /* 기존의 오른쪽 여백 유지 */
+  margin-right: 215px; /* 기존의 오른쪽 여백 유지 */
   align-self: flex-end;
   padding: 10px 15px;
   border-radius: 15px;
@@ -273,6 +280,7 @@ body {
   background-color: #e6e4e4;
   margin-right: auto; 
   align-self: flex-start;
+  left: 120px;
 }
 
 .no-records {

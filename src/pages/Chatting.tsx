@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Sidebar from "../components/desktop/chat/Sidebar";
 import "../css/chatCss.scss";
 import ChatContent from "../components/desktop/chat/ChatContent";
@@ -37,19 +37,19 @@ const Chatting: React.FC = () => {
     const serverIp: string | undefined = process.env.REACT_APP_HOST;
     const port: string | undefined = process.env.REACT_APP_BACK_PORT;
 
+    const [searchParams] = useSearchParams();
+    const sessionIdFromUrl = searchParams.get('session_id');
+
+    useEffect(() => {
+        if (sessionIdFromUrl) {
+            setSession_id(sessionIdFromUrl);
+            viewChatDetail(sessionIdFromUrl);
+        }
+    }, [sessionIdFromUrl]);
 
     //질문 보내기
     const handleSubmit = async () => {
         console.log("handleSubmit 호출");
-
-
-        if ( query === null || query.trim() === '') {
-            if(!localStorage.getItem("clickQuery")){
-            console.log("입력값이 없습니다. 함수 종료.");
-            return; 
-            }
-        }
-    
         if (!session_id || localStorage.getItem("clickQuery")) {
             console.log("handleSubmit session_id없음");
             await endstartChat();
@@ -57,13 +57,13 @@ const Chatting: React.FC = () => {
                 await new Promise((resolve) => setTimeout(resolve, 100));
             }
             localStorage.removeItem("clickQuery");
-        } else {
+        }
+        else {
             console.log("handleSubmit -> else");
             setIsChatEnded(false);
             await sendMessage();
         }
     };
-    
 
     useEffect(() => {
         console.log("test -> session_id:", session_id, "query:", query);
@@ -75,7 +75,6 @@ const Chatting: React.FC = () => {
 
     const sendMessage = async () => {
         console.log("sendMessage호출됨");
-        
         const userMessage: Message = { type: "user", text: query || "" };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setIsLoading(true);
@@ -109,6 +108,10 @@ const Chatting: React.FC = () => {
             const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data.data);
             setShowChatDetail(true);
+            setMessages(response.data.data.map((item: any) => ({
+                type: item.role === 'user' ? 'user' : 'bot',
+                text: item.content
+            })));
         } catch (error) {
             console.error('채팅 상세 불러오기 오류:', error);
         }
@@ -147,10 +150,7 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         localStorage.setItem("nowChatting", "nowChatting");
         localStorage.removeItem("end");
-        if (!childId) {
-            alert("선택된 아이가 없습니다.");
-            return;
-        }
+
 
         const child_num = childId;
 
