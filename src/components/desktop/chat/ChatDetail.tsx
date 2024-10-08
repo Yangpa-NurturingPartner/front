@@ -79,49 +79,49 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
 
   return (
     <div className="pc-show-chat">
-      <div className="pc-chat-content">
-        <header className="chat-header">
-          <h1>채팅 기록</h1>
-        </header>
-        <div className="message-container">
-          {messages.length > 0 ? (
-            messages
-              .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-              .map((msg, index) => (
-                <div key={index}>
-                  <div
-                    className={`message ${msg.type}`}
-                    style={{ fontSize: '15px' }}
-                  >
-                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
-                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
-                  </div>
-                </div>
-              ))
-          ) : (
-            <div className="no-records">채팅 기록이 없습니다.</div>
-          )}
-          <div ref={messageEndRef} />
-        </div>
+        <div className="pc-chat-content">
+            <header className="chat-header">
+                <h1>채팅 기록</h1>
+            </header>
+            <div className="message-container">
+                {messages.length > 0 ? (
+                    messages
+                        .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+                        .map((msg, index) => (
+                            <div key={index}>
+                                <div
+                                    className={`message ${msg.type}`}
+                                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }} // 줄바꿈을 유지하는 스타일
+                                >
+                                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
+                                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        ))
+                ) : (
+                    <div className="no-records">채팅 기록이 없습니다.</div>
+                )}
+                <div ref={messageEndRef} />
+            </div>
 
-        <form className="pc-chat-input" onSubmit={handleChatSubmit}>
-          <TextField
-            placeholder="질문을 입력하세요"
-            variant="outlined"
-            sx={makeSx}
-            value={query}
-            onChange={(e) => {
-              setLocalQuery(e.target.value);
-              setQuery(e.target.value); 
-            }}
-          />
-          <IconButton type="button">
-            <Search />
-          </IconButton>
-        </form>
-      </div>
+            <form className="pc-chat-input" onSubmit={handleChatSubmit}>
+                <TextField
+                    placeholder="질문을 입력하세요"
+                    variant="outlined"
+                    sx={makeSx}
+                    value={query}
+                    onChange={(e) => {
+                        setLocalQuery(e.target.value);
+                        setQuery(e.target.value); 
+                    }}
+                />
+                <IconButton type="button">
+                    <Search />
+                </IconButton>
+            </form>
+        </div>
     </div>
-  );
+);
 }
 
 export default ChatDetail;

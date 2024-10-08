@@ -79,6 +79,7 @@ const Chatting: React.FC = () => {
 
             const botAnswer = response.data.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: "bot", text: botAnswer };
+            console.log("answer: " + response.data.data.answer);
 
             setMessages((prevMessages) => [...prevMessages, botMessage]);
             setQuery(''); 
