@@ -129,7 +129,8 @@ $ cd AI
         <td align="center"><strong>채팅 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center"></td>
+        <td align="center">![main](https://github.com/user-attachments/assets/37b20a15-c4e4-4791-9346-6fb6492682ef)
+</td>
         <td align="center"></td>
     </tr>
     <tr>
