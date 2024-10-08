@@ -110,7 +110,7 @@ body {
   width: 90%; 
 
   &.collapsed { /* 사이드바가 접힐 때 */
-    left: 5; 
+    left: 15vw; 
     width: 90%;
   }
 
@@ -191,14 +191,14 @@ body {
   }
   
   .pc-chat-input {
-    bottom: 1vh;
-    left: 0;
+    bottom: 2vh;
+    left: 18%;
     right: 0;
-    width: 80vw;
+    width: 75%;
     padding: 0px 0px 0px 0px ;
     display: flex;
     justify-content: center;
-
+    position: fixed;
     .pc-chat-icon {
       width: 5rem;
     }
@@ -228,21 +228,25 @@ body {
 
 .message-container {
   flex-grow: 1;
-  width: 85%;
+  width: 60vw;
   padding: 60px;
+  justify-content: center;
+  display: flex; /* 추가: flexbox를 사용하여 자식 요소를 정렬 */
+  flex-direction: column; /* 추가: 세로 방향으로 정렬 */
+}
 
-  .message {
-    font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-    max-width: 50%;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 20px;
-    font-size: 14px;
-    line-height: 1.4;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
+.message {
+  font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+  min-width: 20%; 
+  max-width: 50%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  display: flex; 
+  flex-direction: column; 
 }
 
 .timestamp {
@@ -251,17 +255,18 @@ body {
   align-self: flex-end; 
 }
 
-
 .message.user {
   background-color: #E3F0FE;
-  margin-left: auto;
+  margin-left: auto; 
+  margin-right: 150px;
+  align-self: flex-end; 
 }
 
 .message.bot {
-  background-color: #e6e4e4; 
-  margin-right: auto;
+  background-color: #e6e4e4;
+  margin-right: auto; 
+  align-self: flex-start;
 }
-
 
 .no-records {
   text-align: center;
