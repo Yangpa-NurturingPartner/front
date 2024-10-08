@@ -79,7 +79,6 @@ const Chatting: React.FC = () => {
 
             const botAnswer = response.data.data.answer || '답변이 없습니다.';
             const botMessage: Message = { type: "bot", text: botAnswer };
-            console.log("answer: " + response.data.data.answer);
 
             setMessages((prevMessages) => [...prevMessages, botMessage]);
             setQuery(''); 
@@ -97,10 +96,9 @@ const Chatting: React.FC = () => {
     const viewChatDetail = async (session_id: string) => {
         setOldSessionId(session_id);
         try {
-            const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${sessionId}`);
+            const response = await axios.get(`http://${serverIp}:${port}/chat/chat-record-view/${session_id}`);
             setChatDetail(response.data.data);
             setShowChatDetail(true);
-            setSession_id(sessionId);
         } catch (error) {
             console.error('채팅 상세 불러오기 오류:', error);
         }
@@ -139,18 +137,6 @@ const Chatting: React.FC = () => {
     const endstartChat = async () => {
         localStorage.setItem("nowChatting", "nowChatting");
         localStorage.removeItem("end");
-        
-        if (sessionIdFromMessage) {
-            setSession_id(sessionIdFromMessage);
-            viewChatDetail(sessionIdFromMessage);
-            return;
-        }
-
-        // 새 탭에서 열린 경우 childId 체크를 건너뜁니다.
-        if (window.opener) {
-            return;
-        }
-
         if (!childId) {
             alert("선택된 아이가 없습니다.");
             return;
