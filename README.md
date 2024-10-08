@@ -108,7 +108,6 @@ $ cd AI
 
 ### AI
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
-![Whisper](https://img.shields.io/badge/Whisper-1C1E21?style=flat)
 
 ### Development Tools
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat&logo=intellij-idea&logoColor=white)
