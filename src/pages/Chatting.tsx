@@ -174,29 +174,32 @@ const Chatting: React.FC = () => {
     const fetchInitialAnswer = async (query: string) => {
         console.log("fetchInitial 호출됨");
         setIsLoading(true);
-        try {
-            const userQuery = query;
-            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                session_id: session_id,
-                chat_detail: query,
-                token: "Bearer " + localStorage.getItem("jwtToken")
-            });
-            const userMessage: Message = { type: 'user', text: userQuery };
-            const botMessage: Message = { type: 'bot', text: response.data.data.answer };
-            setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
-
-            setMessages(prevMessages => {
-                const updatedMessages = [...prevMessages, userMessage, botMessage];
-                setIsLoading(false); 
-                return updatedMessages; 
-            });
-        } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                console.error("AxiosError 발생:", error.response.data);
-            } else {
-                console.error("기타 오류:", error);
-            }
-        } 
+        if(session_id){
+            try {
+                const userQuery = query;
+                console.log("fetchInitial", session_id, query);
+                const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
+                    session_id: session_id,
+                    chat_detail: query,
+                    token: "Bearer " + localStorage.getItem("jwtToken")
+                });
+                const userMessage: Message = { type: 'user', text: userQuery };
+                const botMessage: Message = { type: 'bot', text: response.data.data.answer };
+                setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
+    
+                setMessages(prevMessages => {
+                    const updatedMessages = [...prevMessages, userMessage, botMessage];
+                    setIsLoading(false); 
+                    return updatedMessages; 
+                });
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    console.error("AxiosError 발생:", error.response.data);
+                } else {
+                    console.error("기타 오류:", error);
+                }
+            } 
+        }
     };
 
     //메세지 추가시 출력 + 스크롤
@@ -209,16 +212,25 @@ const Chatting: React.FC = () => {
 
     //메인에서 보낸 query
     useEffect(() => {
-        if (!session_id) {
-            endstartChat();
-            if (query) {
-                fetchInitialAnswer(query);
-                console.log("fetchInitail 실행");
-            } else {
-                console.log("mainQuery가 null입니다.");
+        const handleChatEnd = async () => {
+            if (!session_id) {
+                await new Promise<void>((resolve) => {
+                    endstartChat();  // endstartChat이 끝날 때까지 기다림
+                    setTimeout(resolve, 0);
+                });
+                
+                if (query) {
+                    await fetchInitialAnswer(query); // endStartChat 이후에 실행
+                    console.log("fetchInitialAnswer 실행");
+                } else {
+                    console.log("query가 null입니다.");
+                }
             }
-        }
+        };
+    
+        handleChatEnd();  // 비동기 함수 호출
     }, [isChatEnded]);
+    
 
     // 페이지를 나갈 때
     useEffect(() => {
