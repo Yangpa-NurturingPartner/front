@@ -41,6 +41,12 @@ const Chatting: React.FC = () => {
     //질문 보내기
     const handleSubmit = async () => {
         console.log("handleSubmit 호출");
+
+        if (query === null || query.trim() === '') {
+            console.log("입력값이 없습니다. 함수 종료.");
+            return; 
+        }
+    
         if (!session_id || localStorage.getItem("clickQuery")) {
             console.log("handleSubmit session_id없음");
             await endstartChat();
@@ -48,13 +54,13 @@ const Chatting: React.FC = () => {
                 await new Promise((resolve) => setTimeout(resolve, 100));
             }
             localStorage.removeItem("clickQuery");
-        }
-        else {
+        } else {
             console.log("handleSubmit -> else");
             setIsChatEnded(false);
             await sendMessage();
         }
     };
+    
 
     useEffect(() => {
         console.log("test -> session_id:", session_id, "query:", query);
@@ -66,6 +72,7 @@ const Chatting: React.FC = () => {
 
     const sendMessage = async () => {
         console.log("sendMessage호출됨");
+        
         const userMessage: Message = { type: "user", text: query || "" };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setIsLoading(true);

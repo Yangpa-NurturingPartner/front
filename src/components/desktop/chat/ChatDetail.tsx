@@ -66,6 +66,11 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
   }, [messages]);
 
   const handleChatSubmit = async (e: React.FormEvent) => {
+
+    if (query === null || query.trim() === '') {
+      console.log("입력값이 없습니다. 함수 종료.");
+      return; 
+  }
     setShowChatDetail(false);
     e.preventDefault();
     await new Promise<void>((resolve) => {
