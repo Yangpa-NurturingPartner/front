@@ -107,7 +107,6 @@ $ cd AI
 ![DataGrip](https://img.shields.io/badge/DataGrip-000000?style=flat&logo=datagrip&logoColor=white)
 
 ### AI
-![LangChain](https://img.shields.io/badge/LangChain-065535?style=flat)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
 ![Whisper](https://img.shields.io/badge/Whisper-1C1E21?style=flat)
 
