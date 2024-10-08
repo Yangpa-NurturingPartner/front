@@ -186,7 +186,6 @@ const Chatting: React.FC = () => {
                 const userMessage: Message = { type: 'user', text: userQuery };
                 const botMessage: Message = { type: 'bot', text: response.data.data.answer };
                 setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
-    
                 setMessages(prevMessages => {
                     const updatedMessages = [...prevMessages, userMessage, botMessage];
                     setIsLoading(false); 
@@ -212,23 +211,15 @@ const Chatting: React.FC = () => {
 
     //메인에서 보낸 query
     useEffect(() => {
-        const handleChatEnd = async () => {
-            if (!session_id) {
-                await new Promise<void>((resolve) => {
-                    endstartChat();  // endstartChat이 끝날 때까지 기다림
-                    setTimeout(resolve, 0);
-                });
-                
-                if (query) {
-                    await fetchInitialAnswer(query); // endStartChat 이후에 실행
-                    console.log("fetchInitialAnswer 실행");
-                } else {
-                    console.log("query가 null입니다.");
-                }
+        if (!session_id) {
+            endstartChat();
+            if (query) {
+                fetchInitialAnswer(query);
+                console.log("fetchInitail 실행");
+            } else {
+                console.log("mainQuery가 null입니다.");
             }
-        };
-    
-        handleChatEnd();  // 비동기 함수 호출
+        }
     }, [isChatEnded]);
     
 
