@@ -115,7 +115,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
               setQuery(e.target.value); 
             }}
           />
-          <IconButton type="submit">
+          <IconButton type="button">
             <Search />
           </IconButton>
         </form>
