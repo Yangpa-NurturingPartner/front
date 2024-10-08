@@ -9,7 +9,9 @@ body {
   width: 16vw;
   transition: width 0.3s ease, opacity 0.3s ease, left 0.3s ease;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  left: 0;
+  top: 4.5rem;
 
   &.collapsed {
     width: 0;
@@ -257,9 +259,14 @@ body {
 
 .message.user {
   background-color: #E3F0FE;
-  margin-left: auto; 
-  margin-right: 150px;
-  align-self: flex-end; 
+  margin-left: auto;
+  margin-right: 200px; /* 기존의 오른쪽 여백 유지 */
+  align-self: flex-end;
+  padding: 10px 15px;
+  border-radius: 15px;
+  max-width: 70%; /* 최대 너비 설정 */
+  width: fit-content; /* 내용에 맞게 너비 자동 조정 */
+  word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
 }
 
 .message.bot {
