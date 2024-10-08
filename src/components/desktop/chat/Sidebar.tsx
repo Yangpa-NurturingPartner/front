@@ -18,17 +18,13 @@ interface SidebarProps {
     endstartChat: () => void; 
     showChatDetail: boolean;
     setShowChatDetail: (value: boolean) => void; 
-    showAsk: boolean;
-    setShowAsk: (value: boolean) => void; 
     fetchChatSummaries: () => Promise<void>;
     chatSummaries: ChatSummary[];
     setChatSummaries:any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail,endstartChat, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatDetail, showChatDetail, setShowChatDetail, endSession, fetchChatSummaries, chatSummaries, setChatSummaries }) => {
     const navigate = useNavigate();
-    const [showChatDetail, setShowChatDetail] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
     
     return (
         <>
@@ -49,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, viewChatD
                 src={"/img/write.png"}
                 alt={""}
                 onClick={async () => {
-                    navigate('/chat', { state: { showAsk: true } });
+                    navigate('/chat');
                     setShowChatDetail(false);
                     await endSession(); // 기존 채팅 종료
                 }}

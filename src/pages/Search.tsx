@@ -41,11 +41,11 @@ const TotalSearch: React.FC = () => {
         }
     };
 
-    const handleQuestionClick = async (question: string) => {
-        setSearchQuery(question);
-        setSubmittedQuery(question);
+    const handleQuestionClick = async (query: string) => {
+        setSearchQuery(query);
+        setSubmittedQuery(query);
         setFind(true);
-        dispatch(totalSearchResult(question) as any);
+        dispatch(totalSearchResult(query) as any);
     };
 
     const makeSx = {

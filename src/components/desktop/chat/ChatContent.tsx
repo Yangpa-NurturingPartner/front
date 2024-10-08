@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from "react";
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { TextField, IconButton, CircularProgress } from "@mui/material";
-import { QuestionAnswer, Search } from '@mui/icons-material';
-import axios from "axios";
+import { Search } from '@mui/icons-material';
+
 import ChatPartDefault from "./ChatPartDefault";
 
 interface Message {
@@ -11,19 +11,26 @@ interface Message {
 }
 
 interface ChatContentProps {
+    chatDetail: {
+        query: string;
+        answer: string;
+        qa_time: string;
+        session_id: string;
+    }[] | null;
     messages: Message[];
     setMessages: Dispatch<SetStateAction<Message[]>>;
     query: string;
     setQuery: React.Dispatch<React.SetStateAction<string | null>>;
     isChatEnded: boolean;
-    endstartChat: () => void;
-    session_id: string;
-    fetchChatSummaries: () => Promise<void>;
+    handleSubmit: () => Promise<void>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    endStartChat: () => Promise<void>;
+    setSession_id: React.Dispatch<React.SetStateAction<string | null>>;
+    session_id: string | null;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query, setQuery, isChatEnded, endstartChat, session_id,fetchChatSummaries }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [showAsk, setShowAsk] = useState(true);
+const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, chatDetail, setMessages, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +66,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
         }
     }, [navigate]);
 
-    //스크롤 자동 내리기
+    // 스크롤 자동 내리기
     const scrollToBottom = () => {
         if (messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -67,124 +74,129 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setMessages, query,
     };
 
     useEffect(() => {
-        scrollToBottom(); 
+        scrollToBottom();
     }, [messages]);
 
-    //질문 제출
-    const handleSubmit = async () => {
-        setShowAsk(false);
-        if (!session_id) {
-            await endstartChat();
-        } else {
-            await sendMessage();
-        }
+    // 간편질문 클릭 시 바로 전송
+    const handleQuestionClick = async (query: string) => {
+        localStorage.setItem("clickQuery", query);
+        await new Promise<void>((resolve) => {
+            setSession_id(null);
+            setTimeout(resolve, 0);
+        });
+        setMessages([]);
+        setQuery(query);
+        console.log("질문 클릭:", query);
+        setIsLoading(true);
+        await navigate('/chat', { state: { session_id: null, query: query } });
     };
 
     useEffect(() => {
-        if (session_id && query) {
-            sendMessage();
+        if (session_id && chatDetail) {
+            const filteredMessages = chatDetail
+                .filter(detail => detail.session_id === session_id)
+                .map(detail => {
+                    const userMessage: Message = { type: 'user', text: detail.query };
+                    const botMessage: Message = detail.answer
+                        ? { type: 'bot', text: detail.answer }
+                        : { type: 'error', text: '답변이 없습니다.' };
+                    return [userMessage, botMessage];
+                })
+                .flat();
+            setMessages(filteredMessages);
         }
-    }, [session_id]); 
-    
-    const sendMessage = async () => {
-        const serverIp: string | undefined = process.env.REACT_APP_HOST;
-        const port: string | undefined = process.env.REACT_APP_BACK_PORT;
-
-        const userMessage: Message = { type: "user", text: query };
-        setMessages((prevMessages) => [...prevMessages, userMessage]);
-        setIsLoading(true);
-
-        try {
-            const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
-                session_id,
-                chat_detail: query,
-                token: "Bearer " + localStorage.getItem("jwtToken"),
-            });
-
-            const botAnswer = response.data.data.answer || '답변이 없습니다.';
-            const botMessage: Message = { type: "bot", text: botAnswer };
-
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-            setQuery(''); 
-            fetchChatSummaries();
-        } catch (error: any) {
-            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
-            setMessages((prevMessages) => [...prevMessages, errorMessage]);
-            console.error("오류 발생:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    //간편질문 클릭 시 바로 전송
-    const handleQuestionClick = (question: string) => {
-        setShowAsk(false);
-        localStorage.setItem("question", question);
-        setIsLoading(true);
-        setQuery(question);
-        navigate('/chat', { state: { query } });
-    };
+    }, [session_id, chatDetail, setMessages]);
 
     return (
         <div className="pc-show-chat">
-            <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
-                    <ChatPartDefault 
-                    onQuestionClick={handleQuestionClick}
-                    onSubmit={handleSubmit}
-                    />
-            </div>
+        <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
+            <ChatPartDefault
+                onQuestionClick={handleQuestionClick}
+                onSubmit={handleSubmit}
+            />
+        </div>
     
-            <div className="pc-chat-content">
-                <div className="message-container">
-                    {messages.map((msg, index) => (
-                        <div key={index}>
-                            <div 
-                                className={`message ${msg.type}`}
-                                style={{ fontSize: '15px' }}
-                            >
-                                <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
+        <div className="pc-chat-content">
+            <div className="message-container">
+                {chatDetail && !localStorage.getItem("nowChatting") ? (
+                    chatDetail
+                        .filter(detail => detail.session_id === session_id)
+                        .map((detail, index) => (
+                            <div key={index}>
+                                {detail.query && (
+                                    <div className="message user">
+                                        <strong>사용자:</strong> {detail.query}
+                                    </div>
+                                )}
+                                {detail.answer ? (
+                                    <div className="message bot">
+                                        <strong>양파AI:</strong> 
+                                        <span style={{ whiteSpace: 'pre-wrap' }}>
+                                            {detail.answer}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="message error">
+                                        <strong>오류:</strong> 답변이 없습니다.
+                                    </div>
+                                )}
                             </div>
-                        </div>
-                    ))}
-                    <div ref={messageEndRef} />
-                </div>
-    
-                {isLoading && (
-                    <div style={{ textAlign: 'center', margin: '20px 0' }}>
-                        <CircularProgress />
+                        ))
+                ) : (
+                    <div className="message-container">
+                        {messages.map((msg, index) => (
+                            <div key={index}>
+                                <div
+                                    className={`message ${msg.type}`}
+                                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}
+                                >
+                                    <strong>{msg.type === 'user' ? '사용자' : '양파AI'}:</strong> {msg.text}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
     
-                <form className="pc-chat-input">
-                    <TextField
-                        id="outlined-basic"
-                        placeholder="육아 고민을 적어주세요"
-                        variant="outlined"
-                        sx={makeSx}
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleSubmit(); 
-                            }
-                        }}
-                        disabled={isLoading} 
-                        className="pc-chat-body-searchInput"
-                    />
-                    <div style={{ display: 'flex', marginTop: '10px' }}>
-                        <IconButton 
-                            type="button" 
-                            onClick={handleSubmit} 
-                            disabled={isChatEnded || isLoading}
-                        >
-                            <Search /> 
-                        </IconButton>
-                    </div>
-                </form>
+                <div ref={messageEndRef} />
             </div>
+    
+            {isLoading && (
+                <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                    <CircularProgress />
+                </div>
+            )}
+    
+            <form className="pc-chat-input">
+                <TextField
+                    id="outlined-basic"
+                    placeholder="육아 고민을 적어주세요"
+                    variant="outlined"
+                    sx={makeSx}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSubmit();
+                        }
+                    }}
+                    disabled={isLoading}
+                    className="pc-chat-body-searchInput"
+                />
+                <div style={{ display: 'flex', marginTop: '10px' }}>
+                    <IconButton
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={isChatEnded || isLoading}
+                    >
+                        <Search />
+                    </IconButton>
+                </div>
+            </form>
         </div>
+    </div>
+    
     );
 }
-    
+
 export default ChatContent;
