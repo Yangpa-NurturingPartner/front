@@ -52,7 +52,7 @@ const TotalSearch: React.FC = () => {
         backgroundColor: "white",
         width: "100%",
         borderRadius: "15px",
-        border: "1px solid #0B64C0",
+        border: "2px solid #0B64C0",
         "& .MuiOutlinedInput-root": {
             "& fieldset": {
                 border: "none",
@@ -63,6 +63,7 @@ const TotalSearch: React.FC = () => {
             "&.Mui-focused fieldset": {
                 border: "none",
             },
+            borderRadius: "15px",
         },
         "& .MuiInputLabel-root": {
             color: "rgb(AAAAAA)",
@@ -71,11 +72,11 @@ const TotalSearch: React.FC = () => {
                 color: "black",
             },
         },
-    }; 
+    };
 
     return (
         <>
-            <Goback where={"통합검색"}/>
+            <Goback where={"통합검색"} />
 
             <div className={"pc-total-body"}>
                 <span className={"pc-total-title"}>육아 자료를 검색해 보세요</span>
@@ -85,25 +86,25 @@ const TotalSearch: React.FC = () => {
                 }
 
                 <div className={"pc-total-search"}>
-                <TextField
-                    id="outlined-basic"
-                    placeholder="검색할 자료를 입력하세요"
-                    variant="outlined"
-                    sx={makeSx}
-                    value={searchQuery}  // 이 줄 추가
-                    InputProps={{
-                        endAdornment: (
-                            <img 
-                                src={"/img/search.png"} 
-                                alt={""} 
-                                style={{width: "2rem", cursor: "pointer"}} 
-                                onClick={handleSearch}
-                            />
-                        ),
-                    }}
-                    onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e)}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                />
+                    <TextField
+                        id="outlined-basic"
+                        placeholder="검색할 자료를 입력하세요"
+                        variant="outlined"
+                        sx={makeSx}
+                        value={searchQuery}  // 이 줄 추가
+                        InputProps={{
+                            endAdornment: (
+                                <img
+                                    src={"/img/search.png"}
+                                    alt={""}
+                                    style={{ width: "2rem", cursor: "pointer" }}
+                                    onClick={handleSearch}
+                                />
+                            ),
+                        }}
+                        onKeyUp={(e: React.KeyboardEvent<HTMLDivElement>) => handleKeyPress(e)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                    />
                 </div>
 
                 {
