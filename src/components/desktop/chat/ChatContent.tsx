@@ -121,7 +121,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                     {chatDetail && !localStorage.getItem("nowChatting") ? (
                         chatDetail
                             .filter(detail => detail.session_id === session_id)
-                            .sort((a, b) => new Date(a.qa_time).getTime() - new Date(b.qa_time).getTime()) // 정렬 추가
+                            .sort((a, b) => new Date(a.qa_time).getTime() - new Date(b.qa_time).getTime()) 
                             .map((detail, index) => (
                                 <div key={index} className={`message-wrapper ${detail.query ? 'user' : 'bot'}`}>
                                     {detail.query && (
@@ -138,7 +138,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                                     {detail.answer ? (
                                         <>
                                             <div className="message-label bot-label">양파 AI</div>
-                                            <div className="message bot" style={{ whiteSpace: 'pre-wrap' }}>
+                                            <div className="message bot" style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}>
                                                 {detail.answer}
                                             </div>
                                             <div className="timestamp bot-timestamp">
