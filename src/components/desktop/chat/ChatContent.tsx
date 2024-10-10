@@ -122,18 +122,19 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                         chatDetail
                             .filter(detail => detail.session_id === session_id)
                             .map((detail, index) => (
-                                <div key={index}>
+                                <div key={index} className="message-wrapper">
                                     {detail.query && (
-                                        <div className="message user">
-                                            <strong></strong> {detail.query}
+                                        <div className="message-group user">
+                                            <div className="message user">{detail.query}</div>
+                                            <div className="user-label">: 사용자</div>
                                         </div>
                                     )}
                                     {detail.answer ? (
-                                        <div className="message bot">
-                                            <strong></strong>
-                                            <span style={{ whiteSpace: 'pre-wrap' }}>
-                                                {detail.answer}
-                                            </span>
+                                        <div className="message-group bot">
+                                            <div className="bot-label">양파 :</div>
+                                            <div className="message bot">
+                                                <span style={{ whiteSpace: 'pre-wrap' }}>{detail.answer}</span>
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="message error">
@@ -143,14 +144,15 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                                 </div>
                             ))
                     ) : (
-                        <div className="message-container">
+                        <div className="message-container-inner">
                             {messages.map((msg, index) => (
-                                <div key={index}>
-                                    <div
-                                        className={`message ${msg.type}`}
-                                        style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}
-                                    >
-                                        <strong></strong> {msg.text}
+                                <div key={index} className="message-wrapper">
+                                    <div className={`message-group ${msg.type}`}>
+                                        {msg.type === 'user' && <div className="user-label">: 사용자</div>}
+                                        {msg.type === 'bot' && <div className="bot-label">양파 :</div>}
+                                        <div className={`message ${msg.type}`}>
+                                            <span style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</span>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -159,13 +161,11 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
 
                     <div ref={messageEndRef} />
                     {isLoading && (
-                    <div style={{ textAlign: 'center', margin: '20px 0' }}>
-                        <CircularProgress />
-                    </div>
-                )}
+                        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                            <CircularProgress />
+                        </div>
+                    )}
                 </div>
-
-                
 
                 <form className="pc-chat-input" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <TextField
@@ -200,7 +200,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                 </form>
             </div>
         </div>
-
     );
 }
 

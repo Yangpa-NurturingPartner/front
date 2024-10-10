@@ -256,50 +256,71 @@ body {
 
 .message-container {
   flex-grow: 1;
-  width: 60vw;
-  padding: 60px;
-  justify-content: center;
-  display: flex; /* 추가: flexbox를 사용하여 자식 요소를 정렬 */
-  flex-direction: column; /* 추가: 세로 방향으로 정렬 */
+  width: 80vw; // 너비 증가
+  padding: 20px;
+  justify-content: flex-start; // 상단에서 시작
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; // 스크롤 가능하도록
+}
+
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.message-group {
+  display: flex;
+  align-items: flex-start;
+  max-width: 70%;
+}
+
+.message-group.user {
+  flex-direction: row-reverse;
+  align-self: flex-end;
+}
+
+.message-group.bot {
+  align-self: flex-start;
+  margin-right: auto; 
+  align-self: flex-start;
+  left: 120px;
 }
 
 .message {
   font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-  min-width: 20%; 
-  max-width: 50%;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 20px;
+  padding: 10px 15px;
+  border-radius: 15px;
   font-size: 14px;
   line-height: 1.4;
-  position: relative;
-  display: flex; 
-  flex-direction: column; 
-}
-
-.timestamp {
-  font-size: 10px;
-  color: #888;
-  align-self: flex-end; 
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 .message.user {
   background-color: #E3F0FE;
-  margin-left: auto;
-  margin-right: 215px; /* 기존의 오른쪽 여백 유지 */
-  align-self: flex-end;
-  padding: 10px 15px;
-  border-radius: 15px;
-  max-width: 70%; /* 최대 너비 설정 */
-  width: fit-content; /* 내용에 맞게 너비 자동 조정 */
-  word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
+  margin-left: 10px;
 }
 
 .message.bot {
   background-color: #e6e4e4;
-  margin-right: auto; 
-  align-self: flex-start;
-  left: 120px;
+  margin-right: 10px;
+}
+
+.user-label, .bot-label {
+  font-size: 0.9rem;
+  color: #555;
+  padding: 5px;
+}
+
+.user-label {
+  text-align: right;
+}
+
+.bot-label {
+  text-align: left;
 }
 
 .no-records {
@@ -307,3 +328,23 @@ body {
   color: #888;
   margin-top: 20px;
 }
+
+////////////////////////
+// .message.user {
+//   background-color: #E3F0FE;
+//   margin-left: auto;
+//   margin-right: 215px; /* 기존의 오른쪽 여백 유지 */
+//   align-self: flex-end;
+//   padding: 10px 15px;
+//   border-radius: 15px;
+//   max-width: 70%; /* 최대 너비 설정 */
+//   width: fit-content; /* 내용에 맞게 너비 자동 조정 */
+//   word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
+// }
+
+// .message.bot {
+  // background-color: #e6e4e4;
+  // margin-right: auto; 
+  // align-self: flex-start;
+  // left: 120px;
+// }
