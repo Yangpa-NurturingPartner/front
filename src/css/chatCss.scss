@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'NanumSquareRoundOTFB';
+  src: url('../../public/fonts/NanumSquareRoundOTFB.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+font-family: 'NanumSquareRoundOTFB';
+}
+
 body {
   box-sizing: border-box; /* 패딩과 테두리를 width에 포함*/
   overflow-x: hidden;
@@ -41,7 +51,7 @@ body {
   position: absolute;
   width: 90%;
   top: 4.2rem;
-  bottom: 9vh;
+  bottom: 3vh;
   display: flex;
   flex-direction: column;
   padding: 0.5rem 0.5rem;
@@ -143,7 +153,8 @@ body {
 
   .pc-chat-part {
     width: 90%;
-    margin-top : 160px;
+    margin-bottom : 110px;
+    margin-right: 140px;
     display: flex;
     flex-direction: column;
     background-color: white;
