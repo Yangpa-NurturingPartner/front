@@ -115,7 +115,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
         <form className="pc-chat-input" onSubmit={handleChatSubmit}>
           <TextField
             id="outlined-basic"
-            placeholder="질문을 입력하세요"
+            placeholder="이어서 채팅하기"
             variant="outlined"
             sx={{
               ...makeSx,
