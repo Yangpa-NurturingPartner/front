@@ -1,21 +1,4 @@
-@font-face {
-    font-family: 'NanumSquareRoundOTFB';
-    src: url('../../public/fonts/NanumSquareRoundOTFB.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-* {
-  font-family: 'NanumSquareRoundOTFB';
-}
-
-
-
-
 body {
-  // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-  // Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-
   box-sizing: border-box; /* 패딩과 테두리를 width에 포함*/
   overflow-x: hidden;
 }
@@ -26,9 +9,7 @@ body {
   width: 16vw;
   transition: width 0.3s ease, opacity 0.3s ease, left 0.3s ease;
   overflow: hidden;
-  position: fixed;
-  left: 0;
-  top: 4.5rem;
+  position: relative;
 
   &.collapsed {
     width: 0;
@@ -36,7 +17,7 @@ body {
   }
     .pc-chat-sidebar-btn {
       position: absolute;
-      bottom: 2vh;
+      bottom: 3vh;
       display: flex;
       justify-content: space-between;
       padding: 0rem 0.5rem;
@@ -60,7 +41,7 @@ body {
   position: absolute;
   width: 90%;
   top: 4.2rem;
-  bottom: 3vh;
+  bottom: 9vh;
   display: flex;
   flex-direction: column;
   padding: 0.5rem 0.5rem;
@@ -122,18 +103,19 @@ body {
   position: absolute;
   top: 8.3%;
   bottom: 0;
-  right: 100%;
+  right: 0;
   transition: left 0.3s ease, width 0.3s ease;
   height: 91.5%;
   overflow-y: hidden;
+  width: 90%; 
 
   &.collapsed { /* 사이드바가 접힐 때 */
-    left: 0vw; 
-    width: 100%;
+    left: 15vw; 
+    width: 90%;
   }
 
   &.expanded { /* 사이드바가 확장될 때 */
-    left: 14vw;
+    left: 15vw;
     width: 90%; 
   }
 }
@@ -161,13 +143,10 @@ body {
 
   .pc-chat-part {
     width: 90%;
-    margin-top: 160px;
+    margin-top : 160px;
     display: flex;
     flex-direction: column;
     background-color: white;
-    height: 100%; /* 추가: 고정된 높이 설정 */
-    overflow: hidden; /* 추가: 내용이 넘칠 경우 숨김 처리 */
-    
     &.blank {
       margin-top: 0;
       height: 0; 
@@ -178,10 +157,10 @@ body {
   }
 
   .pc-ask {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: auto;
     margin-bottom: 15vh;
 
     .pc-ask-title {
@@ -212,21 +191,14 @@ body {
   }
   
   .pc-chat-input {
-    bottom: 1vh;
-    left: 0;
+    bottom: 2vh;
+    left: 18%;
     right: 0;
-    width: 90%;
+    width: 75%;
     padding: 0px 0px 0px 0px ;
     display: flex;
     justify-content: center;
-    
-
-    // position: absolute; /* 변경: absolute로 설정 */
-    // bottom: 2vh; /* 아래에서의 간격 */
-    // left: 50%; /* 화면의 50% 위치 */
-    // transform: translateX(-50%); /* 요소를 왼쪽으로 50% 이동하여 가운데 정렬 */
-    // width: 75%; /* 너비 설정 */
-
+    position: fixed;
     .pc-chat-icon {
       width: 5rem;
     }
@@ -241,13 +213,6 @@ body {
   background-color: #f5f5f5;
 }
 
-.chat-header {
-  padding: 3px 20px 10px 10px;
-  z-index: 1000;
-  margin-left: 50px;
-  width:100%;
-}
-
 
 .chat-header h1 {
   font-size: 20px;
@@ -256,71 +221,68 @@ body {
 
 .message-container {
   flex-grow: 1;
-  width: 80vw; // 너비 증가
-  padding: 20px;
-  justify-content: flex-start; // 상단에서 시작
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto; // 스크롤 가능하도록
+  width: 60vw;
+  padding-bottom: 60px;
+  justify-content: center;
+  display: flex; 
+  flex-direction: column; 
 }
 
-.message-wrapper {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  width: 100%;
+.message-label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px; 
 }
 
-.message-group {
-  display: flex;
-  align-items: flex-start;
-  max-width: 70%;
+.user-label {
+  text-align: right; 
+  margin-right: 10px;
 }
 
-.message-group.user {
-  flex-direction: row-reverse;
-  align-self: flex-end;
-}
-
-.message-group.bot {
-  align-self: flex-start;
-  margin-right: auto; 
-  align-self: flex-start;
-  left: 120px;
+.bot-label {
+  text-align: left; 
 }
 
 .message {
   font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-  padding: 10px 15px;
-  border-radius: 15px;
+  max-width: 50%;
+  padding: 10px;
+  border-radius: 20px;
   font-size: 14px;
   line-height: 1.4;
-  max-width: 100%;
-  word-wrap: break-word;
+  position: relative;
+}
+
+.timestamp {
+  font-size: 10px;
+  color: #888;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.user-timestamp {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.message-wrapper.user {
+  margin-right: 150px;
+  text-align: right;
+}
+
+.message-wrapper.bot {
+  align-self: flex-start;
+  text-align: left;
 }
 
 .message.user {
   background-color: #E3F0FE;
-  margin-left: 10px;
+  display: inline-block;
 }
+
 
 .message.bot {
   background-color: #e6e4e4;
-  margin-right: 10px;
-}
-
-.user-label, .bot-label {
-  font-size: 0.9rem;
-  color: #555;
-  padding: 5px;
-}
-
-.user-label {
-  text-align: right;
-}
-
-.bot-label {
-  text-align: left;
 }
 
 .no-records {
@@ -328,23 +290,3 @@ body {
   color: #888;
   margin-top: 20px;
 }
-
-////////////////////////
-// .message.user {
-//   background-color: #E3F0FE;
-//   margin-left: auto;
-//   margin-right: 215px; /* 기존의 오른쪽 여백 유지 */
-//   align-self: flex-end;
-//   padding: 10px 15px;
-//   border-radius: 15px;
-//   max-width: 70%; /* 최대 너비 설정 */
-//   width: fit-content; /* 내용에 맞게 너비 자동 조정 */
-//   word-wrap: break-word; /* 긴 단어 자동 줄바꿈 */
-// }
-
-// .message.bot {
-  // background-color: #e6e4e4;
-  // margin-right: auto; 
-  // align-self: flex-start;
-  // left: 120px;
-// }

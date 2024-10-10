@@ -8,6 +8,7 @@ import ChatPartDefault from "./ChatPartDefault";
 interface Message {
     type: 'user' | 'bot' | 'error';
     text: string;
+    timestamp: string;
 }
 
 interface ChatContentProps {
@@ -30,7 +31,10 @@ interface ChatContentProps {
     session_id: string | null;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, chatDetail, setMessages, messages, handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading }) => {
+const ChatContent: React.FC<ChatContentProps> = ({
+    session_id, setSession_id, chatDetail, setMessages, messages,
+    handleSubmit, query, setQuery, isChatEnded, isLoading, setIsLoading
+}) => {
     const navigate = useNavigate();
     const messageEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,10 +100,10 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
             const filteredMessages = chatDetail
                 .filter(detail => detail.session_id === session_id)
                 .map(detail => {
-                    const userMessage: Message = { type: 'user', text: detail.query };
+                    const userMessage: Message = { type: 'user', text: detail.query, timestamp: detail.qa_time };
                     const botMessage: Message = detail.answer
-                        ? { type: 'bot', text: detail.answer }
-                        : { type: 'error', text: '답변이 없습니다.' };
+                        ? { type: 'bot', text: detail.answer, timestamp: detail.qa_time }
+                        : { type: 'error', text: '답변이 없습니다.', timestamp: detail.qa_time };
                     return [userMessage, botMessage];
                 })
                 .flat();
@@ -110,55 +114,59 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
     return (
         <div className="pc-show-chat">
             <div className={`pc-chat-part ${messages.length > 0 && !localStorage.getItem("end") ? 'blank' : ''}`}>
-                <ChatPartDefault
-                    onQuestionClick={handleQuestionClick}
-                    onSubmit={handleSubmit}
-                />
+                <ChatPartDefault onQuestionClick={handleQuestionClick} onSubmit={handleSubmit} />
             </div>
-
             <div className="pc-chat-content">
                 <div className="message-container">
                     {chatDetail && !localStorage.getItem("nowChatting") ? (
                         chatDetail
                             .filter(detail => detail.session_id === session_id)
+                            .sort((a, b) => new Date(a.qa_time).getTime() - new Date(b.qa_time).getTime()) 
                             .map((detail, index) => (
-                                <div key={index} className="message-wrapper">
+                                <div key={index} className={`message-wrapper ${detail.query ? 'user' : 'bot'}`}>
                                     {detail.query && (
-                                        <div className="message-group user">
-                                            <div className="message user">{detail.query}</div>
-                                            <div className="user-label">: 사용자</div>
-                                        </div>
+                                        <>
+                                            <div className="message-label user-label">사용자</div>
+                                            <div className="message user" style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}>
+                                                {detail.query}
+                                            </div>
+                                            <div className="timestamp user-timestamp">
+                                                {new Date(detail.qa_time).toLocaleString()}
+                                            </div>
+                                        </>
                                     )}
                                     {detail.answer ? (
-                                        <div className="message-group bot">
-                                            <div className="bot-label">양파 :</div>
-                                            <div className="message bot">
-                                                <span style={{ whiteSpace: 'pre-wrap' }}>{detail.answer}</span>
+                                        <>
+                                            <div className="message-label bot-label">양파 AI</div>
+                                            <div className="message bot" style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}>
+                                                {detail.answer}
                                             </div>
-                                        </div>
+                                            <div className="timestamp bot-timestamp">
+                                                {new Date(detail.qa_time).toLocaleString()}
+                                            </div>
+                                        </>
                                     ) : (
-                                        <div className="message error">
-                                            <strong>오류:</strong> 답변이 없습니다.
-                                        </div>
+                                        <div className="no-records">오류가 발생했습니다.</div>
                                     )}
                                 </div>
                             ))
                     ) : (
-                        <div className="message-container-inner">
+                        <div className="message-container">
                             {messages.map((msg, index) => (
-                                <div key={index} className="message-wrapper">
-                                    <div className={`message-group ${msg.type}`}>
-                                        {msg.type === 'user' && <div className="user-label">: 사용자</div>}
-                                        {msg.type === 'bot' && <div className="bot-label">양파 :</div>}
-                                        <div className={`message ${msg.type}`}>
-                                            <span style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</span>
-                                        </div>
+                                <div key={index} className={`message-wrapper ${msg.type}`}>
+                                    <div className={`message-label ${msg.type}-label`}>
+                                        {msg.type === 'user' ? '사용자' : '양파 AI'}
+                                    </div>
+                                    <div className={`message ${msg.type}`} style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}>
+                                        {msg.text}
+                                    </div>
+                                    <div className={`timestamp ${msg.type}-timestamp`}>
+                                        {msg.timestamp ? new Date(msg.timestamp).toLocaleString() : ''}
                                     </div>
                                 </div>
                             ))}
                         </div>
                     )}
-
                     <div ref={messageEndRef} />
                     {isLoading && (
                         <div style={{ textAlign: 'center', margin: '20px 0' }}>
@@ -166,7 +174,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
                         </div>
                     )}
                 </div>
-
                 <form className="pc-chat-input" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <TextField
                         id="outlined-basic"
@@ -201,6 +208,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ session_id, setSession_id, ch
             </div>
         </div>
     );
-}
+    
+};
 
 export default ChatContent;

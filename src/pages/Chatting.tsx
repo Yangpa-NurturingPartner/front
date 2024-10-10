@@ -11,6 +11,7 @@ import { RootState } from "../redux/store";
 interface Message {
     type: 'user' | 'bot' | 'error';
     text: string;
+    timestamp: string; 
 }
 
 interface ChatSummary {
@@ -76,32 +77,35 @@ const Chatting: React.FC = () => {
     const sendMessage = async () => {
         console.log("sendMessage호출됨");
         
-        const userMessage: Message = { type: "user", text: query || "" };
+        const timestamp = new Date().toISOString();
+        const userMessage: Message = { type: "user", text: query || "", timestamp: timestamp };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         setIsLoading(true);
-
+    
         try {
             const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
                 session_id,
                 chat_detail: query,
                 token: "Bearer " + localStorage.getItem("jwtToken"),
             });
-
+    
             const botAnswer = response.data.data.answer || '답변이 없습니다.';
-            const botMessage: Message = { type: "bot", text: botAnswer };
-            console.log("answer: " + response.data.data.answer);
-
+            const botMessage: Message = { type: "bot", text: botAnswer, timestamp: timestamp }; 
+            console.log("answer: " + botAnswer);
+            console.log("qa_time: " + response.data.data.qa_time);
+    
             setMessages((prevMessages) => [...prevMessages, botMessage]);
             setQuery(''); 
             fetchChatSummaries();
         } catch (error: any) {
-            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다." };
+            const errorMessage: Message = { type: "error", text: error.response?.data?.message || "오류가 발생했습니다.", timestamp: timestamp };
             setMessages((prevMessages) => [...prevMessages, errorMessage]);
             console.error("오류 발생:", error);
         } finally {
             setIsLoading(false);
         }
     };
+    
 
     //과거 채팅 상세 보기
     const viewChatDetail = async (session_id: string) => {
@@ -186,6 +190,7 @@ const Chatting: React.FC = () => {
         setIsLoading(true);
         if(session_id){
             try {
+                const timestamp = new Date().toISOString();
                 const userQuery = query;
                 console.log("fetchInitial", session_id, query);
                 const response = await axios.post(`http://${serverIp}:${port}/chat/message`, {
@@ -193,8 +198,8 @@ const Chatting: React.FC = () => {
                     chat_detail: query,
                     token: "Bearer " + localStorage.getItem("jwtToken")
                 });
-                const userMessage: Message = { type: 'user', text: userQuery };
-                const botMessage: Message = { type: 'bot', text: response.data.data.answer };
+                const userMessage: Message = { type: 'user', text: userQuery, timestamp: timestamp  };
+                const botMessage: Message = { type: 'bot', text: response.data.data.answer, timestamp: timestamp };
                 setMessages(prevMessages => [...prevMessages, userMessage, botMessage]);
                 setMessages(prevMessages => {
                     const updatedMessages = [...prevMessages, userMessage, botMessage];
