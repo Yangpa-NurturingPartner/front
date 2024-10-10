@@ -141,8 +141,7 @@ const Chatting: React.FC = () => {
             await axios.post(`http://${serverIp}:${port}/chat/end-chat`, null, { params: { session_id: session_id } });
             console.log("채팅이 종료되었습니다.");
         } catch (error) {
-            const axiosError = error as AxiosError;
-            console.error('endSession 오류:', axiosError.response ? axiosError.response.data : axiosError.message);
+            console.log("endSession 오류");
         }
         setSession_id(null);
         console.log("endsession? " + session_id);

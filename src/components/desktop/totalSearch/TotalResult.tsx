@@ -7,6 +7,7 @@ interface TotalResultProps {
     isLoading: boolean;  // isLoading prop 추가
 }
 
+
 const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => {
     const searchResults = useSelector((state: RootState) => state.totalSearch.searchResults);
 
@@ -43,6 +44,7 @@ const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => 
             setShowTooltip(true);
         };
 
+
         const handleMouseLeave = () => {
             setShowTooltip(false);
         };
@@ -51,7 +53,8 @@ const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => 
             if (isCommunity) {
                 return `/community/${result.board_no}`;
             } else if (isChat) {
-                return `http://localhost:3000/chat/chat-record-review/${result.session_id}`;
+                // 여기를 수정합니다
+                return `/chat?session_id=${result.session_id}`;
             } else {
                 return result.url;
             }
@@ -94,7 +97,7 @@ const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => 
 
     const ResultSection = ({ title, results, isCommunity = false, isChat = false }: { title: string, results: any[], isCommunity?: boolean, isChat?: boolean }) => {
         return (
-            <div style={{ width: '48%', margin: '1%' }}>
+            <div style={{ width: '34%', margin: '1%'  }}>
                 <h3>{title}</h3>
                 {results.length > 0 ? (
                     results.map((result: any, index: number) => (
@@ -124,7 +127,7 @@ const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => 
                     <img src="/img/LoagingRolling.gif" alt="로딩 중" style={{ width: '100px', height: '100px' }} />
                 </div>
             ) : hasResults ? (
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <ResultSection title="관련 문서" results={document_results} />
                     <ResultSection title="관련 영상" results={video_results} />
                     <ResultSection title="커뮤니티" results={community_results} isCommunity={true} />
@@ -138,5 +141,6 @@ const TotalResult: React.FC<TotalResultProps> = ({ searchQuery, isLoading }) => 
         </div>
     );
 }
+
 
 export default TotalResult;

@@ -13,7 +13,7 @@
 <br>
 
 
-### 배포 주소
+### 배포 주소 ? 
 
 > 개발 버전 :  <br>
 > 프론트 서버 :  <br>
@@ -64,7 +64,7 @@
 
 
 ## 시작 가이드
-### Requirements
+### Requirements ?
 For building and running the application you need:
 - []()
 <br>
@@ -97,62 +97,90 @@ $ cd AI
 
 ## Stacks ⚙
 ### Frontend & Backend
-![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=spring&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+<div>
+  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white" height="30">
+</div>
 
 ### Database & Search
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)
-![AWS OpenSearch](https://img.shields.io/badge/AWS%20OpenSearch-232F3E?style=flat&logo=amazon-aws&logoColor=white)
-![DataGrip](https://img.shields.io/badge/DataGrip-000000?style=flat&logo=datagrip&logoColor=white)
+<div>
+  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/AWS%20OpenSearch-232F3E?style=flat&logo=amazon-aws&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/DataGrip-000000?style=flat&logo=datagrip&logoColor=white" height="30">
+</div>
 
 ### AI
-![LangChain](https://img.shields.io/badge/LangChain-065535?style=flat)
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
-![Whisper](https://img.shields.io/badge/Whisper-1C1E21?style=flat)
+<div>
+  <img src="https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white" height="30">
+</div>
 
 ### Development Tools
-![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat&logo=intellij-idea&logoColor=white)
-![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat&logo=visual-studio-code&logoColor=white)
+<div>
+  <img src="https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=flat&logo=intellij-idea&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=flat&logo=visual-studio-code&logoColor=white" height="30">
+</div>
 
 ### Communication
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
-![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white)
+<div>
+  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white" height="30">
+</div>
+
+
 
 
 <hr>
 
 
-## 화면 구성📺
+## 화면 구성 📺
 <table>
     <tr>
         <td align="center"><strong>메인 페이지</strong></td>
         <td align="center"><strong>채팅 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center"></td>
-        <td align="center"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/37b20a15-c4e4-4791-9346-6fb6492682ef" alt="main"/></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/824278ad-85e9-4f8b-9de6-e4290d89c72d" alt="chat"></td>
     </tr>
     <tr>
         <td align="center"><strong>통합검색 페이지</strong></td>
         <td align="center"><strong>커뮤니티 페이지</strong></td>
     </tr>
     <tr>
-        <td align="center"></td>
-        <td align="center"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/5788b70c-67be-4496-96e9-58556d54baf5" alt="search"></td>
+        <td align="center"><img src="https://github.com/user-attachments/assets/581543cc-f825-43b9-bcce-1aafb40aa0e8" alt="community"></td>
     </tr>
 </table>
 
 <br>
 
 ## API 주소
+- 
+
+<hr>
+
+
+## 주요 기능 📦
+### ⭐ AI와의 채팅으로 육아 궁금증 해결
+- AI 기술을 활용하여 사용자의 자녀 연령에 맞는 양육 정보와 팁 제공
+- 부모들은 자녀의 현재 상황에 가장 적합한 육아 방법 쉽게 찾기 가능
+
+### ⭐ 오은영 박사 영상, 블로그 서치
+- 오은영 박사의 유튜브 영상 및 블로그의 다양한 자료들의 정리를 통해
+  신뢰성 있는 육아 정보들을 누구나 간편하게 접근 가능
+
+### ⭐ 커뮤니티
+- 비슷한 상황의 부모들과 정보를 공유하고 소통할 수 있는 커뮤니티 기능 제공
+- 사용자들은 서로의 경험을 나누고 정서적인 공감과 지지를 받기 가능
 
 
 <hr>
 
 
-## 주요 기능
+## 시스템 아키텍처 🖇 ?
+
 
 
 

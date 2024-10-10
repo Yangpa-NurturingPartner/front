@@ -41,6 +41,8 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectedProfile }) => {
         localStorage.removeItem('jwtToken');
         localStorage.removeItem('selectedProfile');
         localStorage.removeItem('profileList');
+        // 강제로 페이지 새로고침
+        window.location.reload();
         // 로그인 페이지로 리다이렉트
         navigate('/login');
     };
