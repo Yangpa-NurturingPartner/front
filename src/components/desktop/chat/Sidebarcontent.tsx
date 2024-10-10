@@ -113,7 +113,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ viewChatDetail, fetchCh
     const groupedSummaries = groupByDate(chatSummaries);
 
     return (
-        <div className="pc-chat-body">
+        <div className="pc-chat-body" >
         <TextField
             placeholder="히스토리 검색"
             value={searchQuery}
