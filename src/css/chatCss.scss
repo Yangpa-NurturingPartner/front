@@ -213,13 +213,6 @@ body {
   background-color: #f5f5f5;
 }
 
-.chat-header {
-  padding: 3px 20px 10px 10px;
-  z-index: 1000;
-  margin-left: 50px;
-  width:100%;
-}
-
 
 .chat-header h1 {
   font-size: 20px;
@@ -229,43 +222,67 @@ body {
 .message-container {
   flex-grow: 1;
   width: 60vw;
-  padding: 60px;
+  padding-bottom: 60px;
   justify-content: center;
-  display: flex; /* 추가: flexbox를 사용하여 자식 요소를 정렬 */
-  flex-direction: column; /* 추가: 세로 방향으로 정렬 */
+  display: flex; 
+  flex-direction: column; 
+}
+
+.message-label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px; 
+}
+
+.user-label {
+  text-align: right; 
+  margin-right: 10px;
+}
+
+.bot-label {
+  text-align: left; 
 }
 
 .message {
   font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
-  min-width: 20%; 
   max-width: 50%;
-  margin-bottom: 10px;
   padding: 10px;
   border-radius: 20px;
   font-size: 14px;
   line-height: 1.4;
   position: relative;
-  display: flex; 
-  flex-direction: column; 
 }
 
 .timestamp {
   font-size: 10px;
   color: #888;
-  align-self: flex-end; 
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.user-timestamp {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.message-wrapper.user {
+  margin-right: 150px;
+  text-align: right;
+}
+
+.message-wrapper.bot {
+  align-self: flex-start;
+  text-align: left;
 }
 
 .message.user {
   background-color: #E3F0FE;
-  margin-left: auto; 
-  margin-right: 150px;
-  align-self: flex-end; 
+  display: inline-block;
 }
+
 
 .message.bot {
   background-color: #e6e4e4;
-  margin-right: auto; 
-  align-self: flex-start;
 }
 
 .no-records {

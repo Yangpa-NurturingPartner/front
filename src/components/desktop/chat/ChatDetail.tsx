@@ -69,8 +69,8 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
 
     if (query === null || query.trim() === '') {
       console.log("입력값이 없습니다. 함수 종료.");
-      return; 
-  }
+      return;
+    }
     setShowChatDetail(false);
     e.preventDefault();
     await new Promise<void>((resolve) => {
@@ -93,13 +93,16 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
             messages
               .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
               .map((msg, index) => (
-                <div key={index}>
-                  <div
-                    className={`message ${msg.type}`}
-                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }} // 줄바꿈을 유지하는 스타일
-                  >
-                    <strong>{msg.type === 'user' ? '사용자' : '양파 AI'}:</strong> {msg.text}
-                    <span className="timestamp">{new Date(msg.timestamp).toLocaleString()}</span>
+                <div key={index} className={`message-wrapper ${msg.type}`}>
+                  <div className={`message-label ${msg.type}-label`}>
+                    {msg.type === 'user' ? '사용자' : '양파 AI'}
+                  </div>
+                  <div className={`message ${msg.type}`}
+                    style={{ fontSize: '15px', whiteSpace: 'pre-wrap' }}>
+                    {msg.text}
+                  </div>
+                  <div className={`timestamp ${msg.type}-timestamp`}>
+                    {new Date(msg.timestamp).toLocaleString()}
                   </div>
                 </div>
               ))
@@ -111,9 +114,12 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
 
         <form className="pc-chat-input" onSubmit={handleChatSubmit}>
           <TextField
+            id="outlined-basic"
             placeholder="질문을 입력하세요"
             variant="outlined"
-            sx={makeSx}
+            sx={{
+              ...makeSx,
+            }}
             value={query}
             onChange={(e) => {
               setLocalQuery(e.target.value);
@@ -125,6 +131,7 @@ const ChatDetail: React.FC<ChatDetailProps> = ({ setShowChatDetail, chatDetail, 
                 handleChatSubmit(e);  // 엔터를 눌렀을 때 전송
               }
             }}
+            className="pc-chat-body-searchInput"
             InputProps={{
               endAdornment: (
                 <IconButton type="button" onClick={handleChatSubmit}>
