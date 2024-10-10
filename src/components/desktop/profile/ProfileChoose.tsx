@@ -37,6 +37,7 @@ const ProfileChoose: React.FC<ProfileChooseProps> = ({ setRegis, profileData, se
                             <img
                                 src={profile.imageProfile ? `data:image/png;base64,${profile.imageProfile}` : "/img/profile.png"}
                                 alt={profile.name || "child"}
+                                style={{width:"11rem", maxWidth:"11rem", borderRadius:"20%"}}
                             />
                             <span>{profile.name || `아이 ${index + 1}`}</span>
                         </div>
