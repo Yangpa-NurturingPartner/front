@@ -51,9 +51,12 @@
 
 
 ## 시작 가이드
-### Requirements ?
+### Requirements 
 For building and running the application you need:
-- []()
+- React 18.3.1
+- Spring Boot 3.3.4
+- Python 3.10.14
+
 <br>
 
 ### Installation
@@ -143,8 +146,8 @@ $ cd AI
 
 <br>
 
-## API 주소
-- 
+## API 명세서
+- https://documenter.getpostman.com/view/25431392/2sAXqwZzpg
 
 <hr>
 
