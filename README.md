@@ -88,38 +88,51 @@ $ cd AI
 ## Stacks ⚙
 
 ### Front-end
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" height="30"/>
-<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/React%20Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black" height="30">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/React_Redux-764ABC?style=flat&logo=redux&logoColor=white" height="30">
+</div>
 
 ### Back-end
-<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white" height="30">
+</div>
 
 ### AI
-<img src="https://img.shields.io/badge/OpenAI%20ChatGPT-412991?style=for-the-badge&logo=openai&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/OpenAI%20Whisper-412991?style=for-the-badge&logo=openai&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Upstage%20Solar%20Embeddings-FF5722?style=for-the-badge" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/OpenAI_ChatGPT-412991?style=flat&logo=openai&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/OpenAI_Whisper-412991?style=flat&logo=openai&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Upstage_Solar_Embeddings-FF5722?style=flat&logo=data:image/png;base64,[Base64_Encoded_Logo]" height="30">
+</div>
 
 ### DataBase & Search
-<img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/AWS%20OpenSearch-232F3E?style=for-the-badge&logo=amazondynamodb&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/AWS_OpenSearch-232F3E?style=flat&logo=amazondynamodb&logoColor=white" height="30">
+</div>
 
 ### Authentication
-<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Google%20OAuth2-4285F4?style=for-the-badge&logo=google&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/JWT-000000?style=flat&logo=JSON%20web%20tokens&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Google_OAuth2-4285F4?style=flat&logo=google&logoColor=white" height="30">
+</div>
 
 ### Tools
-<img src="https://img.shields.io/badge/IntelliJ%20IDEA-000000?style=for-the-badge&logo=intellijidea&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/POSTMAN-FF6C37?style=for-the-badge&logo=postman&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/JetBrains-000000?style=flat&logo=jetbrains&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/POSTMAN-FF6C37?style=flat&logo=postman&logoColor=white" height="30">
+</div>
 
 ### Version Control & Collaboration
-<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" height="30"/>
-<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white" height="30"/>
+<div>
+  <img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=slack&logoColor=white" height="30">
+  <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white" height="30">
+</div>
 
 
 <hr>
